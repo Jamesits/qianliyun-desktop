@@ -5,8 +5,120 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Qianliyun_Launcher"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+        Title="MainWindow" Height="800" Width="1400">
+    <Window.Resources>
+        <Color x:Key="TabBarButtonColor">#6A7D8E</Color>
+        <SolidColorBrush x:Key="TabBarButtonColorBrush" Color="{StaticResource TabBarButtonColor}"/>
+        <Style x:Key="TabBarButtonStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <!--
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Ellipse Fill="{TemplateBinding Background}"
+                                     Stroke="{TemplateBinding BorderBrush}"/>
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                    -->
+                    <ControlTemplate TargetType="Button">
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="TabBarImageButtonStyleEx" TargetType="{x:Type local:ImageButton}">
+            <Setter Property="FocusVisualStyle">
+                <Setter.Value>
+                    <Style>
+                        <Setter Property="Control.Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <Rectangle Margin="2" SnapsToDevicePixels="True" 
+                                               Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" 
+                                               StrokeThickness="1" StrokeDashArray="1 2"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type local:ImageButton}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                Background="{TemplateBinding Background}" 
+                                SnapsToDevicePixels="True">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="3*" />
+                                    <RowDefinition Height="1*" />
+                                </Grid.RowDefinitions>
+                                <Image x:Name="buttonImage"
+                                       Source="{Binding Source, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                       Grid.Row="0" />
+                                <ContentPresenter 
+                                    x:Name="contentPresenter" 
+                                    Grid.Row="1"
+                                    ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                    Content="{TemplateBinding Content}" 
+                                    ContentStringFormat="{TemplateBinding ContentStringFormat}" 
+                                    Focusable="False" 
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                    Margin="{TemplateBinding Padding}" 
+                                    RecognizesAccessKey="True" 
+                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="True">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" TargetName="border" Value="#FFBEE6FD"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FF3C7FB1"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" TargetName="border" Value="#FFC4E5F6"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FF2C628B"/>
+                            </Trigger>
+                            <Trigger Property="ToggleButton.IsChecked" Value="True">
+                                <Setter Property="Background" TargetName="border" Value="#FFBCDDEE"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FF245A83"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" TargetName="border" Value="#FFF4F4F4"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FFADB2B5"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="#FF838383"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <DockPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" VerticalAlignment="Top" Height="128" Background="{DynamicResource TabBarButtonColorBrush}">
+            <Button Style="{DynamicResource TabBarButtonStyle}" Content="起始页"></Button>
+            <local:ImageButton Width="80" Style="{DynamicResource TabBarImageButtonStyleEx}">
+                <local:ImageButton.Source>
+                    <BitmapImage UriSource="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Cisco_logo.svg/300px-Cisco_logo.svg.png" />
+                </local:ImageButton.Source>
+                <TextBlock>Cisco, Inc.</TextBlock>
+            </local:ImageButton>
+        </StackPanel>
+        <Grid DockPanel.Dock="Bottom" Height="32" VerticalAlignment="Bottom"></Grid>
+        <Grid DockPanel.Dock="Right" Width="250" HorizontalAlignment="Right"></Grid>
+        <Grid></Grid>
+    </DockPanel>
 </Window>
