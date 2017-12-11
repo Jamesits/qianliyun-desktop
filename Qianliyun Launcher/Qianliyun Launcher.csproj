@@ -108,10 +108,26 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\StartPage.png" />
+    <None Include="Resources\Capture.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\account_balance_u20.png" />
+    <Resource Include="Resources\Tag.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Upgrade.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\SMS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Contant.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Data.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\Start.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -9,24 +9,11 @@
     <Window.Resources>
         <Color x:Key="TabBarButtonColor">#6A7D8E</Color>
         <SolidColorBrush x:Key="TabBarButtonColorBrush" Color="{StaticResource TabBarButtonColor}"/>
-        <Style x:Key="TabBarButtonStyle" TargetType="Button">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <!--
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Grid>
-                            <Ellipse Fill="{TemplateBinding Background}"
-                                     Stroke="{TemplateBinding BorderBrush}"/>
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-                        </Grid>
-                    </ControlTemplate>
-                    -->
-                    <ControlTemplate TargetType="Button">
-
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+        <Color x:Key="TabBarTextColor">White</Color>
+        <SolidColorBrush x:Key="TabBarTextColorBrush" Color="{StaticResource TabBarTextColor}"/>
+        <Style x:Key="TabBarTextBlockStyle">
+            <Setter Property="Control.Foreground" Value="{DynamicResource TabBarTextColorBrush}" />
+            <Setter Property="Control.FontSize" Value="20px" />
         </Style>
         <Style x:Key="TabBarImageButtonStyleEx" TargetType="{x:Type local:ImageButton}">
             <Setter Property="FocusVisualStyle">
@@ -57,7 +44,8 @@
                         <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" 
                                 BorderThickness="{TemplateBinding BorderThickness}" 
                                 Background="{TemplateBinding Background}" 
-                                SnapsToDevicePixels="True">
+                                SnapsToDevicePixels="True"
+                                MinWidth="128">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="3*" />
@@ -65,7 +53,7 @@
                                 </Grid.RowDefinitions>
                                 <Image x:Name="buttonImage"
                                        Source="{Binding Source, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                       Grid.Row="0" />
+                                       Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="8" />
                                 <ContentPresenter 
                                     x:Name="contentPresenter" 
                                     Grid.Row="1"
@@ -109,12 +97,47 @@
     </Window.Resources>
     <DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" VerticalAlignment="Top" Height="128" Background="{DynamicResource TabBarButtonColorBrush}">
-            <Button Style="{DynamicResource TabBarButtonStyle}" Content="起始页"></Button>
-            <local:ImageButton Width="80" Style="{DynamicResource TabBarImageButtonStyleEx}">
+            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
                 <local:ImageButton.Source>
-                    <BitmapImage UriSource="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Cisco_logo.svg/300px-Cisco_logo.svg.png" />
+                    <BitmapImage UriSource="pack://siteoforigin:,,,/Resources/Start.png" />
                 </local:ImageButton.Source>
-                <TextBlock>Cisco, Inc.</TextBlock>
+                <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">起始页</TextBlock>
+            </local:ImageButton>
+            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
+                <local:ImageButton.Source>
+                    <BitmapImage UriSource="pack://siteoforigin:,,,/Resources/Capture.png" />
+                </local:ImageButton.Source>
+                <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">直播采集</TextBlock>
+            </local:ImageButton>
+            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
+                <local:ImageButton.Source>
+                    <BitmapImage UriSource="pack://siteoforigin:,,,/Resources/Capture.png" />
+                </local:ImageButton.Source>
+                <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">打标入库</TextBlock>
+            </local:ImageButton>
+            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
+                <local:ImageButton.Source>
+                    <BitmapImage UriSource="pack://siteoforigin:,,,/Resources/Upgrade.png" />
+                </local:ImageButton.Source>
+                <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">升级会员</TextBlock>
+            </local:ImageButton>
+            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
+                <local:ImageButton.Source>
+                    <BitmapImage UriSource="pack://siteoforigin:,,,/Resources/SMS.png" />
+                </local:ImageButton.Source>
+                <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">短信发送</TextBlock>
+            </local:ImageButton>
+            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
+                <local:ImageButton.Source>
+                    <BitmapImage UriSource="pack://siteoforigin:,,,/Resources/Contant.png" />
+                </local:ImageButton.Source>
+                <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">提取手机号</TextBlock>
+            </local:ImageButton>
+            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
+                <local:ImageButton.Source>
+                    <BitmapImage UriSource="pack://siteoforigin:,,,/Resources/Data.png" />
+                </local:ImageButton.Source>
+                <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">数据管理</TextBlock>
             </local:ImageButton>
         </StackPanel>
         <Grid DockPanel.Dock="Bottom" Height="32" VerticalAlignment="Bottom"></Grid>
