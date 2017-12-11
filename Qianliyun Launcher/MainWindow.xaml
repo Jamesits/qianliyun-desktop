@@ -103,43 +103,43 @@
     </Window.Resources>
     <DockPanel Background="{DynamicResource AppBackgroundColorBrush}">
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" VerticalAlignment="Top" Height="80" Background="{DynamicResource TabBarButtonColorBrush}">
-            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}" Click="ButtonBase_OnClick">
+            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}" Click="ButtonStart_OnClick">
                 <local:ImageButton.Source>
                     <BitmapImage UriSource="pack://application:,,,/Resources/Start.png" />
                 </local:ImageButton.Source>
                 <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">起始页</TextBlock>
             </local:ImageButton>
-            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
+            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}" Click="ButtonCapture_OnClick">
                 <local:ImageButton.Source>
                     <BitmapImage UriSource="pack://application:,,,/Resources/Capture.png" />
                 </local:ImageButton.Source>
                 <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">直播采集</TextBlock>
             </local:ImageButton>
-            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
+            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}" Click="ButtonTagging_OnClick">
                 <local:ImageButton.Source>
                     <BitmapImage UriSource="pack://application:,,,/Resources/Tag.png" />
                 </local:ImageButton.Source>
                 <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">打标入库</TextBlock>
             </local:ImageButton>
-            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
+            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}" Click="ButtonUpgrade_OnClick">
                 <local:ImageButton.Source>
                     <BitmapImage UriSource="pack://application:,,,/Resources/Upgrade.png" />
                 </local:ImageButton.Source>
                 <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">升级会员</TextBlock>
             </local:ImageButton>
-            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
+            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}" Click="ButtonSMS_OnClick">
                 <local:ImageButton.Source>
                     <BitmapImage UriSource="pack://application:,,,/Resources/SMS.png" />
                 </local:ImageButton.Source>
                 <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">短信发送</TextBlock>
             </local:ImageButton>
-            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
+            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}" Click="ButtonContact_OnClick">
                 <local:ImageButton.Source>
                     <BitmapImage UriSource="pack://application:,,,/Resources/Contact.png" />
                 </local:ImageButton.Source>
                 <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">提取手机号</TextBlock>
             </local:ImageButton>
-            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
+            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}" Click="ButtonData_OnClick">
                 <local:ImageButton.Source>
                     <BitmapImage UriSource="pack://application:,,,/Resources/Data.png" />
                 </local:ImageButton.Source>
@@ -159,7 +159,9 @@
             </Border>
         </Grid>
         <Grid DockPanel.Dock="Right" Width="220" HorizontalAlignment="Right">
-            <WebBrowser Source="https://google.com" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" />
+            <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1,0,0,0">
+                <WebBrowser Source="https://google.com" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" />
+            </Border>
         </Grid>
         <Grid>
             <ContentControl x:Name="Page" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"></ContentControl>

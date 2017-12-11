@@ -41,6 +41,7 @@ namespace Qianliyun_Launcher
     public partial class MainWindow : Window
     {
         private Homepage.Homepage homepage;
+        private BroadcastCapture.BroadcastCaptureUI broadcast;
 
         public MainWindow()
         {
@@ -49,11 +50,43 @@ namespace Qianliyun_Launcher
 
             // prepare controls
             homepage = new Homepage.Homepage();
+            broadcast = new BroadcastCapture.BroadcastCaptureUI();
+            
         }
 
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        private void ButtonStart_OnClick(object sender, RoutedEventArgs e)
         {
             this.Page.Content = homepage;
+        }
+
+        private void ButtonCapture_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.Page.Content = broadcast;
+        }
+
+        private void ButtonTagging_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.Page.Content = broadcast;
+        }
+
+        private void ButtonUpgrade_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.Page.Content = broadcast;
+        }
+
+        private void ButtonSMS_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.Page.Content = broadcast;
+        }
+
+        private void ButtonContact_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.Page.Content = broadcast;
+        }
+
+        private void ButtonData_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.Page.Content = broadcast;
         }
     }
 
