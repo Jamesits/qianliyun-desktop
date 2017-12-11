@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Qianliyun_Launcher.LoadingPage;
+using Qianliyun_Launcher.Homepage;
 
 namespace Qianliyun_Launcher
 {
@@ -38,9 +40,20 @@ namespace Qianliyun_Launcher
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Homepage.Homepage homepage;
+
         public MainWindow()
         {
             InitializeComponent();
+            this.Page.Content = new Loading();
+
+            // prepare controls
+            homepage = new Homepage.Homepage();
+        }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.Page.Content = homepage;
         }
     }
 

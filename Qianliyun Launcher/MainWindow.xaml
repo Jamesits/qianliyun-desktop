@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Qianliyun_Launcher"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="1400">
+        Title="MainWindow" Height="780" Width="1150">
     <Window.Resources>
         <Color x:Key="TabBarButtonColor">#6A7D8E</Color>
         <SolidColorBrush x:Key="TabBarButtonColorBrush" Color="{StaticResource TabBarButtonColor}"/>
@@ -13,8 +13,8 @@
         <SolidColorBrush x:Key="TabBarTextColorBrush" Color="{StaticResource TabBarTextColor}"/>
         <Style x:Key="TabBarTextBlockStyle">
             <Setter Property="Control.Foreground" Value="{DynamicResource TabBarTextColorBrush}" />
-            <Setter Property="Control.FontSize" Value="18px" />
-            <Setter Property="Control.Margin" Value="0,-4,0,4" />
+            <Setter Property="Control.FontSize" Value="14px" />
+            <Setter Property="Control.Margin" Value="0,-2,0,2" />
         </Style>
         <Style x:Key="TabBarImageButtonStyleEx" TargetType="{x:Type local:ImageButton}">
             <Setter Property="FocusVisualStyle">
@@ -23,7 +23,7 @@
                         <Setter Property="Control.Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <Rectangle Margin="2" SnapsToDevicePixels="True" 
+                                    <Rectangle Margin="1" SnapsToDevicePixels="True" 
                                                Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" 
                                                StrokeThickness="1" StrokeDashArray="1 2"/>
                                 </ControlTemplate>
@@ -102,8 +102,8 @@
         </Style>
     </Window.Resources>
     <DockPanel Background="{DynamicResource AppBackgroundColorBrush}">
-        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" VerticalAlignment="Top" Height="96" Background="{DynamicResource TabBarButtonColorBrush}">
-            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" VerticalAlignment="Top" Height="80" Background="{DynamicResource TabBarButtonColorBrush}">
+            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}" Click="ButtonBase_OnClick">
                 <local:ImageButton.Source>
                     <BitmapImage UriSource="pack://application:,,,/Resources/Start.png" />
                 </local:ImageButton.Source>
@@ -158,9 +158,11 @@
                 </DockPanel>
             </Border>
         </Grid>
-        <Grid DockPanel.Dock="Right" Width="250" HorizontalAlignment="Right">
+        <Grid DockPanel.Dock="Right" Width="220" HorizontalAlignment="Right">
             <WebBrowser Source="https://google.com" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" />
         </Grid>
-        <Grid></Grid>
+        <Grid>
+            <ContentControl x:Name="Page" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"></ContentControl>
+        </Grid>
     </DockPanel>
 </Window>
