@@ -108,7 +108,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Capture.png" />
+    <Resource Include="Resources\Capture.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Tag.png" />
@@ -120,12 +120,11 @@
     <Resource Include="Resources\SMS.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Contant.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Data.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\Contact.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Start.png" />
   </ItemGroup>

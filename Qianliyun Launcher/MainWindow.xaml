@@ -13,7 +13,8 @@
         <SolidColorBrush x:Key="TabBarTextColorBrush" Color="{StaticResource TabBarTextColor}"/>
         <Style x:Key="TabBarTextBlockStyle">
             <Setter Property="Control.Foreground" Value="{DynamicResource TabBarTextColorBrush}" />
-            <Setter Property="Control.FontSize" Value="20px" />
+            <Setter Property="Control.FontSize" Value="18px" />
+            <Setter Property="Control.Margin" Value="0,-4,0,4" />
         </Style>
         <Style x:Key="TabBarImageButtonStyleEx" TargetType="{x:Type local:ImageButton}">
             <Setter Property="FocusVisualStyle">
@@ -45,8 +46,8 @@
                                 BorderThickness="{TemplateBinding BorderThickness}" 
                                 Background="{TemplateBinding Background}" 
                                 SnapsToDevicePixels="True"
-                                MinWidth="128">
-                            <Grid>
+                                MinWidth="104">
+                            <Grid MaxWidth="96" HorizontalAlignment="Center">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="3*" />
                                     <RowDefinition Height="1*" />
@@ -96,46 +97,46 @@
         </Style>
     </Window.Resources>
     <DockPanel>
-        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" VerticalAlignment="Top" Height="128" Background="{DynamicResource TabBarButtonColorBrush}">
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" VerticalAlignment="Top" Height="96" Background="{DynamicResource TabBarButtonColorBrush}">
             <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
                 <local:ImageButton.Source>
-                    <BitmapImage UriSource="pack://siteoforigin:,,,/Resources/Start.png" />
+                    <BitmapImage UriSource="pack://application:,,,/Resources/Start.png" />
                 </local:ImageButton.Source>
                 <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">起始页</TextBlock>
             </local:ImageButton>
             <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
                 <local:ImageButton.Source>
-                    <BitmapImage UriSource="pack://siteoforigin:,,,/Resources/Capture.png" />
+                    <BitmapImage UriSource="pack://application:,,,/Resources/Capture.png" />
                 </local:ImageButton.Source>
                 <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">直播采集</TextBlock>
             </local:ImageButton>
             <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
                 <local:ImageButton.Source>
-                    <BitmapImage UriSource="pack://siteoforigin:,,,/Resources/Capture.png" />
+                    <BitmapImage UriSource="pack://application:,,,/Resources/Tag.png" />
                 </local:ImageButton.Source>
                 <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">打标入库</TextBlock>
             </local:ImageButton>
             <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
                 <local:ImageButton.Source>
-                    <BitmapImage UriSource="pack://siteoforigin:,,,/Resources/Upgrade.png" />
+                    <BitmapImage UriSource="pack://application:,,,/Resources/Upgrade.png" />
                 </local:ImageButton.Source>
                 <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">升级会员</TextBlock>
             </local:ImageButton>
             <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
                 <local:ImageButton.Source>
-                    <BitmapImage UriSource="pack://siteoforigin:,,,/Resources/SMS.png" />
+                    <BitmapImage UriSource="pack://application:,,,/Resources/SMS.png" />
                 </local:ImageButton.Source>
                 <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">短信发送</TextBlock>
             </local:ImageButton>
             <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
                 <local:ImageButton.Source>
-                    <BitmapImage UriSource="pack://siteoforigin:,,,/Resources/Contant.png" />
+                    <BitmapImage UriSource="pack://application:,,,/Resources/Contact.png" />
                 </local:ImageButton.Source>
                 <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">提取手机号</TextBlock>
             </local:ImageButton>
             <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
                 <local:ImageButton.Source>
-                    <BitmapImage UriSource="pack://siteoforigin:,,,/Resources/Data.png" />
+                    <BitmapImage UriSource="pack://application:,,,/Resources/Data.png" />
                 </local:ImageButton.Source>
                 <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">数据管理</TextBlock>
             </local:ImageButton>
