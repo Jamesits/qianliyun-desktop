@@ -95,8 +95,13 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Color x:Key="AppBackgroundColor">#EFF5FB</Color>
+        <SolidColorBrush x:Key="AppBackgroundColorBrush" Color="{StaticResource AppBackgroundColor}"/>
+        <Style x:Key="StatusBarTextBlockStyle">
+            <Setter Property="Control.FontSize" Value="14px" />
+        </Style>
     </Window.Resources>
-    <DockPanel>
+    <DockPanel Background="{DynamicResource AppBackgroundColorBrush}">
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" VerticalAlignment="Top" Height="96" Background="{DynamicResource TabBarButtonColorBrush}">
             <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}">
                 <local:ImageButton.Source>
@@ -141,8 +146,21 @@
                 <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">数据管理</TextBlock>
             </local:ImageButton>
         </StackPanel>
-        <Grid DockPanel.Dock="Bottom" Height="32" VerticalAlignment="Bottom"></Grid>
-        <Grid DockPanel.Dock="Right" Width="250" HorizontalAlignment="Right"></Grid>
+        <Grid DockPanel.Dock="Bottom" Height="20" VerticalAlignment="Bottom" Background="{DynamicResource AppBackgroundColorBrush}" Margin="2">
+            <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="0,1,0,0">
+                <DockPanel>
+                    <Grid>
+                        <TextBlock Style="{DynamicResource StatusBarTextBlockStyle}" HorizontalAlignment="Left">版本号：1.0</TextBlock>
+                    </Grid>
+                    <Grid DockPanel.Dock="Right" HorizontalAlignment="Right">
+                        <TextBlock Style="{DynamicResource StatusBarTextBlockStyle}">千里云软件技术有限公司 正版原创保护 QQ:114514</TextBlock>
+                    </Grid>
+                </DockPanel>
+            </Border>
+        </Grid>
+        <Grid DockPanel.Dock="Right" Width="250" HorizontalAlignment="Right">
+            <WebBrowser Source="https://google.com" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" />
+        </Grid>
         <Grid></Grid>
     </DockPanel>
 </Window>
