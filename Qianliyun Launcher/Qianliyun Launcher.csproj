@@ -75,6 +75,7 @@
     <Compile Include="BroadcastCapture\BroadcastCaptureUI.xaml.cs">
       <DependentUpon>BroadcastCaptureUI.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BroadcastCapture\Capture.cs" />
     <Compile Include="Homepage\Homepage.xaml.cs">
       <DependentUpon>Homepage.xaml</DependentUpon>
     </Compile>

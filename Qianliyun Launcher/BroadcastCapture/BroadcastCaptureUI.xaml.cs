@@ -20,9 +20,17 @@ namespace Qianliyun_Launcher.BroadcastCapture
     /// </summary>
     public partial class BroadcastCaptureUI : UserControl
     {
-        public BroadcastCaptureUI()
+        private GlobalStatus status;
+        public BroadcastCaptureUI(GlobalStatus status)
         {
             InitializeComponent();
+            this.status = status;
+            this.CaptureList.ItemsSource = status.CaptureList;
+            var capture = new Capture();
+            capture.GUID = "123";
+            capture.name = "name";
+            status.CaptureList.Add(capture);
+
         }
     }
 }

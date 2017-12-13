@@ -43,14 +43,19 @@ namespace Qianliyun_Launcher
         private Homepage.Homepage homepage;
         private BroadcastCapture.BroadcastCaptureUI broadcast;
 
+        private GlobalStatus status;
+        private BackgroundWindow bgWindow;
+
         public MainWindow()
         {
             InitializeComponent();
+            this.bgWindow = new BackgroundWindow();
+            this.status = this.bgWindow.Status;
             this.Page.Content = new Loading();
 
             // prepare controls
             homepage = new Homepage.Homepage();
-            broadcast = new BroadcastCapture.BroadcastCaptureUI();
+            broadcast = new BroadcastCapture.BroadcastCaptureUI(status);
             
         }
 
@@ -87,6 +92,11 @@ namespace Qianliyun_Launcher
         private void ButtonData_OnClick(object sender, RoutedEventArgs e)
         {
             this.Page.Content = broadcast;
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            this.bgWindow.Close();
         }
     }
 

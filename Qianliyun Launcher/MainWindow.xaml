@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Qianliyun_Launcher"
         mc:Ignorable="d"
-        Title="MainWindow" Height="780" Width="1150">
+        Title="MainWindow" Height="780" Width="1150" Closing="Window_Closing">
     <Window.Resources>
         <Color x:Key="TabBarButtonColor">#6A7D8E</Color>
         <SolidColorBrush x:Key="TabBarButtonColorBrush" Color="{StaticResource TabBarButtonColor}"/>
@@ -164,7 +164,9 @@
             </Border>
         </Grid>
         <Grid>
-            <ContentControl x:Name="Page" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"></ContentControl>
+            <DockPanel>
+                <ContentControl x:Name="Page" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"></ContentControl>
+            </DockPanel>
         </Grid>
     </DockPanel>
 </Window>
