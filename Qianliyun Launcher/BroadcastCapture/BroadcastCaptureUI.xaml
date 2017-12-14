@@ -3,12 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
              xmlns:local="clr-namespace:Qianliyun_Launcher.BroadcastCapture"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <DockPanel>
-            <DataGrid x:Name="CaptureList"/>
+        <DockPanel LastChildFill="True" MinHeight="200">
+            <DockPanel DockPanel.Dock="Top">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <Button Content="打开页面" Click="BtnGoto_Click"/>
+                    <Button Content="开始采集"/>
+                    <Button Content="停止采集"/>
+                </StackPanel>
+                <TextBox x:Name="AddressBar"/>
+            </DockPanel>
+            <cefSharp:ChromiumWebBrowser x:Name="CaptureBrowser" Address="https://taobaolive.taobao.com/"/>
         </DockPanel>
         
     </Grid>

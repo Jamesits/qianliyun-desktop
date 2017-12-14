@@ -50,6 +50,7 @@ namespace Qianliyun_Launcher
         {
             InitializeComponent();
             this.bgWindow = new BackgroundWindow();
+            this.bgWindow.EnableDebugMode();
             this.status = this.bgWindow.Status;
             this.Page.Content = new Loading();
 

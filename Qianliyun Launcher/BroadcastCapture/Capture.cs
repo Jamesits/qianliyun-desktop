@@ -13,4 +13,24 @@ namespace Qianliyun_Launcher.BroadcastCapture
         public String URL;
     }
 
+    public class CaptureResultEntry
+    {
+        public String username;
+        public String userAction;
+        public DateTime time;
+    }
+
+    public class CaptureStorage
+    {
+        public List<CaptureResultEntry> CaptureResults;
+        public CaptureStorage()
+        {
+            CaptureResults = new List<CaptureResultEntry>();
+        }
+
+        public bool newCaptureResult()
+        {
+            return true;
+        }
+    }
 }
