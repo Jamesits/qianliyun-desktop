@@ -111,6 +111,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Accessibility" />
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -152,6 +153,16 @@
     <Compile Include="LoadingPage\Loading.xaml.cs">
       <DependentUpon>Loading.xaml</DependentUpon>
     </Compile>
+    <Compile Include="QianniuTag\MSAA.cs" />
+    <Compile Include="QianniuTag\MSAAPropertySet.cs" />
+    <Compile Include="QianniuTag\MSAARoles.cs" />
+    <Compile Include="QianniuTag\MSAAState.cs" />
+    <Compile Include="QianniuTag\MSAAUIItem.cs" />
+    <Compile Include="QianniuTag\QianniuTagCore.cs" />
+    <Compile Include="QianniuTag\QianniuTagUI.xaml.cs">
+      <DependentUpon>QianniuTagUI.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="QianniuTag\Win32.cs" />
     <Compile Include="Resource1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -185,6 +196,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="QianniuTag\QianniuTagUI.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -247,9 +262,7 @@
   <ItemGroup>
     <Resource Include="Resources\Start.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="QianniuTag\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\cef.redist.x64.3.2987.1601\build\cef.redist.x64.targets" Condition="Exists('..\packages\cef.redist.x64.3.2987.1601\build\cef.redist.x64.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
