@@ -287,6 +287,30 @@ namespace MSAALayer
             return default(IAccessible);
         }
 
+        public static List<IAccessible> GetTopWindowAccessibleObjects(Regex windowName)
+        {
+            var windowList = new List<IAccessible>();
+            foreach (IAccessible accWindowObject in GetTopWindowAccessibleList())
+            {
+                try
+                {
+                    string accWindowName = accWindowObject.get_accName(0);
+
+                    if (!string.IsNullOrEmpty(accWindowName))
+                    {
+                        if (windowName.Match(accWindowObject.get_accName(0)).Success)
+                        {
+                            windowList.Add(accWindowObject);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+            return windowList;
+        }
+
         public static IAccessible GetAccessibleObjectFromHandle(IntPtr hwnd)
         {
             object accObject = new object();

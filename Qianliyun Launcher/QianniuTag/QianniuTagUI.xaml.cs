@@ -24,5 +24,11 @@ namespace Qianliyun_Launcher.QianniuTag
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var _qianniuWindow = new QianniuWindow("接待中心");
+            var i = 1;
+        }
     }
 }

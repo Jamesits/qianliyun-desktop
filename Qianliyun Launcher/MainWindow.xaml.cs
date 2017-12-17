@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Qianliyun_Launcher.LoadingPage;
 using Qianliyun_Launcher.Homepage;
+using Qianliyun_Launcher.QianniuTag;
 
 namespace Qianliyun_Launcher
 {
@@ -45,6 +46,7 @@ namespace Qianliyun_Launcher
 
         private GlobalStatus status;
         private BackgroundWindow bgWindow;
+        private QianniuTagUI tag;
 
         public MainWindow()
         {
@@ -57,6 +59,7 @@ namespace Qianliyun_Launcher
             // prepare controls
             homepage = new Homepage.Homepage();
             broadcast = new BroadcastCapture.BroadcastCaptureUI(status);
+            tag = new QianniuTagUI();
             
         }
 
@@ -72,7 +75,7 @@ namespace Qianliyun_Launcher
 
         private void ButtonTagging_OnClick(object sender, RoutedEventArgs e)
         {
-            this.Page.Content = broadcast;
+            this.Page.Content = tag;
         }
 
         private void ButtonUpgrade_OnClick(object sender, RoutedEventArgs e)

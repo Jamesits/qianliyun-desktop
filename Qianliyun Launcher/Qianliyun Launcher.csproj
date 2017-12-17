@@ -102,7 +102,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug %28Remote%29|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug %28Remote%29\</OutputPath>
+    <OutputPath>\\192.168.88.1\pub\qianliyun_debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -162,6 +162,7 @@
     <Compile Include="QianniuTag\QianniuTagUI.xaml.cs">
       <DependentUpon>QianniuTagUI.xaml</DependentUpon>
     </Compile>
+    <Compile Include="QianniuTag\QianniuWindow.cs" />
     <Compile Include="QianniuTag\Win32.cs" />
     <Compile Include="Resource1.Designer.cs">
       <AutoGen>True</AutoGen>
