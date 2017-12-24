@@ -27,8 +27,14 @@ namespace Qianliyun_Launcher.QianniuTag
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            doTag("kicksnare", "test");
+            
+        }
+
+        private void doTag(String username, String tag)
+        {
             var _qianniuWindow = new QianniuWindow("接待中心");
-            var i = 1;
+            _qianniuWindow.Search(username);
         }
     }
 }

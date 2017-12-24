@@ -48,7 +48,7 @@ namespace Qianliyun_Launcher.QianniuTag
         {
             var qianniuChatWindows = new List<QianniuWindow>();
             var foundWindows = MSAA.GetTopWindowAccessibleObject(new Regex("接待中心"));
-
+            return qianniuChatWindows;
         }
         //OfficeRibbon _ribbon = null;
         //OfficeRibbonPropertyPage _propertyPage = null;
@@ -100,6 +100,13 @@ namespace Qianliyun_Launcher.QianniuTag
             //    }
 
             //}
+        }
+
+        public bool Search(string name)
+        {
+            var searchbox = this.GetChildren()[3].GetChildren()[0].GetChildren()[3].GetChildren()[7].GetChildren()[3].GetChildren()[0].GetChildren()[3];
+            // input text to it
+            return true;
         }
 
 
