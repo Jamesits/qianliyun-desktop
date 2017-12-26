@@ -84,6 +84,9 @@ namespace Qianliyun_Launcher.QianniuTag
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern bool SetWindowText(IntPtr hwnd, String lpString);
 
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern bool SetWindowTextW(IntPtr hwnd, String lpString);
+
         public static void click(IntPtr hWnd, int x, int y)
         {
             SendMessage(hWnd, WM_LBUTTONDOWN, 1, (y << 16) | (x & 0xffff));
@@ -93,7 +96,7 @@ namespace Qianliyun_Launcher.QianniuTag
         public static void write(IntPtr hWnd, string text)
         {
             SendMessage(hWnd, WM_SETFOCUS, IntPtr.Zero, IntPtr.Zero);
-            SetWindowText(hWnd, text);
+            SetWindowTextW(hWnd, text);
         }
 
         public static bool Search(string name)
