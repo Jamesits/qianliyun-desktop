@@ -33,8 +33,7 @@ namespace Qianliyun_Launcher.QianniuTag
 
         private void doTag(String username, String tag)
         {
-            var _qianniuWindow = new QianniuWindow("接待中心");
-            _qianniuWindow.Search(username);
+            QianniuTagCore.Search(username);
         }
     }
 }
