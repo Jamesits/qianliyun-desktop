@@ -27,7 +27,7 @@ namespace Qianliyun_Launcher.QianniuTag
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            doTag("kicksnare", "test");
+            doTag("不存在", "test");
             
         }
 
