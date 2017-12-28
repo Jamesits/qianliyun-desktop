@@ -62,13 +62,13 @@ namespace Qianliyun_Launcher
 
         public void EnableDebugMode()
         {
-            AllocConsole();
-            Console.WriteLine("Debug mode on");
+            //AllocConsole();
+            //Console.WriteLine("Debug mode on");
         }
 
         public void DisableDebugMode()
         {
-            FreeConsole();
+            //FreeConsole();
         }
     }
 }

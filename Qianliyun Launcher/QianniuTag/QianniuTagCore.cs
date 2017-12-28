@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-
+using System.Windows;
+using System.Windows.Forms;
 using Accessibility;
-using FlaUI.Core;
 using FlaUI.Core.Tools;
 using FlaUI.UIA3;
+using Application = FlaUI.Core.Application;
+using Clipboard = System.Windows.Clipboard;
 
 namespace Qianliyun_Launcher.QianniuTag
 {
@@ -20,6 +23,8 @@ namespace Qianliyun_Launcher.QianniuTag
         private const int WM_CLOSE = 0x10;
         private const int WM_LBUTTONDOWN = 0x201;
         private const int WM_LBUTTONUP = 0x202;
+        private const int WM_KEYDOWN = 0x0100;
+        private const int WM_PASTE = 0x0302;
         [DllImport("user32.dll")]
         private static extern IntPtr FindWindow(
             string lpClassName,
@@ -87,19 +92,59 @@ namespace Qianliyun_Launcher.QianniuTag
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern bool SetWindowTextW(IntPtr hwnd, String lpString);
 
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
+        //Mouse actions
+        private const int MOUSEEVENTF_LEFTDOWN = 0x02;
+        private const int MOUSEEVENTF_LEFTUP = 0x04;
+        private const int MOUSEEVENTF_RIGHTDOWN = 0x08;
+        private const int MOUSEEVENTF_RIGHTUP = 0x10;
+
+        [DllImport("User32.Dll")]
+        public static extern long SetCursorPos(int x, int y);
+
+        [DllImport("User32.Dll")]
+        public static extern bool ClientToScreen(IntPtr hWnd, ref POINT point);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct POINT
+        {
+            public int x;
+            public int y;
+        }
+
+        public static void clickWithMouse(int x, int y)
+        {
+            //Call the imported function with the cursor's current position
+            Cursor.Position = new System.Drawing.Point(x, y);
+            mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, (uint)x, (uint)y, 0, 0);
+        }
+
         public static void click(IntPtr hWnd, int x, int y)
         {
             SendMessage(hWnd, WM_LBUTTONDOWN, 1, (y << 16) | (x & 0xffff));
+            Thread.Sleep(100);
             SendMessage(hWnd, WM_LBUTTONUP, 0, (y << 16) | (x & 0xffff));
         }
 
         public static void write(IntPtr hWnd, string text)
         {
+            // activate it
             SendMessage(hWnd, WM_SETFOCUS, IntPtr.Zero, IntPtr.Zero);
-            SetWindowTextW(hWnd, text);
+            // this fails on Chinese...
+            //SetWindowTextW(hWnd, text);
+            Clipboard.SetText(text);
+            // let's hope nobody modifies it...
+            SendMessage(hWnd, WM_PASTE, IntPtr.Zero, IntPtr.Zero);
+            // cleanup
+            Clipboard.Flush();
         }
 
-        public static bool Search(string name)
+        // return value
+        // 0: success
+        // 1: need verification
+        // 2: cannot find panel
+        public static int Search(string name)
         {
             //var searchbox = this.GetChildren()[3].GetChildren()[0].GetChildren()[3].GetChildren()[7].GetChildren()[3].GetChildren()[0].GetChildren()[3];
             //// click on searchbox
@@ -117,9 +162,23 @@ namespace Qianliyun_Launcher.QianniuTag
             {
                 var QianniuTopWindows = QianniuApplication.GetAllTopLevelWindows(automation);
                 var chatWindow = QianniuTopWindows.Where(x => x.Name.EndsWith("接待中心")).ToList()[0];
-                var searchBox = chatWindow.FindFirstByXPath("/Pane[last()]/Pane[5]/Edit").AsTextBox();
+                var searchBar = chatWindow.FindFirstByXPath("/Pane[last()]/Pane[5]");
+                var searchBarChilds = searchBar.FindAllChildren().ToList();
+                // if there is content in searchBar, click clear;
+                if (searchBarChilds.Count > 2)
+                {
+                    var clearBtn = searchBarChilds[2].AsButton();
+                    click(clearBtn.Properties.NativeWindowHandle, 5, 5);
+
+                }
+
+                Thread.Sleep(1000);
+
+                var searchBox = searchBar.FindFirstByXPath("/Edit").AsTextBox();
 
                 write(searchBox.Properties.NativeWindowHandle, name);
+
+                Thread.Sleep(1000);
 
                 // check if we can get a search result pane
                 try
@@ -128,18 +187,74 @@ namespace Qianliyun_Launcher.QianniuTag
                         .Where(x => x.FindAllChildren().Length == 2 && x.FindAllChildren()[1].Name == "SEARCH_WND")
                         .ToList()[0];
                     var searchResultInnerPane = searchResultPopup.FindFirstByXPath("/Pane[2]");
+                    // search in network
+                    // TODO: it seems that pressing enter works too. needs verification.
                     click(searchResultInnerPane.Properties.NativeWindowHandle,
                         searchResultInnerPane.ActualWidth.ToInt() - 15, 21);
                 }
                 catch (ArgumentOutOfRangeException)
                 {
                     // search text is empty
+                    return 2;
                 }
+
+                Thread.Sleep(1000);
+
+                // wait for search result
+                try
+                {
+                    var searchResultPopup = chatWindow.FindAllChildren()
+                        .Where(x => x.FindAllChildren().Length == 2 && x.FindAllChildren()[1].Name == "SEARCH_WND")
+                        .ToList()[0];
+                    var searchResultInnerPane = searchResultPopup.FindFirstByXPath("/Pane[1]");
+
+                    // check if there is result
+
+                    // click first entry
+                    clickWithMouse(
+                        (int)(searchResultInnerPane.BoundingRectangle.X + searchResultInnerPane.BoundingRectangle.Width / 2),
+                        (int)searchResultInnerPane.BoundingRectangle.Y + 19);
+                    // TODO: Why this doesn't work
+                    //click(searchResultInnerPane.Properties.NativeWindowHandle,
+                    //    searchResultInnerPane.ActualWidth.ToInt() / 2, 19);
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    // search text is empty
+                    return 2;
+                }
+
+                Thread.Sleep(1000);
+
+                // Check if this guy needs verification to add friends
+                try
+                {
+                    var desktop = automation.GetDesktop();
+                    var addFriendVerificationWindow = desktop.FindAllChildren().Where(x => x.Name == "添加好友").ToList()[0];
+                    // yes
+                    // now we cancel
+                    var cancelBtn = addFriendVerificationWindow.FindAllChildren().Where(x => x.Name.EndsWith("消")).ToList()[0].AsButton();
+                    cancelBtn.Invoke();
+                    return 1;
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    
+                }
+
+                // no
+                // now we should have chat dialog opened...
+                // find chat toolbar
+                var friendToolbar = chatWindow.FindFirstByXPath("/Pane[last()]/Pane[3]").FindAllChildren().Where((x => x.ClassName == "ToolBarPlus")).ToList()[0];
+                // click on add friend button
+                // TODO: doesn't work either
+                // click(friendToolbar.Properties.NativeWindowHandle, 90, 15);
+                clickWithMouse((int)friendToolbar.BoundingRectangle.Left + 90, (int)friendToolbar.BoundingRectangle.Top + 15);
 
             }
 
 
-            return true;
+            return 0;
         }
     }
 }
