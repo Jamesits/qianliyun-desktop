@@ -157,8 +157,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AccessibilityHelper\AHTreeNode.cs" />
-    <Compile Include="AccessibilityHelper\AHView.cs" />
     <Compile Include="BackgroundWindow.xaml.cs">
       <DependentUpon>BackgroundWindow.xaml</DependentUpon>
     </Compile>
@@ -173,18 +171,11 @@
     <Compile Include="LoadingPage\Loading.xaml.cs">
       <DependentUpon>Loading.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AccessibilityHelper\MSAA.cs" />
-    <Compile Include="AccessibilityHelper\MSAAPropertySet.cs" />
-    <Compile Include="AccessibilityHelper\MSAARoles.cs" />
-    <Compile Include="AccessibilityHelper\MSAAState.cs" />
-    <Compile Include="AccessibilityHelper\MSAAUIItem.cs" />
     <Compile Include="PInvoke.cs" />
     <Compile Include="QianniuTag\QianniuTagCore.cs" />
     <Compile Include="QianniuTag\QianniuTagUI.xaml.cs">
       <DependentUpon>QianniuTagUI.xaml</DependentUpon>
     </Compile>
-    <Compile Include="QianniuTag\QianniuWindow.cs" />
-    <Compile Include="QianniuTag\Win32.cs" />
     <Compile Include="Resource1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

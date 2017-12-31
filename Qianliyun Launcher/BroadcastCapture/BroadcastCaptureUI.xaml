@@ -12,8 +12,8 @@
             <DockPanel DockPanel.Dock="Top">
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
                     <Button Content="打开页面" Click="BtnGoto_Click"/>
-                    <Button Content="开始采集"/>
-                    <Button Content="停止采集"/>
+                    <Button Content="开始采集" Click="BtnStart_Click"/>
+                    <Button Content="停止采集" Click="BtnStop_Click"/>
                 </StackPanel>
                 <TextBox x:Name="AddressBar"/>
             </DockPanel>

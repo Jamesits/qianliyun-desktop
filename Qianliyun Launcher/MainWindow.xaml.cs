@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NLog;
 using Qianliyun_Launcher.LoadingPage;
 using Qianliyun_Launcher.Homepage;
 using Qianliyun_Launcher.QianniuTag;
@@ -41,6 +42,7 @@ namespace Qianliyun_Launcher
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
         private Homepage.Homepage homepage;
         private BroadcastCapture.BroadcastCaptureUI broadcast;
 
@@ -51,12 +53,14 @@ namespace Qianliyun_Launcher
         public MainWindow()
         {
             InitializeComponent();
+            logger.Debug("Loading background window");
             this.bgWindow = new BackgroundWindow();
             //this.bgWindow.EnableDebugMode();
             this.status = this.bgWindow.Status;
             this.Page.Content = new Loading();
 
             // prepare controls
+            logger.Debug("Preparing controls");
             homepage = new Homepage.Homepage();
             broadcast = new BroadcastCapture.BroadcastCaptureUI(status);
             tag = new QianniuTagUI();
