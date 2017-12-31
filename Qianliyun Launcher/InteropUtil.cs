@@ -44,6 +44,7 @@ namespace Qianliyun_Launcher
         public static void click(IntPtr hWnd, int x, int y)
         {
             logger.Debug("Sending mouse click event to control {0} relative position ({1}, {2})", hWnd, x, y);
+            SendMessage(hWnd, WM_SETFOCUS, IntPtr.Zero, IntPtr.Zero);
             SendMessage(hWnd, WM_LBUTTONDOWN, 1, (y << 16) | (x & 0xffff));
             SendMessage(hWnd, WM_LBUTTONUP, 0, (y << 16) | (x & 0xffff));
         }
@@ -65,6 +66,7 @@ namespace Qianliyun_Launcher
         public static void ScrollToBottom(IntPtr hWnd)
         {
             logger.Debug("Scrolling window {0} to the bottom", hWnd);
+            SendMessage(hWnd, WM_SETFOCUS, IntPtr.Zero, IntPtr.Zero);
             SendMessage(hWnd, WM_VSCROLL, new IntPtr(SB_BOTTOM), IntPtr.Zero);
         }
     }
