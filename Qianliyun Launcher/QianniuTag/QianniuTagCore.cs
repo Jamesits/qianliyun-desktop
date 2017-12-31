@@ -10,135 +10,19 @@ using System.Windows.Forms;
 using Accessibility;
 using FlaUI.Core.Tools;
 using FlaUI.UIA3;
+using NLog;
 using Application = FlaUI.Core.Application;
 using Clipboard = System.Windows.Clipboard;
+using static Qianliyun_Launcher.PInvoke;
+using static Qianliyun_Launcher.InteropUtil;
 
 namespace Qianliyun_Launcher.QianniuTag
 {
     class QianniuTagCore
     {
-        private const int WM_SETTEXT = 0x000C;
-        private const int WM_SETFOCUS = 0x0007;
-        private const int WM_KILLFOCUS = 0x0008;
-        private const int WM_CLOSE = 0x10;
-        private const int WM_LBUTTONDOWN = 0x201;
-        private const int WM_LBUTTONUP = 0x202;
-        private const int WM_KEYDOWN = 0x0100;
-        private const int WM_PASTE = 0x0302;
-        [DllImport("user32.dll")]
-        private static extern IntPtr FindWindow(
-            string lpClassName,
-            string lpWindowName);
+        private static Logger logger = LogManager.GetCurrentClassLogger();
 
-        [DllImport("User32.dll")]
-        private static extern IntPtr FindWindowEx(
-            IntPtr hwndParent,
-            IntPtr hwndChildAfter,
-            string lpszClass,
-            string lpszWindows);
-        [DllImport("User32.dll")]
-        private static extern Int32 SendMessage(
-            IntPtr hWnd,
-            int Msg,
-            IntPtr wParam,
-            StringBuilder lParam);
-
-        [DllImport("user32.dll")]
-        public static extern int SendMessageW(IntPtr hwnd, int wMsg, IntPtr wParam, StringBuilder lParam);
-
-        [DllImport("User32.dll")]
-        private static extern Int32 SendMessage(
-            IntPtr hWnd,
-            int Msg,
-            IntPtr wParam,
-            IntPtr lParam);
-
-        [DllImport("User32.dll")]
-        private static extern Int32 SendMessage(
-            IntPtr hWnd,
-            int Msg,
-            int wParam,
-            int lParam);
-
-        /// <summary>
-        ///     Changes the text of the specified window's title bar (if it has one). If the specified window is a control, the
-        ///     text of the control is changed. However, SetWindowText cannot change the text of a control in another application.
-        ///     <para>
-        ///     Go to https://msdn.microsoft.com/en-us/library/windows/desktop/ms633546%28v=vs.85%29.aspx for more
-        ///     information
-        ///     </para>
-        /// </summary>
-        /// <param name="hwnd">C++ ( hWnd [in]. Type: HWND )<br />A handle to the window or control whose text is to be changed.</param>
-        /// <param name="lpString">C++ ( lpString [in, optional]. Type: LPCTSTR )<br />The new title or control text.</param>
-        /// <returns>
-        ///     If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.<br />
-        ///     To get extended error information, call GetLastError.
-        /// </returns>
-        /// <remarks>
-        ///     If the target window is owned by the current process, <see cref="SetWindowText" /> causes a WM_SETTEXT message to
-        ///     be sent to the specified window or control. If the control is a list box control created with the WS_CAPTION style,
-        ///     however, <see cref="SetWindowText" /> sets the text for the control, not for the list box entries.<br />To set the
-        ///     text of a control in another process, send the WM_SETTEXT message directly instead of calling
-        ///     <see cref="SetWindowText" />. The <see cref="SetWindowText" /> function does not expand tab characters (ASCII code
-        ///     0x09). Tab characters are displayed as vertical bar(|) characters.<br />For an example go to
-        ///     <see cref="!:https://msdn.microsoft.com/en-us/library/windows/desktop/ms644928%28v=vs.85%29.aspx#sending">
-        ///     Sending a
-        ///     Message.
-        ///     </see>
-        /// </remarks>
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern bool SetWindowText(IntPtr hwnd, String lpString);
-
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        public static extern bool SetWindowTextW(IntPtr hwnd, String lpString);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
-        //Mouse actions
-        private const int MOUSEEVENTF_LEFTDOWN = 0x02;
-        private const int MOUSEEVENTF_LEFTUP = 0x04;
-        private const int MOUSEEVENTF_RIGHTDOWN = 0x08;
-        private const int MOUSEEVENTF_RIGHTUP = 0x10;
-
-        [DllImport("User32.Dll")]
-        public static extern long SetCursorPos(int x, int y);
-
-        [DllImport("User32.Dll")]
-        public static extern bool ClientToScreen(IntPtr hWnd, ref POINT point);
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct POINT
-        {
-            public int x;
-            public int y;
-        }
-
-        public static void clickWithMouse(int x, int y)
-        {
-            //Call the imported function with the cursor's current position
-            Cursor.Position = new System.Drawing.Point(x, y);
-            mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, (uint)x, (uint)y, 0, 0);
-        }
-
-        public static void click(IntPtr hWnd, int x, int y)
-        {
-            SendMessage(hWnd, WM_LBUTTONDOWN, 1, (y << 16) | (x & 0xffff));
-            Thread.Sleep(100);
-            SendMessage(hWnd, WM_LBUTTONUP, 0, (y << 16) | (x & 0xffff));
-        }
-
-        public static void write(IntPtr hWnd, string text)
-        {
-            // activate it
-            SendMessage(hWnd, WM_SETFOCUS, IntPtr.Zero, IntPtr.Zero);
-            // this fails on Chinese...
-            //SetWindowTextW(hWnd, text);
-            Clipboard.SetText(text);
-            // let's hope nobody modifies it...
-            SendMessage(hWnd, WM_PASTE, IntPtr.Zero, IntPtr.Zero);
-            // cleanup
-            Clipboard.Flush();
-        }
+        
 
         // return value
         // 0: success
@@ -174,9 +58,18 @@ namespace Qianliyun_Launcher.QianniuTag
 
                 Thread.Sleep(1000);
 
-                var searchBox = searchBar.FindFirstByXPath("/Edit").AsTextBox();
+                try
+                {
+                    var searchBox = searchBar.FindFirstByXPath("/Edit").AsTextBox();
 
-                write(searchBox.Properties.NativeWindowHandle, name);
+                    write(searchBox.Properties.NativeWindowHandle, name);
+                }
+                catch (Exception)
+                {
+                    // strange things happened
+                    logger.Trace(System.Environment.StackTrace);
+                    return 2;
+                }
 
                 Thread.Sleep(1000);
 
@@ -195,6 +88,7 @@ namespace Qianliyun_Launcher.QianniuTag
                 catch (ArgumentOutOfRangeException)
                 {
                     // search text is empty
+                    logger.Trace(System.Environment.StackTrace);
                     return 2;
                 }
 
@@ -221,6 +115,7 @@ namespace Qianliyun_Launcher.QianniuTag
                 catch (ArgumentOutOfRangeException)
                 {
                     // search text is empty
+                    logger.Trace(System.Environment.StackTrace);
                     return 2;
                 }
 
@@ -239,7 +134,8 @@ namespace Qianliyun_Launcher.QianniuTag
                 }
                 catch (ArgumentOutOfRangeException)
                 {
-                    
+                    // OK, let's continue...
+                    logger.Trace(System.Environment.StackTrace);
                 }
 
                 // no
@@ -247,9 +143,76 @@ namespace Qianliyun_Launcher.QianniuTag
                 // find chat toolbar
                 var friendToolbar = chatWindow.FindFirstByXPath("/Pane[last()]/Pane[3]").FindAllChildren().Where((x => x.ClassName == "ToolBarPlus")).ToList()[0];
                 // click on add friend button
+                // TODO: this guy may already be friend. Try to detect?
                 // TODO: doesn't work either
                 // click(friendToolbar.Properties.NativeWindowHandle, 90, 15);
                 clickWithMouse((int)friendToolbar.BoundingRectangle.Left + 90, (int)friendToolbar.BoundingRectangle.Top + 15);
+
+
+                // Check if this guy needs verification to add friends (this is exactly the same as 2 block above)
+                try
+                {
+                    var desktop = automation.GetDesktop();
+                    var addFriendVerificationWindow = desktop.FindAllChildren().Where(x => x.Name == "添加好友").ToList()[0];
+                    // yes
+                    // now we cancel
+                    var cancelBtn = addFriendVerificationWindow.FindAllChildren().Where(x => x.Name.EndsWith("消")).ToList()[0].AsButton();
+                    cancelBtn.Invoke();
+                    return 1;
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    // OK, let's continue...
+                    logger.Trace(System.Environment.StackTrace);
+                }
+
+                // Otherwise we should have a "添加好友成功!" dialog here
+                try
+                {
+                    var desktop = automation.GetDesktop();
+                    var addFriendVerificationWindow = desktop.FindAllChildren().Where(x => x.Name == "添加好友成功!").ToList()[0];
+                    // yes
+                    // click on "完成"
+                    var doneBtn = addFriendVerificationWindow.FindAllChildren().Where(x => x.Name.EndsWith("成")).ToList()[0].AsButton();
+                    doneBtn.Invoke();
+                    
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    // strange things happened
+                    // might already be friends...
+                    logger.Trace(System.Environment.StackTrace);
+                    //return 2;
+                }
+
+                // click "客户" on the right panel on chat dialog
+                try
+                {
+                    var userInformationTabBar = chatWindow.FindFirstByXPath("/Pane[2]/Pane[3]/Pane[5]/Pane[1]");
+                    click(userInformationTabBar.Properties.NativeWindowHandle, 210, 22);
+                }
+                catch (Exception)
+                {
+                    // strange things happened
+                    logger.Trace(System.Environment.StackTrace);
+                    return 2;
+                }
+
+                // now find the right panel - a embedded Chrome
+                try
+                {
+                    var customerInformationPanel = chatWindow.FindFirstByXPath("/Pane[2]/Pane[3]/Pane[5]/Pane[3]")
+                        .FindAllDescendants().Where(x => x.Name == "客户插件").ToList()[0];
+                    // scroll to the end
+                    ScrollToBottom(customerInformationPanel.Properties.NativeWindowHandle);
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    // strange things happened
+                    logger.Trace(System.Environment.StackTrace);
+                    return 2;
+                }
+                
 
             }
 

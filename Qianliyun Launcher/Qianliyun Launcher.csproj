@@ -169,6 +169,7 @@
     <Compile Include="Homepage\Homepage.xaml.cs">
       <DependentUpon>Homepage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="InteropUtil.cs" />
     <Compile Include="LoadingPage\Loading.xaml.cs">
       <DependentUpon>Loading.xaml</DependentUpon>
     </Compile>
@@ -177,6 +178,7 @@
     <Compile Include="AccessibilityHelper\MSAARoles.cs" />
     <Compile Include="AccessibilityHelper\MSAAState.cs" />
     <Compile Include="AccessibilityHelper\MSAAUIItem.cs" />
+    <Compile Include="PInvoke.cs" />
     <Compile Include="QianniuTag\QianniuTagCore.cs" />
     <Compile Include="QianniuTag\QianniuTagUI.xaml.cs">
       <DependentUpon>QianniuTagUI.xaml</DependentUpon>
