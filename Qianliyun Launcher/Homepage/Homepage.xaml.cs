@@ -8,7 +8,7 @@ namespace Qianliyun_Launcher.Homepage
     /// </summary>
     public partial class Homepage : UserControl
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         public Homepage()
         {
             InitializeComponent();

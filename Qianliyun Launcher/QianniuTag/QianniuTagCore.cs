@@ -12,7 +12,7 @@ namespace Qianliyun_Launcher.QianniuTag
 {
     class QianniuTagCore
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         #region exceptions
         public class QianniuTagCoreBaseException : Exception
@@ -398,7 +398,7 @@ namespace Qianliyun_Launcher.QianniuTag
                         }
 
                     }
-                    catch (QianniuTagCoreBaseException e)
+                    catch (QianniuTagCoreBaseException)
                     {
                         throw;
                     }
@@ -411,7 +411,7 @@ namespace Qianliyun_Launcher.QianniuTag
                     }
 
                 }
-                catch (QianniuTagCoreBaseException e)
+                catch (QianniuTagCoreBaseException)
                 {
                     throw;
                 }

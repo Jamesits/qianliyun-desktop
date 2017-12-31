@@ -22,8 +22,8 @@ namespace Qianliyun_Launcher
     /// </summary>
     public partial class BackgroundWindow : Window
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
-        static PInvoke.WinEventDelegate procDelegate = new PInvoke.WinEventDelegate(WinEventProc);
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly PInvoke.WinEventDelegate procDelegate = new PInvoke.WinEventDelegate(WinEventProc);
         public GlobalStatus Status = new GlobalStatus();
         private IntPtr hhook;
 

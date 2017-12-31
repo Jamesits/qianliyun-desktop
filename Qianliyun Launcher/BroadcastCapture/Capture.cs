@@ -25,7 +25,7 @@ namespace Qianliyun_Launcher.BroadcastCapture
 
     public class CaptureResultStorage
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         public Capture captureProperties;
         public List<CaptureResultEntry> resultEntries;
 

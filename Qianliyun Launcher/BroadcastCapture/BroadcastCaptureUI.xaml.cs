@@ -11,7 +11,7 @@ namespace Qianliyun_Launcher.BroadcastCapture
     /// </summary>
     public partial class BroadcastCaptureUI : UserControl
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private GlobalStatus status;
         private CaptureResultStorage result;
 

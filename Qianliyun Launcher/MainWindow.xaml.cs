@@ -42,7 +42,7 @@ namespace Qianliyun_Launcher
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private Homepage.Homepage homepage;
         private BroadcastCapture.BroadcastCaptureUI broadcast;
 
