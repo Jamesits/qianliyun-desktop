@@ -80,7 +80,7 @@ namespace Qianliyun_Launcher
             {
                 // notify Chrome that Accessibility should be enabled
                 logger.Info("Received accessibility probe message, replying");
-                SendMessage(hwnd, WM_GETOBJECT, 0, 0);
+                SendMessage(hwnd, WM_GETOBJECT, 0, 1);
             }
         }
 

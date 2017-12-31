@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using Accessibility;
+using FlaUI.Core.Definitions;
 using FlaUI.Core.Tools;
 using FlaUI.UIA3;
 using NLog;
@@ -246,16 +247,49 @@ namespace Qianliyun_Launcher.QianniuTag
                     // now find the right panel - a embedded Chrome
                     try
                     {
-                        logger.Debug("Scrolling page to the bottom");
-                        var customerInformationPanel = chatWindow.FindFirstByXPath("/Pane[2]/Pane[3]/Pane[5]/Pane[3]")
-                            .FindAllDescendants().Where(x => x.Name == "客户插件").ToList()[0];
-                        // scroll to the end
-                        ScrollToBottom(customerInformationPanel.Properties.NativeWindowHandle);
+                        logger.Debug("Find the right panel");
+                        var rightPanel = chatWindow.FindFirstByXPath("/Pane[2]/Pane[3]/Pane[5]/Pane[3]");
+                        var customerInformationPanel = rightPanel.FindFirstByXPath("/Pane/Pane/Pane");
+                        // TODO: there is two identical documents under customerInformationPanel; check why
+                        var customerInformationDocument = customerInformationPanel.FindFirstChild().FindFirstChild();
+                        // check if Chrome MSAA API has been enabled
+                        if (customerInformationDocument.FindAllChildren().Length == 0)
+                        {
+                            logger.Fatal("Chrome MSAA not enabled!");
+                            return 2;
+                        }
+                        else
+                        {
+                            logger.Debug("Chrome MSAA check passed, continue to next stage");
+                        }
+
+                        // find Edit after "备注"; following List （tag 总数量）
+                        var commentEditControl = customerInformationDocument.FindAllChildren().Last(x =>
+                        {
+                            try
+                            {
+                                return x.ControlType == ControlType.Edit;
+                            }
+                            catch
+                            {
+                                return false;
+                            }
+                        });
+                        logger.Debug("Got comment edit control");
+                        var htmlTopNodes = customerInformationDocument.FindAllChildren();
+                        var tagListIndex = htmlTopNodes.ToList().IndexOf(commentEditControl) + 2;
+                        var tagNum = Convert.ToInt32(htmlTopNodes[tagListIndex - 1].FindFirstChild()
+                            .FindChildAt(2).Name);
+                        logger.Debug("This user have {0} tags", tagNum);
+                        var tagListItems = customerInformationDocument.FindAllChildren().ToList().Skip(tagListIndex)
+                            .Take(tagNum);
+                        var userTagList = tagListItems.Select(x => x.FindFirstChild().Name).ToList();
+                        logger.Info("User tags: {0}", userTagList);
                     }
-                    catch (ArgumentOutOfRangeException)
+                    catch (Exception e)
                     {
                         // strange things happened
-                        logger.Trace(System.Environment.StackTrace);
+                        logger.Fatal(e);
                         return 2;
                     }
 
