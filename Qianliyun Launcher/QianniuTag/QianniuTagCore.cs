@@ -23,6 +23,56 @@ namespace Qianliyun_Launcher.QianniuTag
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
+        #region exceptions
+        // 用户需要验证好友请求
+        public class UserNeedFriendVerificationException : Exception
+        {
+            public UserNeedFriendVerificationException() { }
+            public UserNeedFriendVerificationException(string message) : base(message) { }
+            public UserNeedFriendVerificationException(string message, Exception inner) : base(message, inner) { }
+        }
+        
+        // 用户拒绝加为好友
+        public class UserCannotAddFriendException : Exception
+        {
+            public UserCannotAddFriendException() { }
+            public UserCannotAddFriendException(string message) : base(message) { }
+            public UserCannotAddFriendException(string message, Exception inner) : base(message, inner) { }
+        }
+
+        // 用户 tag 已打
+        public class TagAlreadyPresentException : Exception
+        {
+            public TagAlreadyPresentException(){}
+            public TagAlreadyPresentException(string message) : base(message){}
+            public TagAlreadyPresentException(string message, Exception inner) : base(message, inner){}
+        }
+
+        // 某个控件没有启用 UI Automation 支持
+        public class UIAutomationUnsupportedException : Exception
+        {
+            public UIAutomationUnsupportedException() { }
+            public UIAutomationUnsupportedException(string message) : base(message) { }
+            public UIAutomationUnsupportedException(string message, Exception inner) : base(message, inner) { }
+        }
+
+        // 找不到需要的 UI Automation 控件
+        public class UIAutomationElementException : Exception
+        {
+            public UIAutomationElementException() { }
+            public UIAutomationElementException(string message) : base(message) { }
+            public UIAutomationElementException(string message, Exception inner) : base(message, inner) { }
+        }
+
+        // 遇到了没有测试的目标程序行为
+        public class UIAutomationNotTestedRouteException : Exception
+        {
+            public UIAutomationNotTestedRouteException() { }
+            public UIAutomationNotTestedRouteException(string message) : base(message) { }
+            public UIAutomationNotTestedRouteException(string message, Exception inner) : base(message, inner) { }
+        }
+        #endregion
+
         private static void cancelFriendVerificationDialog()
         {
             using (var automation = new UIA3Automation())
@@ -37,11 +87,7 @@ namespace Qianliyun_Launcher.QianniuTag
             }
         }
 
-        // return value
-        // 0: success
-        // 1: need verification
-        // 2: cannot find panel
-        public static int Search(string name)
+        public static void doTag(string name, string newTag)
         {
             //var searchbox = this.GetChildren()[3].GetChildren()[0].GetChildren()[3].GetChildren()[7].GetChildren()[3].GetChildren()[0].GetChildren()[3];
             //// click on searchbox
@@ -84,7 +130,7 @@ namespace Qianliyun_Launcher.QianniuTag
                     catch (Exception e)
                     {
                         logger.Error(e);
-                        return 2;
+                        throw new UIAutomationElementException("Clear search bar content failed", e);
                     }
 
                     Thread.Sleep(1000);
@@ -100,7 +146,7 @@ namespace Qianliyun_Launcher.QianniuTag
                     {
                         // strange things happened
                         logger.Error(e);
-                        return 2;
+                        throw new UIAutomationNotTestedRouteException("Insert search string into textbox failed", e);
                     }
 
                     Thread.Sleep(1000);
@@ -119,11 +165,11 @@ namespace Qianliyun_Launcher.QianniuTag
                         click(searchResultInnerPane.Properties.NativeWindowHandle,
                             searchResultInnerPane.ActualWidth.ToInt() - 15, 21);
                     }
-                    catch (ArgumentOutOfRangeException)
+                    catch (ArgumentOutOfRangeException e)
                     {
                         // search text is empty
                         logger.Error("search text is empty or unknown error");
-                        return 2;
+                        throw new UIAutomationElementException("Local search result popup not present", e);
                     }
 
                     Thread.Sleep(1000);
@@ -144,23 +190,25 @@ namespace Qianliyun_Launcher.QianniuTag
                         //clickWithMouse(
                         //    (int)(searchResultInnerPane.BoundingRectangle.X + searchResultInnerPane.BoundingRectangle.Width / 2),
                         //    (int)searchResultInnerPane.BoundingRectangle.Y + 19);
+                        // this is strange: we have to click on its parent not itself
                         click(searchResultInnerPane.Parent.Properties.NativeWindowHandle, searchResultInnerPane.ActualWidth.ToInt() / 2, 15);
                     }
-                    catch (ArgumentOutOfRangeException)
+                    catch (ArgumentOutOfRangeException e)
                     {
                         // search text is empty
                         logger.Error("search text is empty or unknown error");
-                        return 2;
+                        throw new UIAutomationElementException("Internet search result popup not present", e);
                     }
 
                     Thread.Sleep(1000);
 
                     // Check if this guy needs verification to add friends
+                    // TODO: if the user completes disable friend request
                     try
                     {
                         cancelFriendVerificationDialog();
                         logger.Warn("Verification needed");
-                        return 1;
+                        throw new UserNeedFriendVerificationException("Needs to pass user friend verification to open chat dialog");
                     }
                     catch (ArgumentOutOfRangeException)
                     {
@@ -186,17 +234,18 @@ namespace Qianliyun_Launcher.QianniuTag
                     catch (Exception e)
                     {
                         logger.Fatal(e);
-                        return 2;
+                        throw new UIAutomationElementException("Cannot find add friend button", e);
                     }
 
                     Thread.Sleep(1000);
 
                     // Check if this guy needs verification to add friends (this is exactly the same as 2 block above)
+                    // TODO: if the user completes disable friend request
                     try
                     {
                         cancelFriendVerificationDialog();
                         logger.Warn("Verification needed");
-                        return 1;
+                        throw new UserNeedFriendVerificationException("Needs to pass user friend verification to add friend");
                     }
                     catch (ArgumentOutOfRangeException)
                     {
@@ -216,7 +265,6 @@ namespace Qianliyun_Launcher.QianniuTag
                         // click on "完成"
                         var doneBtn = addFriendVerificationWindow.FindAllChildren().Where(x => x.Name.EndsWith("成")).ToList()[0].AsButton();
                         doneBtn.Invoke();
-
                     }
                     catch (ArgumentOutOfRangeException e)
                     {
@@ -239,7 +287,7 @@ namespace Qianliyun_Launcher.QianniuTag
                     {
                         // strange things happened
                         logger.Fatal(e);
-                        return 2;
+                        throw new UIAutomationElementException("Cannot find 客户 tab", e);
                     }
 
                     Thread.Sleep(1000);
@@ -256,7 +304,7 @@ namespace Qianliyun_Launcher.QianniuTag
                         if (customerInformationDocument.FindAllChildren().Length == 0)
                         {
                             logger.Fatal("Chrome MSAA not enabled!");
-                            return 2;
+                            throw new UIAutomationUnsupportedException("Legacy Chrome Window don't have MSAA support enabled");
                         }
                         else
                         {
@@ -277,6 +325,12 @@ namespace Qianliyun_Launcher.QianniuTag
                         });
                         logger.Debug("Got comment edit control");
                         var htmlTopNodes = customerInformationDocument.FindAllChildren();
+                        // 备注
+                        // 备注输入框
+                        // 标签总数量
+                        // 标签 1
+                        // 标签 2
+                        // ...
                         var tagListIndex = htmlTopNodes.ToList().IndexOf(commentEditControl) + 2;
                         var tagNum = Convert.ToInt32(htmlTopNodes[tagListIndex - 1].FindFirstChild()
                             .FindChildAt(2).Name);
@@ -284,28 +338,25 @@ namespace Qianliyun_Launcher.QianniuTag
                         var tagListItems = customerInformationDocument.FindAllChildren().ToList().Skip(tagListIndex)
                             .Take(tagNum);
                         var userTagList = tagListItems.Select(x => x.FindFirstChild().Name).ToList();
-                        logger.Info("User tags: {0}", userTagList);
+                        logger.Info("User tags: ");
+                        foreach (var tag in userTagList) logger.Info("\t{0}", tag);
+
+                        // if this user already have this tag -> ignore
                     }
                     catch (Exception e)
                     {
                         // strange things happened
                         logger.Fatal(e);
-                        return 2;
+                        throw new UIAutomationElementException("Cannot find element in right panel", e);
                     }
 
                 }
                 catch (Exception e)
                 {
                     logger.Error(e);
-                    return 2;
+                    throw new UIAutomationNotTestedRouteException("Unknown error", e);
                 }
-                
-
-
             }
-
-
-            return 0;
         }
     }
 }

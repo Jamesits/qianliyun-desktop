@@ -33,7 +33,7 @@ namespace Qianliyun_Launcher.QianniuTag
 
         private void doTag(String username, String tag)
         {
-            QianniuTagCore.Search(username);
+            QianniuTagCore.doTag(username, tag);
         }
     }
 }
