@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using Microsoft.Win32.SafeHandles;
 using NLog;
 using Clipboard = System.Windows.Clipboard;
@@ -47,6 +48,16 @@ namespace Qianliyun_Launcher
             SendMessage(hWnd, WM_SETFOCUS, IntPtr.Zero, IntPtr.Zero);
             SendMessage(hWnd, WM_LBUTTONDOWN, 1, (y << 16) | (x & 0xffff));
             SendMessage(hWnd, WM_LBUTTONUP, 0, (y << 16) | (x & 0xffff));
+        }
+
+        // click an element inside a parent element, where child element do not have a handle
+        public static void click(AutomationElement MessageReceiver, AutomationElement RelativeChild, int x, int y)
+        {
+            logger.Debug("Clicking child element {1} relative position ({2}, {3}) relative parent {0}", MessageReceiver.Name, RelativeChild.Name, x, y);
+            var hWnd = MessageReceiver.Properties.NativeWindowHandle;
+            x = x + (int)(RelativeChild.BoundingRectangle.X - MessageReceiver.BoundingRectangle.X);
+            y = y + (int)(RelativeChild.BoundingRectangle.Y - MessageReceiver.BoundingRectangle.Y);
+            click(hWnd, x, y);
         }
 
         public static void write(IntPtr hWnd, string text)

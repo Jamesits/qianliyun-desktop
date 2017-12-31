@@ -27,7 +27,7 @@ namespace Qianliyun_Launcher.QianniuTag
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            doTag("朱导来了", "test");
+            doTag("朱导来了", "测试");
             
         }
 

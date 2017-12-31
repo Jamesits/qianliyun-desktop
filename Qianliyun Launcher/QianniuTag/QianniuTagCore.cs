@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
-using Accessibility;
 using FlaUI.Core.Definitions;
 using FlaUI.Core.Tools;
 using FlaUI.UIA3;
 using NLog;
 using Application = FlaUI.Core.Application;
-using Clipboard = System.Windows.Clipboard;
-using static Qianliyun_Launcher.PInvoke;
 using static Qianliyun_Launcher.InteropUtil;
 
 namespace Qianliyun_Launcher.QianniuTag
@@ -24,8 +20,15 @@ namespace Qianliyun_Launcher.QianniuTag
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
         #region exceptions
+        public class QianniuTagCoreBaseException : Exception
+        {
+            public QianniuTagCoreBaseException() { }
+            public QianniuTagCoreBaseException(string message) : base(message) { }
+            public QianniuTagCoreBaseException(string message, Exception inner) : base(message, inner) { }
+        }
+
         // 用户需要验证好友请求
-        public class UserNeedFriendVerificationException : Exception
+        public class UserNeedFriendVerificationException : QianniuTagCoreBaseException
         {
             public UserNeedFriendVerificationException() { }
             public UserNeedFriendVerificationException(string message) : base(message) { }
@@ -33,7 +36,7 @@ namespace Qianliyun_Launcher.QianniuTag
         }
         
         // 用户拒绝加为好友
-        public class UserCannotAddFriendException : Exception
+        public class UserCannotAddFriendException : QianniuTagCoreBaseException
         {
             public UserCannotAddFriendException() { }
             public UserCannotAddFriendException(string message) : base(message) { }
@@ -41,15 +44,23 @@ namespace Qianliyun_Launcher.QianniuTag
         }
 
         // 用户 tag 已打
-        public class TagAlreadyPresentException : Exception
+        public class TagAlreadyPresentException : QianniuTagCoreBaseException
         {
             public TagAlreadyPresentException(){}
             public TagAlreadyPresentException(string message) : base(message){}
             public TagAlreadyPresentException(string message, Exception inner) : base(message, inner){}
         }
 
+        // 全局 tag 不存在
+        public class TagNotExistException : QianniuTagCoreBaseException
+        {
+            public TagNotExistException() { }
+            public TagNotExistException(string message) : base(message) { }
+            public TagNotExistException(string message, Exception inner) : base(message, inner) { }
+        }
+
         // 某个控件没有启用 UI Automation 支持
-        public class UIAutomationUnsupportedException : Exception
+        public class UIAutomationUnsupportedException : QianniuTagCoreBaseException
         {
             public UIAutomationUnsupportedException() { }
             public UIAutomationUnsupportedException(string message) : base(message) { }
@@ -57,7 +68,7 @@ namespace Qianliyun_Launcher.QianniuTag
         }
 
         // 找不到需要的 UI Automation 控件
-        public class UIAutomationElementException : Exception
+        public class UIAutomationElementException : QianniuTagCoreBaseException
         {
             public UIAutomationElementException() { }
             public UIAutomationElementException(string message) : base(message) { }
@@ -65,7 +76,7 @@ namespace Qianliyun_Launcher.QianniuTag
         }
 
         // 遇到了没有测试的目标程序行为
-        public class UIAutomationNotTestedRouteException : Exception
+        public class UIAutomationNotTestedRouteException : QianniuTagCoreBaseException
         {
             public UIAutomationNotTestedRouteException() { }
             public UIAutomationNotTestedRouteException(string message) : base(message) { }
@@ -191,7 +202,8 @@ namespace Qianliyun_Launcher.QianniuTag
                         //    (int)(searchResultInnerPane.BoundingRectangle.X + searchResultInnerPane.BoundingRectangle.Width / 2),
                         //    (int)searchResultInnerPane.BoundingRectangle.Y + 19);
                         // this is strange: we have to click on its parent not itself
-                        click(searchResultInnerPane.Parent.Properties.NativeWindowHandle, searchResultInnerPane.ActualWidth.ToInt() / 2, 15);
+                        click(searchResultInnerPane.Parent.Properties.NativeWindowHandle,
+                            searchResultInnerPane.ActualWidth.ToInt() / 2, 15);
                     }
                     catch (ArgumentOutOfRangeException e)
                     {
@@ -208,7 +220,8 @@ namespace Qianliyun_Launcher.QianniuTag
                     {
                         cancelFriendVerificationDialog();
                         logger.Warn("Verification needed");
-                        throw new UserNeedFriendVerificationException("Needs to pass user friend verification to open chat dialog");
+                        throw new UserNeedFriendVerificationException(
+                            "Needs to pass user friend verification to open chat dialog");
                     }
                     catch (ArgumentOutOfRangeException)
                     {
@@ -228,7 +241,7 @@ namespace Qianliyun_Launcher.QianniuTag
                         // click on add friend button
                         logger.Debug("Click on add friend button");
                         // TODO: this guy may already be friend. Try to detect?
-                        click(friendToolbar.Properties.NativeWindowHandle, 90, 15);
+                        click(friendToolbar.Properties.NativeWindowHandle, 90, 18);
                         // clickWithMouse((int) friendToolbar.BoundingRectangle.Left + 90, (int) friendToolbar.BoundingRectangle.Top + 15);
                     }
                     catch (Exception e)
@@ -245,7 +258,8 @@ namespace Qianliyun_Launcher.QianniuTag
                     {
                         cancelFriendVerificationDialog();
                         logger.Warn("Verification needed");
-                        throw new UserNeedFriendVerificationException("Needs to pass user friend verification to add friend");
+                        throw new UserNeedFriendVerificationException(
+                            "Needs to pass user friend verification to add friend");
                     }
                     catch (ArgumentOutOfRangeException)
                     {
@@ -260,10 +274,12 @@ namespace Qianliyun_Launcher.QianniuTag
                     {
                         logger.Debug("trying to get a friended dialog");
                         var desktop = automation.GetDesktop();
-                        var addFriendVerificationWindow = desktop.FindAllChildren().Where(x => x.Name == "添加好友成功!").ToList()[0];
+                        var addFriendVerificationWindow = desktop.FindAllChildren().Where(x => x.Name == "添加好友成功!")
+                            .ToList()[0];
                         // yes
                         // click on "完成"
-                        var doneBtn = addFriendVerificationWindow.FindAllChildren().Where(x => x.Name.EndsWith("成")).ToList()[0].AsButton();
+                        var doneBtn = addFriendVerificationWindow.FindAllChildren().Where(x => x.Name.EndsWith("成"))
+                            .ToList()[0].AsButton();
                         doneBtn.Invoke();
                     }
                     catch (ArgumentOutOfRangeException e)
@@ -304,7 +320,8 @@ namespace Qianliyun_Launcher.QianniuTag
                         if (customerInformationDocument.FindAllChildren().Length == 0)
                         {
                             logger.Fatal("Chrome MSAA not enabled!");
-                            throw new UIAutomationUnsupportedException("Legacy Chrome Window don't have MSAA support enabled");
+                            throw new UIAutomationUnsupportedException(
+                                "Legacy Chrome Window don't have MSAA support enabled");
                         }
                         else
                         {
@@ -332,24 +349,76 @@ namespace Qianliyun_Launcher.QianniuTag
                         // 标签 2
                         // ...
                         var tagListIndex = htmlTopNodes.ToList().IndexOf(commentEditControl) + 2;
-                        var tagNum = Convert.ToInt32(htmlTopNodes[tagListIndex - 1].FindFirstChild()
+                        var alreadyHadTagCount = Convert.ToInt32(htmlTopNodes[tagListIndex - 1].FindFirstChild()
                             .FindChildAt(2).Name);
-                        logger.Debug("This user have {0} tags", tagNum);
-                        var tagListItems = customerInformationDocument.FindAllChildren().ToList().Skip(tagListIndex)
-                            .Take(tagNum);
-                        var userTagList = tagListItems.Select(x => x.FindFirstChild().Name).ToList();
+                        logger.Debug("This user have {0} tags", alreadyHadTagCount);
+                        var alreadyHadTagList = htmlTopNodes.ToList().Skip(tagListIndex)
+                            .Take(alreadyHadTagCount);
+                        var alreadyHadTags = alreadyHadTagList.Select(x => x.FindFirstChild().Name).ToList();
                         logger.Info("User tags: ");
-                        foreach (var tag in userTagList) logger.Info("\t{0}", tag);
+                        foreach (var tag in alreadyHadTags) logger.Info("\t{0}", tag);
 
                         // if this user already have this tag -> ignore
+                        if (alreadyHadTags.Contains(newTag)) throw new TagAlreadyPresentException();
+
+                        // else click add tag button
+                        try
+                        {
+                            var addButton = htmlTopNodes.Last().FindChildAt(1).AsButton();
+                            addButton.Invoke();
+                        }
+                        catch (Exception e)
+                        {
+                            logger.Warn("Cannot find add tag button, maybe already clicked");
+                            logger.Warn(e);
+                        }
+
+                        Thread.Sleep(500);
+
+                        // refresh HTML nodes
+                        htmlTopNodes = customerInformationDocument.FindAllChildren();
+
+                        // get a global tag list
+                        // after user tags, before last one
+                        var alreadyPresentTags = htmlTopNodes.ToList().Skip(tagListIndex + alreadyHadTagCount).Reverse()
+                            .Skip(1).Reverse().Select(x => x.FindFirstChild().Name).ToList();
+                        logger.Info("Global tags: ");
+                        foreach (var tag in alreadyPresentTags) logger.Info("\t{0}", tag);
+                        if (!alreadyPresentTags.Contains(newTag)) throw new TagNotExistException();
+
+                        // get the tag to be added
+                        var newTagText =
+                            htmlTopNodes[alreadyPresentTags.IndexOf(newTag) + tagListIndex + alreadyHadTagCount]
+                                .FindFirstChild();
+                        // unfortunately we have to emulate a click
+                        click(customerInformationDocument, newTagText, 5, 5);
+                        try
+                        {
+                            var addTagButton = htmlTopNodes.Last().FindFirstChild().AsButton();
+                            addTagButton.Invoke();
+                        }
+                        catch (Exception e)
+                        {
+                            throw new UIAutomationElementException("Cannot find add tag confirm button", e);
+                        }
+
+                    }
+                    catch (QianniuTagCoreBaseException e)
+                    {
+                        throw;
                     }
                     catch (Exception e)
                     {
+
                         // strange things happened
                         logger.Fatal(e);
                         throw new UIAutomationElementException("Cannot find element in right panel", e);
                     }
 
+                }
+                catch (QianniuTagCoreBaseException e)
+                {
+                    throw;
                 }
                 catch (Exception e)
                 {
