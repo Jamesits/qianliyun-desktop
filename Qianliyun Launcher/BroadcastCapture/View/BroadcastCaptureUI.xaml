@@ -5,23 +5,24 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
              xmlns:local="clr-namespace:Qianliyun_Launcher.BroadcastCapture"
+             xmlns:qianliyunLauncher="clr-namespace:Qianliyun_Launcher"
              DataContext="{Binding RelativeSource={RelativeSource Self}}"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
     <UserControl.Resources>
-        <CollectionViewSource x:Key="CaptureResultSource" Source="{Binding CaptureResults}" /> 
+        <CollectionViewSource x:Key="CaptureResultSource" Source="{Binding CaptureResults}" />
     </UserControl.Resources>
     <Grid>
         <DockPanel LastChildFill="True" MinHeight="200">
             <DockPanel DockPanel.Dock="Top">
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
                     <Button Content="打开页面" Click="BtnGoto_Click"/>
-                    <Button Content="开始采集" Click="BtnStart_Click"/>
-                    <Button Content="停止采集" Click="BtnStop_Click"/>
+                    <ToggleButton Content="采集" Click="BtnStart_Click" IsChecked="{Binding IsCapturing, Mode=TwoWay}"/>
+                    <Button Content="DevTool" Click="BtnDevtool_Click" />
                 </StackPanel>
                 <TextBox x:Name="AddressBar"/>
             </DockPanel>
-            <DataGrid DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource CaptureResultSource}}" DisplayMemberPath="Name" Width="300" AutoGenerateColumns="False" CanUserAddRows="False" CanUserSortColumns="False" IsReadOnly="True">
+            <DataGrid x:Name="CaptureResultDataGrid" DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource CaptureResultSource}}" DisplayMemberPath="Name" Width="300" AutoGenerateColumns="False" CanUserAddRows="False" CanUserSortColumns="False" IsReadOnly="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn x:Name="UserName" Width="200" Header="用户名" Binding="{Binding Username}"/>
                     <DataGridTextColumn x:Name="UserAction" Width="Auto" Header="动作" Binding="{Binding UserAction}"/>

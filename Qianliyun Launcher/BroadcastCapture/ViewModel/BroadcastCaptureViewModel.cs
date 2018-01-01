@@ -18,6 +18,33 @@ namespace Qianliyun_Launcher.BroadcastCapture.ViewModel
         public Capture CaptureProperties;
         public ObservableCollection<CaptureResultEntry> ResultEntries;
 
+        private bool _hasInjectedJs;
+
+        public bool HasInjectedJs
+        {
+            get => _hasInjectedJs;
+            set
+            {
+                _hasInjectedJs = value;
+                
+            }
+        }
+
+        private bool _isCapturing = false;
+
+        public bool IsCapturing
+        {
+            get => _isCapturing;
+            set
+            {
+                _isCapturing = value;
+                RaisePropertyChanged("IsCapturing");
+                RaisePropertyChanged("CaptureToggleButtonText");
+            }
+        }
+
+        public string CaptureToggleButtonText => IsCapturing ? "停止采集" : "开始采集";
+
         public BroadcastCaptureViewModel(string guid, string name, string url)
         {
             CaptureProperties = new Capture { GUID = guid, name = name, URL = url };
@@ -25,30 +52,41 @@ namespace Qianliyun_Launcher.BroadcastCapture.ViewModel
             Logger.Debug("Initialized capture result storage for GUID {0}, name {1}", guid, name);
         }
 
-        public void addEntry(string username, string useraction)
+        public void Log(string message) => Logger.Debug(message);
+
+        public void SetMetadata(string title, string user, string url)
         {
-            var content = "";
-            if (username.EndsWith(":"))
+            Logger.Debug("SetMetadata {0}, {1}, {2}", title, user, url);
+        }
+
+        public void AddEntry(string username, string useraction)
+        {
+            if (IsCapturing)
             {
-                username = username.TrimEnd(':');
-                content = useraction;
-                useraction = "发言";
-            }
-            //Dispatcher.Invoke(() =>
-            //{
-            App.Current.Dispatcher.Invoke((Action) delegate
-            {
-                ResultEntries.Add(new CaptureResultEntry
+                var content = "";
+                if (username.EndsWith(":"))
                 {
-                    Username = username,
-                    UserAction = useraction,
-                    Content = content,
-                    Time = DateTime.Now
+                    username = username.TrimEnd(':');
+                    content = useraction;
+                    useraction = "发言";
+                }
+                App.Current.Dispatcher.Invoke((Action) delegate
+                {
+                    ResultEntries.Add(new CaptureResultEntry
+                    {
+                        Username = username,
+                        UserAction = useraction,
+                        Content = content,
+                        Time = DateTime.Now
+                    });
                 });
-            });
-                
-            //});
-            Logger.Debug("New record: {0} {1}", username, useraction);
+                Logger.Debug("New record: {0} {1}", username, useraction);
+            }
+            else
+            {
+                Logger.Debug("Discarded new record: {0} {1}", username, useraction);
+            }
+            
         }
 
         public void SaveEntries()
