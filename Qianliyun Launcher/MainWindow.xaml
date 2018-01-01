@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Qianliyun_Launcher"
+        xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
         mc:Ignorable="d"
         Title="MainWindow" Height="780" Width="1150" Closing="Window_Closing">
     <Window.Resources>
@@ -160,7 +161,7 @@
         </Grid>
         <Grid DockPanel.Dock="Right" Width="220" HorizontalAlignment="Right">
             <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1,0,0,0">
-                <WebBrowser Source="https://google.com" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" />
+                <wpf:ChromiumWebBrowser x:Name="CaptureBrowser" Address="about:blank" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden"/>
             </Border>
         </Grid>
         <Grid>

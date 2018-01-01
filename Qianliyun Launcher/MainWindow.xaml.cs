@@ -32,7 +32,7 @@ namespace Qianliyun_Launcher
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly Homepage.Homepage _homepage;
         private readonly BroadcastCaptureUI _broadcast;
 
@@ -43,18 +43,22 @@ namespace Qianliyun_Launcher
         public MainWindow()
         {
             InitializeComponent();
-            logger.Debug("Loading background window");
+            Logger.Debug("Loading background window");
             _bgWindow = new BackgroundWindow();
             //this.bgWindow.EnableDebugMode();
             _status = _bgWindow.Status;
             Page.Content = new Loading();
 
             // prepare controls
-            logger.Debug("Preparing controls");
+            Logger.Debug("Preparing controls");
             _homepage = new Homepage.Homepage();
             _broadcast = new BroadcastCaptureUI(_status);
             _tag = new QianniuTagUI();
-            
+
+            // Done, goto homepage
+            Logger.Debug("Loading Homepage");
+            Page.Content = _homepage;
+
         }
 
         private void ButtonStart_OnClick(object sender, RoutedEventArgs e)
