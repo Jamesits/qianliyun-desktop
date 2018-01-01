@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using CefSharp;
 using NLog;
+using Qianliyun_Launcher.BroadcastCapture.Model;
+using Qianliyun_Launcher.BroadcastCapture.ViewModel;
 
-namespace Qianliyun_Launcher.BroadcastCapture
+namespace Qianliyun_Launcher.BroadcastCapture.View
 {
     /// <summary>
     /// Interaction logic for BroadcastCaptureUI.xaml
@@ -13,7 +16,11 @@ namespace Qianliyun_Launcher.BroadcastCapture
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private GlobalStatus status;
-        private CaptureResultStorage result;
+        private BroadcastCaptureViewModel _result;
+        public BroadcastCaptureViewModel Result { get => _result; set => _result = value; }
+        public ObservableCollection<CaptureResultEntry> CaptureResults {
+            get =>  _result.ResultEntries;
+        }
 
         private const string captureJs = @"
             if (window.location.host == ""taobaolive.taobao.com"") {
@@ -80,14 +87,14 @@ namespace Qianliyun_Launcher.BroadcastCapture
 
         public BroadcastCaptureUI(GlobalStatus status)
         {
-            InitializeComponent();
             this.status = status;
-            result = new CaptureResultStorage("test", "testname", "testurl");
+            Result = new BroadcastCaptureViewModel("test", "testname", "testurl");
+            InitializeComponent();
             // this.CaptureBrowser.ShowDevTools();
             CaptureBrowser.RenderProcessMessageHandler = new RenderProcessMessageHandler();
             CaptureBrowser.FrameLoadStart += CaptureBrowser_FrameLoadStart;
             CaptureBrowser.LoadingStateChanged += CaptureBrowserOnLoadingStateChanged;
-            CaptureBrowser.RegisterAsyncJsObject("capture", result, BindingOptions.DefaultBinder);
+            CaptureBrowser.RegisterAsyncJsObject("capture", Result, BindingOptions.DefaultBinder);
             //Wait for the page to finish loading (all resources will have been loaded, rendering is likely still happening)
             CaptureBrowser.LoadingStateChanged += (sender, args) =>
             {

@@ -175,10 +175,11 @@
     <Compile Include="BackgroundWindow.xaml.cs">
       <DependentUpon>BackgroundWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BroadcastCapture\BroadcastCaptureUI.xaml.cs">
+    <Compile Include="BroadcastCapture\Model\BroadcastCaptureModel.cs" />
+    <Compile Include="BroadcastCapture\ViewModel\BroadcastCaptureViewModel.cs" />
+    <Compile Include="BroadcastCapture\View\BroadcastCaptureUI.xaml.cs">
       <DependentUpon>BroadcastCaptureUI.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BroadcastCapture\Capture.cs" />
     <Compile Include="Homepage\Homepage.xaml.cs">
       <DependentUpon>Homepage.xaml</DependentUpon>
     </Compile>
@@ -202,7 +203,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="BroadcastCapture\BroadcastCaptureUI.xaml">
+    <Page Include="BroadcastCapture\View\BroadcastCaptureUI.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

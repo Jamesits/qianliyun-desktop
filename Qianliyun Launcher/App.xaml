@@ -1,8 +1,6 @@
-<Application x:Class="Qianliyun_Launcher.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:Qianliyun_Launcher" StartupUri="MainWindow.xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" d1p1:Ignorable="d" xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:broadcastCapture="clr-namespace:Qianliyun_Launcher.BroadcastCapture">
+<Application x:Class="Qianliyun_Launcher.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:Qianliyun_Launcher" StartupUri="MainWindow.xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" d1p1:Ignorable="d" xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006">
   <Application.Resources>
         <ResourceDictionary>
-            <broadcastCapture:CaptureResultViewModelLocator x:Key="CaptureResultViewModelLocator" />
         </ResourceDictionary>
   </Application.Resources>
 </Application>

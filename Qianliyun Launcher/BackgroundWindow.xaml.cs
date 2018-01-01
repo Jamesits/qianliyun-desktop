@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Windows;
 using NLog;
 using Qianliyun_Launcher.BroadcastCapture;
+using Qianliyun_Launcher.BroadcastCapture.ViewModel;
 using static Qianliyun_Launcher.PInvoke;
 using static Qianliyun_Launcher.InteropUtil;
 
@@ -10,11 +11,9 @@ namespace Qianliyun_Launcher
 {
     public class GlobalStatus
     {
-        public BindingList<Capture> CaptureList;
 
         public GlobalStatus()
         {
-            CaptureList = new BindingList<Capture>();
         }
     }
     /// <summary>

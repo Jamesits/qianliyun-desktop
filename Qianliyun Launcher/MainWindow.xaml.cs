@@ -6,6 +6,7 @@ using NLog;
 using Qianliyun_Launcher.BroadcastCapture;
 using Qianliyun_Launcher.LoadingPage;
 using Qianliyun_Launcher.QianniuTag;
+using BroadcastCaptureUI = Qianliyun_Launcher.BroadcastCapture.View.BroadcastCaptureUI;
 
 namespace Qianliyun_Launcher
 {
