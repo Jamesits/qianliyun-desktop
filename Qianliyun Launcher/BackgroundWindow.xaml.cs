@@ -23,15 +23,15 @@ namespace Qianliyun_Launcher
     public partial class BackgroundWindow : Window
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private static readonly PInvoke.WinEventDelegate procDelegate = new PInvoke.WinEventDelegate(WinEventProc);
+        private static readonly WinEventDelegate ProcDelegate = WinEventProc;
         public GlobalStatus Status = new GlobalStatus();
-        private IntPtr hhook;
+        private readonly IntPtr _hhook;
 
         public BackgroundWindow()
         {
             logger.Debug("BackgroundWindow initialization");
             InitializeComponent();
-            this.Hide();
+            Hide();
 
             // Initialize application
             //logger.Debug("Setting IE Control compatibility mode");
@@ -49,15 +49,15 @@ namespace Qianliyun_Launcher
 
             // register accessibility hook
             logger.Info("Registering Chrome Accessibility hook");
-            hhook = SetWinEventHook(EVENT_SYSTEM_ALERT, EVENT_SYSTEM_ALERT, IntPtr.Zero,
-                procDelegate, 0, 0, WINEVENT_OUTOFCONTEXT);
+            _hhook = SetWinEventHook(EVENT_SYSTEM_ALERT, EVENT_SYSTEM_ALERT, IntPtr.Zero,
+                ProcDelegate, 0, 0, WINEVENT_OUTOFCONTEXT);
 
         }
 
         ~BackgroundWindow()
         {
             logger.Info("Unregistering Chrome Accessibility hook");
-            UnhookWinEvent(hhook);
+            UnhookWinEvent(_hhook);
         }
 
         static void WinEventProc(IntPtr hWinEventHook, uint eventType,

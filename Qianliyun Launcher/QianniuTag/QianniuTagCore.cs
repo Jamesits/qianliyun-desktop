@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using FlaUI.Core;
 using FlaUI.Core.Definitions;
 using FlaUI.Core.Tools;
 using FlaUI.UIA3;
 using NLog;
-using Application = FlaUI.Core.Application;
 using static Qianliyun_Launcher.InteropUtil;
 
 namespace Qianliyun_Launcher.QianniuTag
@@ -318,10 +318,7 @@ namespace Qianliyun_Launcher.QianniuTag
                             throw new UIAutomationUnsupportedException(
                                 "Legacy Chrome Window don't have MSAA support enabled");
                         }
-                        else
-                        {
-                            logger.Debug("Chrome MSAA check passed, continue to next stage");
-                        }
+                        logger.Debug("Chrome MSAA check passed, continue to next stage");
 
                         // find Edit after "备注"; following List （tag 总数量）
                         var commentEditControl = customerInformationDocument.FindAllChildren().Last(x =>

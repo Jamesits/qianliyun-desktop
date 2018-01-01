@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using FlaUI.Core.AutomationElements.Infrastructure;
 using Microsoft.Win32.SafeHandles;
 using NLog;
-using Clipboard = System.Windows.Clipboard;
 using static Qianliyun_Launcher.PInvoke;
+using Clipboard = System.Windows.Clipboard;
 
 namespace Qianliyun_Launcher
 {
@@ -28,7 +25,7 @@ namespace Qianliyun_Launcher
             // if (currentStdout != defaultStdoutHandle)
             SafeFileHandle safeFileHandle = new SafeFileHandle(currentStdout, true);
             FileStream fileStream = new FileStream(safeFileHandle, FileAccess.Write);
-            Encoding encoding = System.Text.Encoding.GetEncoding(65001);
+            Encoding encoding = Encoding.GetEncoding(65001);
             StreamWriter standardOutput = new StreamWriter(fileStream, encoding) {AutoFlush = true};
             Console.SetOut(standardOutput);
             logger.Info("New console prepared");
@@ -38,7 +35,7 @@ namespace Qianliyun_Launcher
         {
             //Call the imported function with the cursor's current position
             logger.Debug("Clicking on screen position ({0}, {1})", x, y);
-            Cursor.Position = new System.Drawing.Point(x, y);
+            Cursor.Position = new Point(x, y);
             mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, (uint)x, (uint)y, 0, 0);
         }
 
@@ -67,7 +64,7 @@ namespace Qianliyun_Launcher
             SendMessage(hWnd, WM_SETFOCUS, IntPtr.Zero, IntPtr.Zero);
             // this fails on Chinese...
             //SetWindowTextW(hWnd, text);
-            System.Windows.Clipboard.SetText(text);
+            Clipboard.SetText(text);
             // let's hope nobody modifies it...
             SendMessage(hWnd, WM_PASTE, IntPtr.Zero, IntPtr.Zero);
             // cleanup

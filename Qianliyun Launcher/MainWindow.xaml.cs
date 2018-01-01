@@ -1,35 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using NLog;
+using Qianliyun_Launcher.BroadcastCapture;
 using Qianliyun_Launcher.LoadingPage;
-using Qianliyun_Launcher.Homepage;
 using Qianliyun_Launcher.QianniuTag;
 
 namespace Qianliyun_Launcher
 {
 
-    public partial class ImageButton : Button
+    public class ImageButton : Button
     {
 
         [Description("The image displayed in the button if there is an Image control in the template " +
             "whose Source property is template-bound to the ImageButton Source property."), Category("Common Properties")]
         public ImageSource Source
         {
-            get { return base.GetValue(SourceProperty) as ImageSource; }
-            set { base.SetValue(SourceProperty, value); }
+            get => GetValue(SourceProperty) as ImageSource;
+            set => SetValue(SourceProperty, value);
         }
 
         public static readonly DependencyProperty SourceProperty =
@@ -43,68 +32,68 @@ namespace Qianliyun_Launcher
     public partial class MainWindow : Window
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private Homepage.Homepage homepage;
-        private BroadcastCapture.BroadcastCaptureUI broadcast;
+        private readonly Homepage.Homepage _homepage;
+        private readonly BroadcastCaptureUI _broadcast;
 
-        private GlobalStatus status;
-        private BackgroundWindow bgWindow;
-        private QianniuTagUI tag;
+        private readonly GlobalStatus _status;
+        private readonly BackgroundWindow _bgWindow;
+        private readonly QianniuTagUI _tag;
 
         public MainWindow()
         {
             InitializeComponent();
             logger.Debug("Loading background window");
-            this.bgWindow = new BackgroundWindow();
+            _bgWindow = new BackgroundWindow();
             //this.bgWindow.EnableDebugMode();
-            this.status = this.bgWindow.Status;
-            this.Page.Content = new Loading();
+            _status = _bgWindow.Status;
+            Page.Content = new Loading();
 
             // prepare controls
             logger.Debug("Preparing controls");
-            homepage = new Homepage.Homepage();
-            broadcast = new BroadcastCapture.BroadcastCaptureUI(status);
-            tag = new QianniuTagUI();
+            _homepage = new Homepage.Homepage();
+            _broadcast = new BroadcastCaptureUI(_status);
+            _tag = new QianniuTagUI();
             
         }
 
         private void ButtonStart_OnClick(object sender, RoutedEventArgs e)
         {
-            this.Page.Content = homepage;
+            Page.Content = _homepage;
         }
 
         private void ButtonCapture_OnClick(object sender, RoutedEventArgs e)
         {
-            this.Page.Content = broadcast;
+            Page.Content = _broadcast;
         }
 
         private void ButtonTagging_OnClick(object sender, RoutedEventArgs e)
         {
-            this.Page.Content = tag;
+            Page.Content = _tag;
         }
 
         private void ButtonUpgrade_OnClick(object sender, RoutedEventArgs e)
         {
-            this.Page.Content = broadcast;
+            Page.Content = _broadcast;
         }
 
         private void ButtonSMS_OnClick(object sender, RoutedEventArgs e)
         {
-            this.Page.Content = broadcast;
+            Page.Content = _broadcast;
         }
 
         private void ButtonContact_OnClick(object sender, RoutedEventArgs e)
         {
-            this.Page.Content = broadcast;
+            Page.Content = _broadcast;
         }
 
         private void ButtonData_OnClick(object sender, RoutedEventArgs e)
         {
-            this.Page.Content = broadcast;
+            Page.Content = _broadcast;
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            this.bgWindow.Close();
+            _bgWindow.Close();
         }
     }
 

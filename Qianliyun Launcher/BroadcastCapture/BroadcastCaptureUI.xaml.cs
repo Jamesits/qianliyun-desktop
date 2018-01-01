@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using CefSharp;
 using NLog;
-using UserControl = System.Windows.Controls.UserControl;
 
 namespace Qianliyun_Launcher.BroadcastCapture
 {
@@ -113,20 +113,20 @@ namespace Qianliyun_Launcher.BroadcastCapture
         {
         }
 
-        private void CaptureBrowser_FrameLoadStart(object sender, CefSharp.FrameLoadStartEventArgs e)
+        private void CaptureBrowser_FrameLoadStart(object sender, FrameLoadStartEventArgs e)
         {
-            this.Dispatcher.Invoke(() =>
+            Dispatcher.Invoke(() =>
             {
-                this.AddressBar.Text = e.Url;
+                AddressBar.Text = e.Url;
             });
         }
 
 
-        private void BtnGoto_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void BtnGoto_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                this.CaptureBrowser.Load(this.AddressBar.Text);
+                CaptureBrowser.Load(AddressBar.Text);
             }
             catch (UriFormatException exception)
             {
@@ -135,7 +135,7 @@ namespace Qianliyun_Launcher.BroadcastCapture
             }
         }
 
-        private void BtnStart_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
             CaptureBrowser.ExecuteScriptAsync(captureJs);
         }
