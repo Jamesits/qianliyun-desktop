@@ -10,8 +10,11 @@ namespace Qianliyun_Launcher
     class PInvoke
     {
         #region consts
+        
         public static uint EVENT_SYSTEM_ALERT = 0x0002;
         public static uint WINEVENT_OUTOFCONTEXT = 0;
+
+        // https://wiki.winehq.org/List_Of_Windows_Messages
         public static int WM_GETOBJECT = 0x003d;
         public static int WM_SETTEXT = 0x000C;
         public static int WM_SETFOCUS = 0x0007;
@@ -22,11 +25,14 @@ namespace Qianliyun_Launcher
         public static int WM_KEYDOWN = 0x0100;
         public static int WM_PASTE = 0x0302;
         public static int WM_VSCROLL = 0x115;
-        //Mouse actions
+
+        // Mouse actions
         public static uint MOUSEEVENTF_LEFTDOWN = 0x02;
         public static uint MOUSEEVENTF_LEFTUP = 0x04;
         public static uint MOUSEEVENTF_RIGHTDOWN = 0x08;
         public static uint MOUSEEVENTF_RIGHTUP = 0x10;
+
+        // scroll
         public static int SB_BOTTOM = 7;
 
         public static IntPtr defaultStdoutHandle = new IntPtr(7);
