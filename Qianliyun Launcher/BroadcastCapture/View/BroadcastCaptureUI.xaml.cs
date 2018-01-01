@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Media;
 using CefSharp;
-using GalaSoft.MvvmLight;
 using NLog;
 using Qianliyun_Launcher.BroadcastCapture.Model;
 using Qianliyun_Launcher.BroadcastCapture.ViewModel;
@@ -18,20 +15,6 @@ namespace Qianliyun_Launcher.BroadcastCapture.View
     /// </summary>
     public partial class BroadcastCaptureUI : UserControl
     {
-
-        public class BoolVisibilityConverter : IValueConverter
-        {
-            public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-            {
-                return (bool)value ? Visibility.Visible : Visibility.Collapsed;
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private GlobalStatus status;
         public BroadcastCaptureViewModel VM { get; set; }
@@ -49,10 +32,8 @@ namespace Qianliyun_Launcher.BroadcastCapture.View
             } 
         }
 
-        public string CaptureToggleButtonText => VM.CaptureToggleButtonText;
-
         #region JavaScript
-        private const string onReadyJs = @"
+        private const string OnReadyJs = @"
             function ready(fn) {
               if (document.attachEvent ? document.readyState === ""complete"" : document.readyState !== ""loading""){
                 fn();
@@ -68,7 +49,7 @@ namespace Qianliyun_Launcher.BroadcastCapture.View
             }
         ";
 
-        private const string getMetadataJs = @"
+        private const string GetMetadataJs = @"
             CaptureBridge.log(""Starting getMetadataJs"");
             var title = ""未知"";
             var user = ""未知"";
@@ -85,7 +66,7 @@ namespace Qianliyun_Launcher.BroadcastCapture.View
             CaptureBridge.setMetadata(title, user, window.location.href);
         ";
         
-        private const string captureJs = @"
+        private const string CaptureJs = @"
             CaptureBridge.log(""Starting captureJs"");
             if (window.alreadyObserving != 1) {
                 if (window.location.host == ""taobaolive.taobao.com"") {
@@ -123,7 +104,7 @@ namespace Qianliyun_Launcher.BroadcastCapture.View
             } else CaptureBridge.log(""captureJS is executed twice, quitting"");
         ";
 
-        private const string stopCaptureJs = @"
+        private const string StopCaptureJs = @"
             observer.disconnect();
         ";
         #endregion
@@ -176,8 +157,8 @@ namespace Qianliyun_Launcher.BroadcastCapture.View
                     {
                         Logger.Debug("OK to inject JS");
                         //CaptureBrowser.ExecuteScriptAsync(onReadyJs);
-                        CaptureBrowser.ExecuteScriptAsync(getMetadataJs);
-                        CaptureBrowser.ExecuteScriptAsync(captureJs);
+                        CaptureBrowser.ExecuteScriptAsync(GetMetadataJs);
+                        CaptureBrowser.ExecuteScriptAsync(CaptureJs);
                     }
                     else
                     {

@@ -6,13 +6,13 @@ namespace Qianliyun_Launcher.Homepage
     /// <summary>
     /// Interaction logic for Homepage.xaml
     /// </summary>
-    public partial class Homepage : UserControl
+    public partial class Homepage
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public Homepage()
         {
             InitializeComponent();
-            logger.Debug("Homepage control initialized");
+            Logger.Debug("Homepage control initialized");
         }
     }
 }

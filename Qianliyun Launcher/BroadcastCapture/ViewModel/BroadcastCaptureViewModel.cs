@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Threading;
+using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 using NLog;
@@ -18,19 +14,9 @@ namespace Qianliyun_Launcher.BroadcastCapture.ViewModel
         public Capture CaptureProperties;
         public ObservableCollection<CaptureResultEntry> ResultEntries;
 
-        private bool _hasInjectedJs;
+        public bool HasInjectedJs { get; set; }
 
-        public bool HasInjectedJs
-        {
-            get => _hasInjectedJs;
-            set
-            {
-                _hasInjectedJs = value;
-                
-            }
-        }
-
-        private bool _isCapturing = false;
+        private bool _isCapturing;
 
         public bool IsCapturing
         {
@@ -38,16 +24,14 @@ namespace Qianliyun_Launcher.BroadcastCapture.ViewModel
             set
             {
                 _isCapturing = value;
-                RaisePropertyChanged("IsCapturing");
-                RaisePropertyChanged("CaptureToggleButtonText");
+                RaisePropertyChanged();
             }
         }
 
-        public string CaptureToggleButtonText => IsCapturing ? "停止采集" : "开始采集";
 
         public BroadcastCaptureViewModel(string guid, string name, string url)
         {
-            CaptureProperties = new Capture { GUID = guid, name = name, URL = url };
+            CaptureProperties = new Capture { GUID = guid, Name = name, URL = url };
             ResultEntries = new ObservableCollection<CaptureResultEntry>();
             Logger.Debug("Initialized capture result storage for GUID {0}, name {1}", guid, name);
         }
@@ -70,7 +54,7 @@ namespace Qianliyun_Launcher.BroadcastCapture.ViewModel
                     content = useraction;
                     useraction = "发言";
                 }
-                App.Current.Dispatcher.Invoke((Action) delegate
+                Application.Current.Dispatcher.Invoke(delegate
                 {
                     ResultEntries.Add(new CaptureResultEntry
                     {
@@ -91,7 +75,7 @@ namespace Qianliyun_Launcher.BroadcastCapture.ViewModel
 
         public void SaveEntries()
         {
-            Messenger.Default.Send<NotificationMessage>(new NotificationMessage("Saved."));
+            Messenger.Default.Send(new NotificationMessage("Saved."));
             Logger.Debug("Saved");
         }
 
@@ -99,7 +83,7 @@ namespace Qianliyun_Launcher.BroadcastCapture.ViewModel
         {
             // load entries here
             RaisePropertyChanged(() => ResultEntries);
-            Messenger.Default.Send<NotificationMessage>(new NotificationMessage("Loaded."));
+            Messenger.Default.Send(new NotificationMessage("Loaded."));
             Logger.Debug("Loaded");
         }
     }

@@ -12,7 +12,7 @@ namespace Qianliyun_Launcher.QianniuTag
 {
     class QianniuTagCore
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         #region exceptions
         public class QianniuTagCoreBaseException : Exception
@@ -55,6 +55,7 @@ namespace Qianliyun_Launcher.QianniuTag
         }
 
         // 某个控件没有启用 UI Automation 支持
+        // ReSharper disable once InconsistentNaming
         public class UIAutomationUnsupportedException : QianniuTagCoreBaseException
         {
             public UIAutomationUnsupportedException() { }
@@ -63,6 +64,7 @@ namespace Qianliyun_Launcher.QianniuTag
         }
 
         // 找不到需要的 UI Automation 控件
+        // ReSharper disable once InconsistentNaming
         public class UIAutomationElementException : QianniuTagCoreBaseException
         {
             public UIAutomationElementException() { }
@@ -71,6 +73,7 @@ namespace Qianliyun_Launcher.QianniuTag
         }
 
         // 遇到了没有测试的目标程序行为
+        // ReSharper disable once InconsistentNaming
         public class UIAutomationNotTestedRouteException : QianniuTagCoreBaseException
         {
             public UIAutomationNotTestedRouteException() { }
@@ -79,11 +82,11 @@ namespace Qianliyun_Launcher.QianniuTag
         }
         #endregion
 
-        private static void cancelFriendVerificationDialog()
+        private static void CancelFriendVerificationDialog()
         {
             using (var automation = new UIA3Automation())
             {
-                logger.Debug("Checking if there is a verification dialog");
+                Logger.Debug("Checking if there is a verification dialog");
                 var desktop = automation.GetDesktop();
                 var addFriendVerificationWindow = desktop.FindAllChildren().Where(x => x.Name == "添加好友").ToList()[0];
                 // yes
@@ -93,49 +96,49 @@ namespace Qianliyun_Launcher.QianniuTag
             }
         }
 
-        public static void doTag(string name, string newTag)
+        public static void DoTag(string name, string newTag)
         {
             //var searchbox = this.GetChildren()[3].GetChildren()[0].GetChildren()[3].GetChildren()[7].GetChildren()[3].GetChildren()[0].GetChildren()[3];
-            //// click on searchbox
+            //// Click on searchbox
             //SendMessage(searchbox.Properties.Handle, WM_SETFOCUS, IntPtr.Zero, IntPtr.Zero);
             //// input to it
             //SendMessage(searchbox.Properties.Handle, WM_SETTEXT, IntPtr.Zero, new StringBuilder(name));
-            //// click on 在网络中查找
+            //// Click on 在网络中查找
             //// check if there is result
             //// caveat: there is no reliable way to check a result since it runs on a special dialog.
             ////var first_result_pos = this.GetChildren()[3].GetChildren()[0].GetChildren()[3].GetChildren()[4].GetChildren()[3].GetChildren()[1].GetChildren()[3];
             //var searchDialog = new QianniuWindow("SEARCH_WND");
-            //click(searchDialog.Properties.Handle, 150, 20);
-            var QianniuApplication = Application.Attach("AliWorkbench.exe");
+            //Click(searchDialog.Properties.Handle, 150, 20);
+            var qianniuApplication = Application.Attach("AliWorkbench.exe");
             using (var automation = new UIA3Automation())
             {
                 try
                 {
-                    logger.Debug("Finding Qianniu Application");
-                    var QianniuTopWindows = QianniuApplication.GetAllTopLevelWindows(automation);
-                    logger.Debug("Finding Qianniu Chat Window");
-                    var chatWindow = QianniuTopWindows.Where(x => x.Name.EndsWith("接待中心")).ToList()[0];
-                    logger.Debug("Finding Search bar");
+                    Logger.Debug("Finding Qianniu Application");
+                    var qianniuTopWindows = qianniuApplication.GetAllTopLevelWindows(automation);
+                    Logger.Debug("Finding Qianniu Chat Window");
+                    var chatWindow = qianniuTopWindows.Where(x => x.Name.EndsWith("接待中心")).ToList()[0];
+                    Logger.Debug("Finding Search bar");
                     var searchBar = chatWindow.FindFirstByXPath("/Pane[last()]/Pane[5]");
 
-                    // if there is content in searchBar, click clear;
+                    // if there is content in searchBar, Click clear;
                     try
                     {
                         var searchBarChilds = searchBar.FindAllChildren().ToList();
                         if (searchBarChilds.Count > 2)
                         {
-                            logger.Debug("Clearing search bar content");
+                            Logger.Debug("Clearing search bar content");
                             var clearBtn = searchBarChilds[2].AsButton();
-                            click(clearBtn.Properties.NativeWindowHandle, 5, 5);
+                            Click(clearBtn.Properties.NativeWindowHandle, 5, 5);
                         }
                         else
                         {
-                            logger.Debug("Nothing in search bar, OK to progress");
+                            Logger.Debug("Nothing in search bar, OK to progress");
                         }
                     }
                     catch (Exception e)
                     {
-                        logger.Error(e);
+                        Logger.Error(e);
                         throw new UIAutomationElementException("Clear search bar content failed", e);
                     }
 
@@ -143,15 +146,15 @@ namespace Qianliyun_Launcher.QianniuTag
 
                     try
                     {
-                        logger.Debug("Finding search textbox");
+                        Logger.Debug("Finding search textbox");
                         var searchBox = searchBar.FindFirstByXPath("/Edit").AsTextBox();
-                        logger.Debug("Inserting username {0}", name);
-                        write(searchBox.Properties.NativeWindowHandle, name);
+                        Logger.Debug("Inserting username {0}", name);
+                        Write(searchBox.Properties.NativeWindowHandle, name);
                     }
                     catch (Exception e)
                     {
                         // strange things happened
-                        logger.Error(e);
+                        Logger.Error(e);
                         throw new UIAutomationNotTestedRouteException("Insert search string into textbox failed", e);
                     }
 
@@ -160,21 +163,21 @@ namespace Qianliyun_Launcher.QianniuTag
                     // check if we can get a search result pane
                     try
                     {
-                        logger.Debug("See if we can get a search resule pane...");
+                        Logger.Debug("See if we can get a search resule pane...");
                         var searchResultPopup = chatWindow.FindAllChildren()
                             .Where(x => x.FindAllChildren().Length == 2 && x.FindAllChildren()[1].Name == "SEARCH_WND")
                             .ToList()[0];
                         var searchResultInnerPane = searchResultPopup.FindFirstByXPath("/Pane[2]");
                         // search in network
                         // TODO: it seems that pressing enter works too. needs verification.
-                        logger.Debug("we need to search in network rather than friend list");
-                        click(searchResultInnerPane.Properties.NativeWindowHandle,
+                        Logger.Debug("we need to search in network rather than friend list");
+                        Click(searchResultInnerPane.Properties.NativeWindowHandle,
                             searchResultInnerPane.ActualWidth.ToInt() - 15, 21);
                     }
                     catch (ArgumentOutOfRangeException e)
                     {
                         // search text is empty
-                        logger.Error("search text is empty or unknown error");
+                        Logger.Error("search text is empty or unknown error");
                         throw new UIAutomationElementException("Local search result popup not present", e);
                     }
 
@@ -183,7 +186,7 @@ namespace Qianliyun_Launcher.QianniuTag
                     // wait for search result
                     try
                     {
-                        logger.Debug("find search result pop dialog");
+                        Logger.Debug("find search result pop dialog");
                         var searchResultPopup = chatWindow.FindAllChildren()
                             .Where(x => x.FindAllChildren().Length == 2 && x.FindAllChildren()[1].Name == "SEARCH_WND")
                             .ToList()[0];
@@ -191,19 +194,19 @@ namespace Qianliyun_Launcher.QianniuTag
 
                         // check if there is result
 
-                        // click first entry
-                        logger.Debug("click on the first entry");
+                        // Click first entry
+                        Logger.Debug("Click on the first entry");
                         //clickWithMouse(
                         //    (int)(searchResultInnerPane.BoundingRectangle.X + searchResultInnerPane.BoundingRectangle.Width / 2),
                         //    (int)searchResultInnerPane.BoundingRectangle.Y + 19);
-                        // this is strange: we have to click on its parent not itself
-                        click(searchResultInnerPane.Parent.Properties.NativeWindowHandle,
+                        // this is strange: we have to Click on its parent not itself
+                        Click(searchResultInnerPane.Parent.Properties.NativeWindowHandle,
                             searchResultInnerPane.ActualWidth.ToInt() / 2, 15);
                     }
                     catch (ArgumentOutOfRangeException e)
                     {
                         // search text is empty
-                        logger.Error("search text is empty or unknown error");
+                        Logger.Error("search text is empty or unknown error");
                         throw new UIAutomationElementException("Internet search result popup not present", e);
                     }
 
@@ -213,15 +216,15 @@ namespace Qianliyun_Launcher.QianniuTag
                     // TODO: if the user completes disable friend request
                     try
                     {
-                        cancelFriendVerificationDialog();
-                        logger.Warn("Verification needed");
+                        CancelFriendVerificationDialog();
+                        Logger.Warn("Verification needed");
                         throw new UserNeedFriendVerificationException(
                             "Needs to pass user friend verification to open chat dialog");
                     }
                     catch (ArgumentOutOfRangeException)
                     {
                         // OK, let's continue...
-                        logger.Debug("Friend request passed");
+                        Logger.Debug("Friend request passed");
                     }
 
                     Thread.Sleep(1000);
@@ -229,19 +232,19 @@ namespace Qianliyun_Launcher.QianniuTag
                     try
                     {
                         // now we should have chat dialog opened...
-                        logger.Debug("Trying to find add friend toolbar");
+                        Logger.Debug("Trying to find add friend toolbar");
                         // find chat toolbar
                         var friendToolbar = chatWindow.FindFirstByXPath("/Pane[last()]/Pane[3]").FindAllChildren()
                             .Where((x => x.ClassName == "ToolBarPlus")).ToList()[0];
-                        // click on add friend button
-                        logger.Debug("Click on add friend button");
+                        // Click on add friend button
+                        Logger.Debug("Click on add friend button");
                         // TODO: this guy may already be friend. Try to detect?
-                        click(friendToolbar.Properties.NativeWindowHandle, 90, 18);
+                        Click(friendToolbar.Properties.NativeWindowHandle, 90, 18);
                         // clickWithMouse((int) friendToolbar.BoundingRectangle.Left + 90, (int) friendToolbar.BoundingRectangle.Top + 15);
                     }
                     catch (Exception e)
                     {
-                        logger.Fatal(e);
+                        Logger.Fatal(e);
                         throw new UIAutomationElementException("Cannot find add friend button", e);
                     }
 
@@ -251,15 +254,15 @@ namespace Qianliyun_Launcher.QianniuTag
                     // TODO: if the user completes disable friend request
                     try
                     {
-                        cancelFriendVerificationDialog();
-                        logger.Warn("Verification needed");
+                        CancelFriendVerificationDialog();
+                        Logger.Warn("Verification needed");
                         throw new UserNeedFriendVerificationException(
                             "Needs to pass user friend verification to add friend");
                     }
                     catch (ArgumentOutOfRangeException)
                     {
                         // OK, let's continue...
-                        logger.Debug("Friend request passed");
+                        Logger.Debug("Friend request passed");
                     }
 
                     Thread.Sleep(1000);
@@ -267,12 +270,12 @@ namespace Qianliyun_Launcher.QianniuTag
                     // Otherwise we should have a "添加好友成功!" dialog here
                     try
                     {
-                        logger.Debug("trying to get a friended dialog");
+                        Logger.Debug("trying to get a friended dialog");
                         var desktop = automation.GetDesktop();
                         var addFriendVerificationWindow = desktop.FindAllChildren().Where(x => x.Name == "添加好友成功!")
                             .ToList()[0];
                         // yes
-                        // click on "完成"
+                        // Click on "完成"
                         var doneBtn = addFriendVerificationWindow.FindAllChildren().Where(x => x.Name.EndsWith("成"))
                             .ToList()[0].AsButton();
                         doneBtn.Invoke();
@@ -281,23 +284,23 @@ namespace Qianliyun_Launcher.QianniuTag
                     {
                         // strange things happened
                         // might already be friends...
-                        logger.Warn(e);
+                        Logger.Warn(e);
                         //return 2;
                     }
 
                     Thread.Sleep(1000);
 
-                    // click "客户" on the right panel on chat dialog
+                    // Click "客户" on the right panel on chat dialog
                     try
                     {
-                        logger.Debug("Clicking on customer information tab");
+                        Logger.Debug("Clicking on customer information tab");
                         var userInformationTabBar = chatWindow.FindFirstByXPath("/Pane[2]/Pane[3]/Pane[5]/Pane[1]");
-                        click(userInformationTabBar.Properties.NativeWindowHandle, 210, 22);
+                        Click(userInformationTabBar.Properties.NativeWindowHandle, 210, 22);
                     }
                     catch (Exception e)
                     {
                         // strange things happened
-                        logger.Fatal(e);
+                        Logger.Fatal(e);
                         throw new UIAutomationElementException("Cannot find 客户 tab", e);
                     }
 
@@ -306,7 +309,7 @@ namespace Qianliyun_Launcher.QianniuTag
                     // now find the right panel - a embedded Chrome
                     try
                     {
-                        logger.Debug("Find the right panel");
+                        Logger.Debug("Find the right panel");
                         var rightPanel = chatWindow.FindFirstByXPath("/Pane[2]/Pane[3]/Pane[5]/Pane[3]");
                         var customerInformationPanel = rightPanel.FindFirstByXPath("/Pane/Pane/Pane");
                         // TODO: there is two identical documents under customerInformationPanel; check why
@@ -314,11 +317,11 @@ namespace Qianliyun_Launcher.QianniuTag
                         // check if Chrome MSAA API has been enabled
                         if (customerInformationDocument.FindAllChildren().Length == 0)
                         {
-                            logger.Fatal("Chrome MSAA not enabled!");
+                            Logger.Fatal("Chrome MSAA not enabled!");
                             throw new UIAutomationUnsupportedException(
                                 "Legacy Chrome Window don't have MSAA support enabled");
                         }
-                        logger.Debug("Chrome MSAA check passed, continue to next stage");
+                        Logger.Debug("Chrome MSAA check passed, continue to next stage");
 
                         // find Edit after "备注"; following List （tag 总数量）
                         var commentEditControl = customerInformationDocument.FindAllChildren().Last(x =>
@@ -332,7 +335,7 @@ namespace Qianliyun_Launcher.QianniuTag
                                 return false;
                             }
                         });
-                        logger.Debug("Got comment edit control");
+                        Logger.Debug("Got comment edit control");
                         var htmlTopNodes = customerInformationDocument.FindAllChildren();
                         // 备注
                         // 备注输入框
@@ -343,17 +346,17 @@ namespace Qianliyun_Launcher.QianniuTag
                         var tagListIndex = htmlTopNodes.ToList().IndexOf(commentEditControl) + 2;
                         var alreadyHadTagCount = Convert.ToInt32(htmlTopNodes[tagListIndex - 1].FindFirstChild()
                             .FindChildAt(2).Name);
-                        logger.Debug("This user have {0} tags", alreadyHadTagCount);
+                        Logger.Debug("This user have {0} tags", alreadyHadTagCount);
                         var alreadyHadTagList = htmlTopNodes.ToList().Skip(tagListIndex)
                             .Take(alreadyHadTagCount);
                         var alreadyHadTags = alreadyHadTagList.Select(x => x.FindFirstChild().Name).ToList();
-                        logger.Info("User tags: ");
-                        foreach (var tag in alreadyHadTags) logger.Info("\t{0}", tag);
+                        Logger.Info("User tags: ");
+                        foreach (var tag in alreadyHadTags) Logger.Info("\t{0}", tag);
 
                         // if this user already have this tag -> ignore
                         if (alreadyHadTags.Contains(newTag)) throw new TagAlreadyPresentException();
 
-                        // else click add tag button
+                        // else Click add tag button
                         try
                         {
                             var addButton = htmlTopNodes.Last().FindChildAt(1).AsButton();
@@ -361,8 +364,8 @@ namespace Qianliyun_Launcher.QianniuTag
                         }
                         catch (Exception e)
                         {
-                            logger.Warn("Cannot find add tag button, maybe already clicked");
-                            logger.Warn(e);
+                            Logger.Warn("Cannot find add tag button, maybe already clicked");
+                            Logger.Warn(e);
                         }
 
                         Thread.Sleep(500);
@@ -374,16 +377,16 @@ namespace Qianliyun_Launcher.QianniuTag
                         // after user tags, before last one
                         var alreadyPresentTags = htmlTopNodes.ToList().Skip(tagListIndex + alreadyHadTagCount).Reverse()
                             .Skip(1).Reverse().Select(x => x.FindFirstChild().Name).ToList();
-                        logger.Info("Global tags: ");
-                        foreach (var tag in alreadyPresentTags) logger.Info("\t{0}", tag);
+                        Logger.Info("Global tags: ");
+                        foreach (var tag in alreadyPresentTags) Logger.Info("\t{0}", tag);
                         if (!alreadyPresentTags.Contains(newTag)) throw new TagNotExistException();
 
                         // get the tag to be added
                         var newTagText =
                             htmlTopNodes[alreadyPresentTags.IndexOf(newTag) + tagListIndex + alreadyHadTagCount]
                                 .FindFirstChild();
-                        // unfortunately we have to emulate a click
-                        click(customerInformationDocument, newTagText, 5, 5);
+                        // unfortunately we have to emulate a Click
+                        Click(customerInformationDocument, newTagText, 5, 5);
                         try
                         {
                             var addTagButton = htmlTopNodes.Last().FindFirstChild().AsButton();
@@ -403,7 +406,7 @@ namespace Qianliyun_Launcher.QianniuTag
                     {
 
                         // strange things happened
-                        logger.Fatal(e);
+                        Logger.Fatal(e);
                         throw new UIAutomationElementException("Cannot find element in right panel", e);
                     }
 
@@ -414,7 +417,7 @@ namespace Qianliyun_Launcher.QianniuTag
                 }
                 catch (Exception e)
                 {
-                    logger.Error(e);
+                    Logger.Error(e);
                     throw new UIAutomationNotTestedRouteException("Unknown error", e);
                 }
             }

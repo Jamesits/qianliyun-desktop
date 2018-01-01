@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 
 namespace Qianliyun_Launcher.BroadcastCapture.Model
 {
     public class Capture
     {
+        // ReSharper disable once InconsistentNaming
         public string GUID { get; set; }
-        public string name { get; set; }
+        public string Name { get; set; }
+        // ReSharper disable once InconsistentNaming
         public string URL { get; set; }
     }
 

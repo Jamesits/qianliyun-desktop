@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace Qianliyun_Launcher.QianniuTag
 {
     /// <summary>
     /// Interaction logic for QianniuTagUI.xaml
     /// </summary>
-    public partial class QianniuTagUI : UserControl
+    // ReSharper disable once InconsistentNaming
+    public partial class QianniuTagUI
     {
         public QianniuTagUI()
         {
@@ -22,7 +22,7 @@ namespace Qianliyun_Launcher.QianniuTag
 
         private void doTag(String username, String tag)
         {
-            QianniuTagCore.doTag(username, tag);
+            QianniuTagCore.DoTag(username, tag);
         }
     }
 }

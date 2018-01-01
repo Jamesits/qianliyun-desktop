@@ -3,10 +3,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using NLog;
-using Qianliyun_Launcher.BroadcastCapture;
+using Qianliyun_Launcher.BroadcastCapture.View;
 using Qianliyun_Launcher.LoadingPage;
 using Qianliyun_Launcher.QianniuTag;
-using BroadcastCaptureUI = Qianliyun_Launcher.BroadcastCapture.View.BroadcastCaptureUI;
 
 namespace Qianliyun_Launcher
 {
