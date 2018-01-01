@@ -17,7 +17,7 @@
                 </StackPanel>
                 <TextBox x:Name="AddressBar"/>
             </DockPanel>
-            <ListBox DockPanel.Dock="Right" ItemsSource="{Binding CaptureResult}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedEmployee}" Width="100"></ListBox>
+            <ListBox DockPanel.Dock="Right" DataContext="{Binding CaptureResult, Source={StaticResource CaptureResultViewModelLocator}}" ItemsSource="{Binding ResultEntries}" DisplayMemberPath="Name" Width="100"></ListBox>
             <cefSharp:ChromiumWebBrowser x:Name="CaptureBrowser" Address="https://taobaolive.taobao.com/"/>
         </DockPanel>
         

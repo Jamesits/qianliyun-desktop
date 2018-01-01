@@ -11,7 +11,7 @@ namespace Qianliyun_Launcher.BroadcastCapture
     /// </summary>
     public partial class BroadcastCaptureUI : UserControl
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private GlobalStatus status;
         private CaptureResultStorage result;
 
@@ -60,12 +60,12 @@ namespace Qianliyun_Launcher.BroadcastCapture
         {
             public void OnContextReleased(IWebBrowser browserControl, IBrowser browser, IFrame frame)
             {
-                logger.Debug("Javascript context released");
+                Logger.Debug("Javascript context released");
             }
 
             public void OnFocusedNodeChanged(IWebBrowser browserControl, IBrowser browser, IFrame frame, IDomNode node)
             {
-                logger.Debug("OnFocusedNodeChanged");
+                Logger.Debug("OnFocusedNodeChanged");
             }
 
             // Wait for the underlying JavaScript Context to be created. This is only called for the main frame.
@@ -74,7 +74,7 @@ namespace Qianliyun_Launcher.BroadcastCapture
             {
                 //const string script = "document.addEventListener('DOMContentLoaded', function(){ alert('DomLoaded'); });";
                 //frame.ExecuteJavaScriptAsync(script);
-                logger.Debug("Javascript context created");
+                Logger.Debug("Javascript context created");
             }
         }
 
@@ -94,7 +94,7 @@ namespace Qianliyun_Launcher.BroadcastCapture
                 //Wait for the Page to finish loading
                 if (args.IsLoading == false)
                 {
-                    logger.Debug("Page loading finished");
+                    Logger.Debug("Page loading finished");
                 }
             };
 
@@ -104,44 +104,49 @@ namespace Qianliyun_Launcher.BroadcastCapture
                 //Wait for the MainFrame to finish loading
                 if (args.Frame.IsMain)
                 {
-                    args.Frame.ExecuteJavaScriptAsync("alert('MainFrame finished loading');");
+                    // args.Frame.ExecuteJavaScriptAsync("alert('MainFrame finished loading');");
+                    Logger.Debug("MainFrame finished loading");
                 }
             };
         }
 
         private void CaptureBrowserOnLoadingStateChanged(object sender, LoadingStateChangedEventArgs loadingStateChangedEventArgs)
         {
+            
         }
 
         private void CaptureBrowser_FrameLoadStart(object sender, FrameLoadStartEventArgs e)
         {
             Dispatcher.Invoke(() =>
             {
+                Logger.Debug("URL changed to {0}", e.Url);
                 AddressBar.Text = e.Url;
             });
         }
-
 
         private void BtnGoto_Click(object sender, RoutedEventArgs e)
         {
             try
             {
+                Logger.Debug("Trying to load {0}", AddressBar.Text);
                 CaptureBrowser.Load(AddressBar.Text);
             }
-            catch (UriFormatException exception)
+            catch (UriFormatException ex)
             {
-                Console.WriteLine(exception);
+                Logger.Fatal(ex);
                 throw;
             }
         }
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
+            Logger.Debug("Start capturing");
             CaptureBrowser.ExecuteScriptAsync(captureJs);
         }
 
         private void BtnStop_Click(object sender, RoutedEventArgs e)
         {
+            Logger.Debug("Stop capturing");
             CaptureBrowser.ExecuteScriptAsync(stopCaptureJs);
         }
     }
