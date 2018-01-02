@@ -29,11 +29,11 @@ namespace Qianliyun_Launcher.BroadcastCapture.ViewModel
         }
 
 
-        public BroadcastCaptureViewModel(string guid, string name, string url)
+        public BroadcastCaptureViewModel()
         {
-            CaptureProperties = new Capture { GUID = guid, Name = name, URL = url };
+            CaptureProperties = new Capture();
             ResultEntries = new ObservableCollection<CaptureResultEntry>();
-            Logger.Debug("Initialized capture result storage for GUID {0}, name {1}", guid, name);
+            Logger.Debug("Initialized capture result storage");
         }
 
         public void Log(string message) => Logger.Debug(message);
@@ -41,6 +41,9 @@ namespace Qianliyun_Launcher.BroadcastCapture.ViewModel
         public void SetMetadata(string title, string user, string url)
         {
             Logger.Debug("SetMetadata {0}, {1}, {2}", title, user, url);
+            CaptureProperties.Title = title;
+            CaptureProperties.Broadcaster = user;
+            CaptureProperties.URL = url;
         }
 
         public void AddEntry(string username, string useraction)
@@ -61,7 +64,7 @@ namespace Qianliyun_Launcher.BroadcastCapture.ViewModel
                         Username = username,
                         UserAction = useraction,
                         Content = content,
-                        Time = DateTime.Now
+                        Time = DateTime.Now,
                     });
                 });
                 Logger.Debug("New record: {0} {1}", username, useraction);

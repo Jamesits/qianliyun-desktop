@@ -19,6 +19,7 @@ namespace Qianliyun_Launcher.BroadcastCapture.View
         private GlobalStatus status;
         public BroadcastCaptureViewModel VM { get; set; }
         public ObservableCollection<CaptureResultEntry> CaptureResults => VM.ResultEntries;
+        public bool IsDebugMode => (bool)Properties.Settings.Default["debug"];
 
         public bool IsCapturing
         {
@@ -134,7 +135,7 @@ namespace Qianliyun_Launcher.BroadcastCapture.View
         public BroadcastCaptureUI(GlobalStatus status)
         {
             this.status = status;
-            VM = new BroadcastCaptureViewModel("test", "testname", "testurl");
+            VM = new BroadcastCaptureViewModel();
             InitializeComponent();
             CaptureBrowser.RenderProcessMessageHandler = new RenderProcessMessageHandler();
             CaptureBrowser.RegisterAsyncJsObject("CaptureBridge", VM, BindingOptions.DefaultBinder);

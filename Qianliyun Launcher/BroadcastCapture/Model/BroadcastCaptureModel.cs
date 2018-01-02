@@ -6,8 +6,8 @@ namespace Qianliyun_Launcher.BroadcastCapture.Model
     public class Capture
     {
         // ReSharper disable once InconsistentNaming
-        public string GUID { get; set; }
-        public string Name { get; set; }
+        public string Title { get; set; }
+        public string Broadcaster { get; set; }
         // ReSharper disable once InconsistentNaming
         public string URL { get; set; }
     }
