@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using NLog;
 using Qianliyun_Launcher.BroadcastCapture.View;
 using Qianliyun_Launcher.LoadingPage;
+using Qianliyun_Launcher.Properties;
 using Qianliyun_Launcher.QianniuTag;
 
 namespace Qianliyun_Launcher
@@ -33,13 +37,12 @@ namespace Qianliyun_Launcher
     public partial class MainWindow : Window
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private readonly GlobalStatus _status;
 
-        #region Windows
-        private readonly BackgroundWindow _bgWindow;
-        #endregion
+        private Settings ApplicationConfig => Properties.Settings.Default;
+        private StateManager State => StateManager.Instance;
 
         #region Tabs
+        private UserControl _loadingPage;
         private UserControl _homepage;
         private UserControl _broadcast;
         private UserControl _tag;
@@ -54,18 +57,14 @@ namespace Qianliyun_Launcher
         public MainWindow()
         {
             InitializeComponent();
-            Logger.Debug("Loading background window");
-            _bgWindow = new BackgroundWindow();
-            //this.bgWindow.EnableDebugMode();
-            _status = _bgWindow.Status;
-            Page.Content = new Loading();
+
+            // display loading progressbar
+            _switchToTab<Loading>(ref _loadingPage);
 
             // prepare controls
             Logger.Debug("Preparing controls");
-            _homepage = new Homepage.Homepage();
-            _broadcast = new BroadcastCaptureUI();
-            _tag = new QianniuTagUI();
 
+            
             // Done, goto homepage
             Logger.Debug("Loading Homepage");
             _switchToTab<Homepage.Homepage>(ref _homepage);
@@ -125,7 +124,7 @@ namespace Qianliyun_Launcher
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            _bgWindow.Close();
+            // _bgWindow.Close();
         }
     }
 

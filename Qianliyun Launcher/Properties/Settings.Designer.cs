@@ -61,10 +61,46 @@ namespace Qianliyun_Launcher.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://qianliyun-test.anydisconnect.com/api/")]
         public string APIBaseURL {
             get {
                 return ((string)(this["APIBaseURL"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MachineGUID {
+            get {
+                return ((string)(this["MachineGUID"]));
+            }
+            set {
+                this["MachineGUID"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsLogined {
+            get {
+                return ((bool)(this["IsLogined"]));
+            }
+            set {
+                this["IsLogined"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LoginCredential {
+            get {
+                return ((string)(this["LoginCredential"]));
+            }
+            set {
+                this["LoginCredential"] = value;
             }
         }
     }
