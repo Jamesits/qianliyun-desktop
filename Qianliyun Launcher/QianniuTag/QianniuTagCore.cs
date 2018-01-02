@@ -109,292 +109,307 @@ namespace Qianliyun_Launcher.QianniuTag
             ////var first_result_pos = this.GetChildren()[3].GetChildren()[0].GetChildren()[3].GetChildren()[4].GetChildren()[3].GetChildren()[1].GetChildren()[3];
             //var searchDialog = new QianniuWindow("SEARCH_WND");
             //Click(searchDialog.Properties.Handle, 150, 20);
-            var qianniuApplication = Application.Attach("AliWorkbench.exe");
-            using (var automation = new UIA3Automation())
+            try
             {
-                try
+                var qianniuApplication = Application.Attach("AliWorkbench.exe");
+                using (var automation = new UIA3Automation())
                 {
-                    Logger.Debug("Finding Qianniu Application");
-                    var qianniuTopWindows = qianniuApplication.GetAllTopLevelWindows(automation);
-                    Logger.Debug("Finding Qianniu Chat Window");
-                    var chatWindow = qianniuTopWindows.Where(x => x.Name.EndsWith("接待中心")).ToList()[0];
-                    Logger.Debug("Finding Search bar");
-                    var searchBar = chatWindow.FindFirstByXPath("/Pane[last()]/Pane[5]");
-
-                    // if there is content in searchBar, Click clear;
                     try
                     {
-                        var searchBarChilds = searchBar.FindAllChildren().ToList();
-                        if (searchBarChilds.Count > 2)
+                        Logger.Debug("Finding Qianniu Application");
+                        var qianniuTopWindows = qianniuApplication.GetAllTopLevelWindows(automation);
+                        Logger.Debug("Finding Qianniu Chat Window");
+                        var chatWindow = qianniuTopWindows.Where(x => x.Name.EndsWith("接待中心")).ToList()[0];
+                        Logger.Debug("Finding Search bar");
+                        var searchBar = chatWindow.FindFirstByXPath("/Pane[last()]/Pane[5]");
+
+                        // if there is content in searchBar, Click clear;
+                        try
                         {
-                            Logger.Debug("Clearing search bar content");
-                            var clearBtn = searchBarChilds[2].AsButton();
-                            Click(clearBtn.Properties.NativeWindowHandle, 5, 5);
+                            var searchBarChilds = searchBar.FindAllChildren().ToList();
+                            if (searchBarChilds.Count > 2)
+                            {
+                                Logger.Debug("Clearing search bar content");
+                                var clearBtn = searchBarChilds[2].AsButton();
+                                Click(clearBtn.Properties.NativeWindowHandle, 5, 5);
+                            }
+                            else
+                            {
+                                Logger.Debug("Nothing in search bar, OK to progress");
+                            }
                         }
-                        else
+                        catch (Exception e)
                         {
-                            Logger.Debug("Nothing in search bar, OK to progress");
+                            Logger.Error(e);
+                            throw new UIAutomationElementException("Clear search bar content failed", e);
                         }
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Error(e);
-                        throw new UIAutomationElementException("Clear search bar content failed", e);
-                    }
 
-                    Thread.Sleep(1000);
+                        Thread.Sleep(1000);
 
-                    try
-                    {
-                        Logger.Debug("Finding search textbox");
-                        var searchBox = searchBar.FindFirstByXPath("/Edit").AsTextBox();
-                        Logger.Debug("Inserting username {0}", name);
-                        Write(searchBox.Properties.NativeWindowHandle, name);
-                    }
-                    catch (Exception e)
-                    {
-                        // strange things happened
-                        Logger.Error(e);
-                        throw new UIAutomationNotTestedRouteException("Insert search string into textbox failed", e);
-                    }
-
-                    Thread.Sleep(1000);
-
-                    // check if we can get a search result pane
-                    try
-                    {
-                        Logger.Debug("See if we can get a search resule pane...");
-                        var searchResultPopup = chatWindow.FindAllChildren()
-                            .Where(x => x.FindAllChildren().Length == 2 && x.FindAllChildren()[1].Name == "SEARCH_WND")
-                            .ToList()[0];
-                        var searchResultInnerPane = searchResultPopup.FindFirstByXPath("/Pane[2]");
-                        // search in network
-                        // TODO: it seems that pressing enter works too. needs verification.
-                        Logger.Debug("we need to search in network rather than friend list");
-                        Click(searchResultInnerPane.Properties.NativeWindowHandle,
-                            searchResultInnerPane.ActualWidth.ToInt() - 15, 21);
-                    }
-                    catch (ArgumentOutOfRangeException e)
-                    {
-                        // search text is empty
-                        Logger.Error("search text is empty or unknown error");
-                        throw new UIAutomationElementException("Local search result popup not present", e);
-                    }
-
-                    Thread.Sleep(1000);
-
-                    // wait for search result
-                    try
-                    {
-                        Logger.Debug("find search result pop dialog");
-                        var searchResultPopup = chatWindow.FindAllChildren()
-                            .Where(x => x.FindAllChildren().Length == 2 && x.FindAllChildren()[1].Name == "SEARCH_WND")
-                            .ToList()[0];
-                        var searchResultInnerPane = searchResultPopup.FindFirstByXPath("/Pane[1]");
-
-                        // check if there is result
-
-                        // Click first entry
-                        Logger.Debug("Click on the first entry");
-                        //clickWithMouse(
-                        //    (int)(searchResultInnerPane.BoundingRectangle.X + searchResultInnerPane.BoundingRectangle.Width / 2),
-                        //    (int)searchResultInnerPane.BoundingRectangle.Y + 19);
-                        // this is strange: we have to Click on its parent not itself
-                        Click(searchResultInnerPane.Parent.Properties.NativeWindowHandle,
-                            searchResultInnerPane.ActualWidth.ToInt() / 2, 15);
-                    }
-                    catch (ArgumentOutOfRangeException e)
-                    {
-                        // search text is empty
-                        Logger.Error("search text is empty or unknown error");
-                        throw new UIAutomationElementException("Internet search result popup not present", e);
-                    }
-
-                    Thread.Sleep(1000);
-
-                    // Check if this guy needs verification to add friends
-                    // TODO: if the user completes disable friend request
-                    try
-                    {
-                        CancelFriendVerificationDialog();
-                        Logger.Warn("Verification needed");
-                        throw new UserNeedFriendVerificationException(
-                            "Needs to pass user friend verification to open chat dialog");
-                    }
-                    catch (ArgumentOutOfRangeException)
-                    {
-                        // OK, let's continue...
-                        Logger.Debug("Friend request passed");
-                    }
-
-                    Thread.Sleep(1000);
-
-                    try
-                    {
-                        // now we should have chat dialog opened...
-                        Logger.Debug("Trying to find add friend toolbar");
-                        // find chat toolbar
-                        var friendToolbar = chatWindow.FindFirstByXPath("/Pane[last()]/Pane[3]").FindAllChildren()
-                            .Where((x => x.ClassName == "ToolBarPlus")).ToList()[0];
-                        // Click on add friend button
-                        Logger.Debug("Click on add friend button");
-                        // TODO: this guy may already be friend. Try to detect?
-                        Click(friendToolbar.Properties.NativeWindowHandle, 90, 18);
-                        // clickWithMouse((int) friendToolbar.BoundingRectangle.Left + 90, (int) friendToolbar.BoundingRectangle.Top + 15);
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Fatal(e);
-                        throw new UIAutomationElementException("Cannot find add friend button", e);
-                    }
-
-                    Thread.Sleep(1000);
-
-                    // Check if this guy needs verification to add friends (this is exactly the same as 2 block above)
-                    // TODO: if the user completes disable friend request
-                    try
-                    {
-                        CancelFriendVerificationDialog();
-                        Logger.Warn("Verification needed");
-                        throw new UserNeedFriendVerificationException(
-                            "Needs to pass user friend verification to add friend");
-                    }
-                    catch (ArgumentOutOfRangeException)
-                    {
-                        // OK, let's continue...
-                        Logger.Debug("Friend request passed");
-                    }
-
-                    Thread.Sleep(1000);
-
-                    // Otherwise we should have a "添加好友成功!" dialog here
-                    try
-                    {
-                        Logger.Debug("trying to get a friended dialog");
-                        var desktop = automation.GetDesktop();
-                        var addFriendVerificationWindow = desktop.FindAllChildren().Where(x => x.Name == "添加好友成功!")
-                            .ToList()[0];
-                        // yes
-                        // Click on "完成"
-                        var doneBtn = addFriendVerificationWindow.FindAllChildren().Where(x => x.Name.EndsWith("成"))
-                            .ToList()[0].AsButton();
-                        doneBtn.Invoke();
-                    }
-                    catch (ArgumentOutOfRangeException e)
-                    {
-                        // strange things happened
-                        // might already be friends...
-                        Logger.Warn(e);
-                        //return 2;
-                    }
-
-                    Thread.Sleep(1000);
-
-                    // Click "客户" on the right panel on chat dialog
-                    try
-                    {
-                        Logger.Debug("Clicking on customer information tab");
-                        var userInformationTabBar = chatWindow.FindFirstByXPath("/Pane[2]/Pane[3]/Pane[5]/Pane[1]");
-                        Click(userInformationTabBar.Properties.NativeWindowHandle, 210, 22);
-                    }
-                    catch (Exception e)
-                    {
-                        // strange things happened
-                        Logger.Fatal(e);
-                        throw new UIAutomationElementException("Cannot find 客户 tab", e);
-                    }
-
-                    Thread.Sleep(1000);
-
-                    // now find the right panel - a embedded Chrome
-                    try
-                    {
-                        Logger.Debug("Find the right panel");
-                        var rightPanel = chatWindow.FindFirstByXPath("/Pane[2]/Pane[3]/Pane[5]/Pane[3]");
-                        var customerInformationPanel = rightPanel.FindFirstByXPath("/Pane/Pane/Pane");
-                        // TODO: there is two identical documents under customerInformationPanel; check why
-                        var customerInformationDocument = customerInformationPanel.FindFirstChild().FindFirstChild();
-                        // check if Chrome MSAA API has been enabled
-                        if (customerInformationDocument.FindAllChildren().Length == 0)
+                        try
                         {
-                            Logger.Fatal("Chrome MSAA not enabled!");
-                            throw new UIAutomationUnsupportedException(
-                                "Legacy Chrome Window don't have MSAA support enabled");
+                            Logger.Debug("Finding search textbox");
+                            var searchBox = searchBar.FindFirstByXPath("/Edit").AsTextBox();
+                            Logger.Debug("Inserting username {0}", name);
+                            Write(searchBox.Properties.NativeWindowHandle, name);
                         }
-                        Logger.Debug("Chrome MSAA check passed, continue to next stage");
-
-                        // find Edit after "备注"; following List （tag 总数量）
-                        var commentEditControl = customerInformationDocument.FindAllChildren().Last(x =>
+                        catch (Exception e)
                         {
+                            // strange things happened
+                            Logger.Error(e);
+                            throw new UIAutomationNotTestedRouteException("Insert search string into textbox failed", e);
+                        }
+
+                        Thread.Sleep(1000);
+
+                        // check if we can get a search result pane
+                        try
+                        {
+                            Logger.Debug("See if we can get a search resule pane...");
+                            var searchResultPopup = chatWindow.FindAllChildren()
+                                .Where(x => x.FindAllChildren().Length == 2 && x.FindAllChildren()[1].Name == "SEARCH_WND")
+                                .ToList()[0];
+                            var searchResultInnerPane = searchResultPopup.FindFirstByXPath("/Pane[2]");
+                            // search in network
+                            // TODO: it seems that pressing enter works too. needs verification.
+                            Logger.Debug("we need to search in network rather than friend list");
+                            Click(searchResultInnerPane.Properties.NativeWindowHandle,
+                                searchResultInnerPane.ActualWidth.ToInt() - 15, 21);
+                        }
+                        catch (ArgumentOutOfRangeException e)
+                        {
+                            // search text is empty
+                            Logger.Error("search text is empty or unknown error");
+                            throw new UIAutomationElementException("Local search result popup not present", e);
+                        }
+
+                        Thread.Sleep(1000);
+
+                        // wait for search result
+                        try
+                        {
+                            Logger.Debug("find search result pop dialog");
+                            var searchResultPopup = chatWindow.FindAllChildren()
+                                .Where(x => x.FindAllChildren().Length == 2 && x.FindAllChildren()[1].Name == "SEARCH_WND")
+                                .ToList()[0];
+                            var searchResultInnerPane = searchResultPopup.FindFirstByXPath("/Pane[1]");
+
+                            // check if there is result
+
+                            // Click first entry
+                            Logger.Debug("Click on the first entry");
+                            //clickWithMouse(
+                            //    (int)(searchResultInnerPane.BoundingRectangle.X + searchResultInnerPane.BoundingRectangle.Width / 2),
+                            //    (int)searchResultInnerPane.BoundingRectangle.Y + 19);
+                            // this is strange: we have to Click on its parent not itself
+                            Click(searchResultInnerPane.Parent.Properties.NativeWindowHandle,
+                                searchResultInnerPane.ActualWidth.ToInt() / 2, 15);
+                        }
+                        catch (ArgumentOutOfRangeException e)
+                        {
+                            // search text is empty
+                            Logger.Error("search text is empty or unknown error");
+                            throw new UIAutomationElementException("Internet search result popup not present", e);
+                        }
+
+                        Thread.Sleep(1000);
+
+                        // Check if this guy needs verification to add friends
+                        // TODO: if the user completes disable friend request
+                        try
+                        {
+                            CancelFriendVerificationDialog();
+                            Logger.Warn("Verification needed");
+                            throw new UserNeedFriendVerificationException(
+                                "Needs to pass user friend verification to open chat dialog");
+                        }
+                        catch (ArgumentOutOfRangeException)
+                        {
+                            // OK, let's continue...
+                            Logger.Debug("Friend request passed");
+                        }
+
+                        Thread.Sleep(1000);
+
+                        try
+                        {
+                            // now we should have chat dialog opened...
+                            Logger.Debug("Trying to find add friend toolbar");
+                            // find chat toolbar
+                            var friendToolbar = chatWindow.FindFirstByXPath("/Pane[last()]/Pane[3]").FindAllChildren()
+                                .Where((x => x.ClassName == "ToolBarPlus")).ToList()[0];
+                            // Click on add friend button
+                            Logger.Debug("Click on add friend button");
+                            // TODO: this guy may already be friend. Try to detect?
+                            Click(friendToolbar.Properties.NativeWindowHandle, 90, 18);
+                            // clickWithMouse((int) friendToolbar.BoundingRectangle.Left + 90, (int) friendToolbar.BoundingRectangle.Top + 15);
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.Fatal(e);
+                            throw new UIAutomationElementException("Cannot find add friend button", e);
+                        }
+
+                        Thread.Sleep(1000);
+
+                        // Check if this guy needs verification to add friends (this is exactly the same as 2 block above)
+                        // TODO: if the user completes disable friend request
+                        try
+                        {
+                            CancelFriendVerificationDialog();
+                            Logger.Warn("Verification needed");
+                            throw new UserNeedFriendVerificationException(
+                                "Needs to pass user friend verification to add friend");
+                        }
+                        catch (ArgumentOutOfRangeException)
+                        {
+                            // OK, let's continue...
+                            Logger.Debug("Friend request passed");
+                        }
+
+                        Thread.Sleep(1000);
+
+                        // Otherwise we should have a "添加好友成功!" dialog here
+                        try
+                        {
+                            Logger.Debug("trying to get a friended dialog");
+                            var desktop = automation.GetDesktop();
+                            var addFriendVerificationWindow = desktop.FindAllChildren().Where(x => x.Name == "添加好友成功!")
+                                .ToList()[0];
+                            // yes
+                            // Click on "完成"
+                            var doneBtn = addFriendVerificationWindow.FindAllChildren().Where(x => x.Name.EndsWith("成"))
+                                .ToList()[0].AsButton();
+                            doneBtn.Invoke();
+                        }
+                        catch (ArgumentOutOfRangeException e)
+                        {
+                            // strange things happened
+                            // might already be friends...
+                            Logger.Warn(e);
+                            //return 2;
+                        }
+
+                        Thread.Sleep(1000);
+
+                        // Click "客户" on the right panel on chat dialog
+                        try
+                        {
+                            Logger.Debug("Clicking on customer information tab");
+                            var userInformationTabBar = chatWindow.FindFirstByXPath("/Pane[2]/Pane[3]/Pane[5]/Pane[1]");
+                            Click(userInformationTabBar.Properties.NativeWindowHandle, 210, 22);
+                        }
+                        catch (Exception e)
+                        {
+                            // strange things happened
+                            Logger.Fatal(e);
+                            throw new UIAutomationElementException("Cannot find 客户 tab", e);
+                        }
+
+                        Thread.Sleep(1000);
+
+                        // now find the right panel - a embedded Chrome
+                        try
+                        {
+                            Logger.Debug("Find the right panel");
+                            var rightPanel = chatWindow.FindFirstByXPath("/Pane[2]/Pane[3]/Pane[5]/Pane[3]");
+                            var customerInformationPanel = rightPanel.FindFirstByXPath("/Pane/Pane/Pane");
+                            // TODO: there is two identical documents under customerInformationPanel; check why
+                            var customerInformationDocument = customerInformationPanel.FindFirstChild().FindFirstChild();
+                            // check if Chrome MSAA API has been enabled
+                            if (customerInformationDocument.FindAllChildren().Length == 0)
+                            {
+                                Logger.Fatal("Chrome MSAA not enabled!");
+                                throw new UIAutomationUnsupportedException(
+                                    "Legacy Chrome Window don't have MSAA support enabled");
+                            }
+                            Logger.Debug("Chrome MSAA check passed, continue to next stage");
+
+                            // find Edit after "备注"; following List （tag 总数量）
+                            var commentEditControl = customerInformationDocument.FindAllChildren().Last(x =>
+                            {
+                                try
+                                {
+                                    return x.ControlType == ControlType.Edit;
+                                }
+                                catch
+                                {
+                                    return false;
+                                }
+                            });
+                            Logger.Debug("Got comment edit control");
+                            var htmlTopNodes = customerInformationDocument.FindAllChildren();
+                            // 备注
+                            // 备注输入框
+                            // 标签总数量
+                            // 标签 1
+                            // 标签 2
+                            // ...
+                            var tagListIndex = htmlTopNodes.ToList().IndexOf(commentEditControl) + 2;
+                            var alreadyHadTagCount = Convert.ToInt32(htmlTopNodes[tagListIndex - 1].FindFirstChild()
+                                .FindChildAt(2).Name);
+                            Logger.Debug("This user have {0} tags", alreadyHadTagCount);
+                            var alreadyHadTagList = htmlTopNodes.ToList().Skip(tagListIndex)
+                                .Take(alreadyHadTagCount);
+                            var alreadyHadTags = alreadyHadTagList.Select(x => x.FindFirstChild().Name).ToList();
+                            Logger.Info("User tags: ");
+                            foreach (var tag in alreadyHadTags) Logger.Info("\t{0}", tag);
+
+                            // if this user already have this tag -> ignore
+                            if (alreadyHadTags.Contains(newTag)) throw new TagAlreadyPresentException();
+
+                            // else Click add tag button
                             try
                             {
-                                return x.ControlType == ControlType.Edit;
+                                var addButton = htmlTopNodes.Last().FindChildAt(1).AsButton();
+                                addButton.Invoke();
                             }
-                            catch
+                            catch (Exception e)
                             {
-                                return false;
+                                Logger.Warn("Cannot find add tag button, maybe already clicked");
+                                Logger.Warn(e);
                             }
-                        });
-                        Logger.Debug("Got comment edit control");
-                        var htmlTopNodes = customerInformationDocument.FindAllChildren();
-                        // 备注
-                        // 备注输入框
-                        // 标签总数量
-                        // 标签 1
-                        // 标签 2
-                        // ...
-                        var tagListIndex = htmlTopNodes.ToList().IndexOf(commentEditControl) + 2;
-                        var alreadyHadTagCount = Convert.ToInt32(htmlTopNodes[tagListIndex - 1].FindFirstChild()
-                            .FindChildAt(2).Name);
-                        Logger.Debug("This user have {0} tags", alreadyHadTagCount);
-                        var alreadyHadTagList = htmlTopNodes.ToList().Skip(tagListIndex)
-                            .Take(alreadyHadTagCount);
-                        var alreadyHadTags = alreadyHadTagList.Select(x => x.FindFirstChild().Name).ToList();
-                        Logger.Info("User tags: ");
-                        foreach (var tag in alreadyHadTags) Logger.Info("\t{0}", tag);
 
-                        // if this user already have this tag -> ignore
-                        if (alreadyHadTags.Contains(newTag)) throw new TagAlreadyPresentException();
+                            Thread.Sleep(500);
 
-                        // else Click add tag button
-                        try
+                            // refresh HTML nodes
+                            htmlTopNodes = customerInformationDocument.FindAllChildren();
+
+                            // get a global tag list
+                            // after user tags, before last one
+                            var alreadyPresentTags = htmlTopNodes.ToList().Skip(tagListIndex + alreadyHadTagCount).Reverse()
+                                .Skip(1).Reverse().Select(x => x.FindFirstChild().Name).ToList();
+                            Logger.Info("Global tags: ");
+                            foreach (var tag in alreadyPresentTags) Logger.Info("\t{0}", tag);
+                            if (!alreadyPresentTags.Contains(newTag)) throw new TagNotExistException();
+
+                            // get the tag to be added
+                            var newTagText =
+                                htmlTopNodes[alreadyPresentTags.IndexOf(newTag) + tagListIndex + alreadyHadTagCount]
+                                    .FindFirstChild();
+                            // unfortunately we have to emulate a Click
+                            Click(customerInformationDocument, newTagText, 5, 5);
+                            try
+                            {
+                                var addTagButton = htmlTopNodes.Last().FindFirstChild().AsButton();
+                                addTagButton.Invoke();
+                            }
+                            catch (Exception e)
+                            {
+                                throw new UIAutomationElementException("Cannot find add tag confirm button", e);
+                            }
+
+                        }
+                        catch (QianniuTagCoreBaseException)
                         {
-                            var addButton = htmlTopNodes.Last().FindChildAt(1).AsButton();
-                            addButton.Invoke();
+                            throw;
                         }
                         catch (Exception e)
                         {
-                            Logger.Warn("Cannot find add tag button, maybe already clicked");
-                            Logger.Warn(e);
-                        }
 
-                        Thread.Sleep(500);
-
-                        // refresh HTML nodes
-                        htmlTopNodes = customerInformationDocument.FindAllChildren();
-
-                        // get a global tag list
-                        // after user tags, before last one
-                        var alreadyPresentTags = htmlTopNodes.ToList().Skip(tagListIndex + alreadyHadTagCount).Reverse()
-                            .Skip(1).Reverse().Select(x => x.FindFirstChild().Name).ToList();
-                        Logger.Info("Global tags: ");
-                        foreach (var tag in alreadyPresentTags) Logger.Info("\t{0}", tag);
-                        if (!alreadyPresentTags.Contains(newTag)) throw new TagNotExistException();
-
-                        // get the tag to be added
-                        var newTagText =
-                            htmlTopNodes[alreadyPresentTags.IndexOf(newTag) + tagListIndex + alreadyHadTagCount]
-                                .FindFirstChild();
-                        // unfortunately we have to emulate a Click
-                        Click(customerInformationDocument, newTagText, 5, 5);
-                        try
-                        {
-                            var addTagButton = htmlTopNodes.Last().FindFirstChild().AsButton();
-                            addTagButton.Invoke();
-                        }
-                        catch (Exception e)
-                        {
-                            throw new UIAutomationElementException("Cannot find add tag confirm button", e);
+                            // strange things happened
+                            Logger.Fatal(e);
+                            throw new UIAutomationElementException("Cannot find element in right panel", e);
                         }
 
                     }
@@ -404,22 +419,15 @@ namespace Qianliyun_Launcher.QianniuTag
                     }
                     catch (Exception e)
                     {
-
-                        // strange things happened
-                        Logger.Fatal(e);
-                        throw new UIAutomationElementException("Cannot find element in right panel", e);
+                        Logger.Error(e);
+                        throw new UIAutomationNotTestedRouteException("Unknown error", e);
                     }
-
                 }
-                catch (QianniuTagCoreBaseException)
-                {
-                    throw;
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e);
-                    throw new UIAutomationNotTestedRouteException("Unknown error", e);
-                }
+            }
+            catch (Exception e)
+            {
+                // cannot find AliWorkbench.exe
+                Logger.Error(e.Message);
             }
         }
     }
