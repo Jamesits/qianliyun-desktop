@@ -186,14 +186,14 @@
     <Compile Include="Homepage\Homepage.xaml.cs">
       <DependentUpon>Homepage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="InteropUtil.cs" />
+    <Compile Include="DeepDarkWin32Fantasy\InteropUtil.cs" />
     <Compile Include="LoadingPage\Loading.xaml.cs">
       <DependentUpon>Loading.xaml</DependentUpon>
     </Compile>
     <Compile Include="NotImplementdPage\NotImplementedPage.xaml.cs">
       <DependentUpon>NotImplementedPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PInvoke.cs" />
+    <Compile Include="DeepDarkWin32Fantasy\PInvoke.cs" />
     <Compile Include="QianniuTag\QianniuTagCore.cs" />
     <Compile Include="QianniuTag\QianniuTagUI.xaml.cs">
       <DependentUpon>QianniuTagUI.xaml</DependentUpon>
@@ -204,6 +204,7 @@
       <DependentUpon>Resource1.resx</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="StateManager.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="BackgroundWindow.xaml">

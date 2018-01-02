@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Qianliyun_Launcher
+namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
 {
     class PInvoke
     {

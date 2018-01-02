@@ -6,10 +6,9 @@ using System.Windows.Forms;
 using FlaUI.Core.AutomationElements.Infrastructure;
 using Microsoft.Win32.SafeHandles;
 using NLog;
-using static Qianliyun_Launcher.PInvoke;
 using Clipboard = System.Windows.Clipboard;
 
-namespace Qianliyun_Launcher
+namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
 {
     class InteropUtil
     {
@@ -19,9 +18,9 @@ namespace Qianliyun_Launcher
         {
             // https://stackoverflow.com/questions/15604014/no-console-output-when-using-allocconsole-and-target-architecture-x86
             Logger.Info("Allocating new console");
-            AllocConsole();
+            PInvoke.AllocConsole();
             // stdout's handle seems to always be equal to 7
-            IntPtr currentStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+            IntPtr currentStdout = PInvoke.GetStdHandle(PInvoke.STD_OUTPUT_HANDLE);
             // if (currentStdout != defaultStdoutHandle)
             SafeFileHandle safeFileHandle = new SafeFileHandle(currentStdout, true);
             FileStream fileStream = new FileStream(safeFileHandle, FileAccess.Write);
@@ -36,15 +35,15 @@ namespace Qianliyun_Launcher
             //Call the imported function with the cursor's current position
             Logger.Debug("Clicking on screen position ({0}, {1})", x, y);
             Cursor.Position = new Point(x, y);
-            mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, (uint)x, (uint)y, 0, 0);
+            PInvoke.mouse_event(PInvoke.MOUSEEVENTF_LEFTDOWN | PInvoke.MOUSEEVENTF_LEFTUP, (uint)x, (uint)y, 0, 0);
         }
 
         public static void Click(IntPtr hWnd, int x, int y)
         {
             Logger.Debug("Sending mouse Click event to control {0} relative position ({1}, {2})", hWnd, x, y);
-            SendMessage(hWnd, WM_SETFOCUS, IntPtr.Zero, IntPtr.Zero);
-            SendMessage(hWnd, WM_LBUTTONDOWN, 1, (y << 16) | (x & 0xffff));
-            SendMessage(hWnd, WM_LBUTTONUP, 0, (y << 16) | (x & 0xffff));
+            PInvoke.SendMessage(hWnd, PInvoke.WM_SETFOCUS, IntPtr.Zero, IntPtr.Zero);
+            PInvoke.SendMessage(hWnd, PInvoke.WM_LBUTTONDOWN, 1, (y << 16) | (x & 0xffff));
+            PInvoke.SendMessage(hWnd, PInvoke.WM_LBUTTONUP, 0, (y << 16) | (x & 0xffff));
         }
 
         // Click an element inside a parent element, where child element do not have a handle
@@ -61,12 +60,12 @@ namespace Qianliyun_Launcher
         {
             Logger.Debug("Setting textbox {0} content to be \"{1}\"", hWnd, text);
             // activate it
-            SendMessage(hWnd, WM_SETFOCUS, IntPtr.Zero, IntPtr.Zero);
+            PInvoke.SendMessage(hWnd, PInvoke.WM_SETFOCUS, IntPtr.Zero, IntPtr.Zero);
             // this fails on Chinese...
             //SetWindowTextW(hWnd, text);
             Clipboard.SetText(text);
             // let's hope nobody modifies it...
-            SendMessage(hWnd, WM_PASTE, IntPtr.Zero, IntPtr.Zero);
+            PInvoke.SendMessage(hWnd, PInvoke.WM_PASTE, IntPtr.Zero, IntPtr.Zero);
             // cleanup
             Clipboard.Flush();
         }
@@ -74,8 +73,8 @@ namespace Qianliyun_Launcher
         public static void ScrollToBottom(IntPtr hWnd)
         {
             Logger.Debug("Scrolling window {0} to the bottom", hWnd);
-            SendMessage(hWnd, WM_SETFOCUS, IntPtr.Zero, IntPtr.Zero);
-            SendMessage(hWnd, WM_VSCROLL, new IntPtr(SB_BOTTOM), IntPtr.Zero);
+            PInvoke.SendMessage(hWnd, PInvoke.WM_SETFOCUS, IntPtr.Zero, IntPtr.Zero);
+            PInvoke.SendMessage(hWnd, PInvoke.WM_VSCROLL, new IntPtr(PInvoke.SB_BOTTOM), IntPtr.Zero);
         }
     }
 }

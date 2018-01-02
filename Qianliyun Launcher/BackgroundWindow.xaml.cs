@@ -1,7 +1,7 @@
 ﻿using System;
 using NLog;
-using static Qianliyun_Launcher.PInvoke;
-using static Qianliyun_Launcher.InteropUtil;
+using static Qianliyun_Launcher.DeepDarkWin32Fantasy.PInvoke;
+using static Qianliyun_Launcher.DeepDarkWin32Fantasy.InteropUtil;
 
 namespace Qianliyun_Launcher
 {

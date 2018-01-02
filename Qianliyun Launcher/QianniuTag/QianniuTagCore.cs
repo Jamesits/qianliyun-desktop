@@ -6,7 +6,7 @@ using FlaUI.Core.Definitions;
 using FlaUI.Core.Tools;
 using FlaUI.UIA3;
 using NLog;
-using static Qianliyun_Launcher.InteropUtil;
+using static Qianliyun_Launcher.DeepDarkWin32Fantasy.InteropUtil;
 
 namespace Qianliyun_Launcher.QianniuTag
 {
