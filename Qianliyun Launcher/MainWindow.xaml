@@ -6,8 +6,10 @@
         xmlns:local="clr-namespace:Qianliyun_Launcher"
         xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
         mc:Ignorable="d"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="MainWindow" Height="780" Width="1150" Closing="Window_Closing">
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
         <Color x:Key="TabBarButtonColor">#6A7D8E</Color>
         <SolidColorBrush x:Key="TabBarButtonColorBrush" Color="{StaticResource TabBarButtonColor}"/>
         <Color x:Key="TabBarTextColor">White</Color>
@@ -145,6 +147,12 @@
                     <BitmapImage UriSource="pack://application:,,,/Resources/Data.png" />
                 </local:ImageButton.Source>
                 <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">数据管理</TextBlock>
+            </local:ImageButton>
+            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}" Visibility="{Binding Path=IsDebugMode, Converter={StaticResource BoolToVis}}" Click="ButtonDebug_OnClick">
+                <local:ImageButton.Source>
+                    <BitmapImage UriSource="" />
+                </local:ImageButton.Source>
+                <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">Debug</TextBlock>
             </local:ImageButton>
         </StackPanel>
         <Grid DockPanel.Dock="Bottom" Height="20" VerticalAlignment="Bottom" Background="{DynamicResource AppBackgroundColorBrush}" Margin="2">

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -32,13 +33,24 @@ namespace Qianliyun_Launcher
     public partial class MainWindow : Window
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private readonly Homepage.Homepage _homepage;
-        private readonly BroadcastCaptureUI _broadcast;
-
         private readonly GlobalStatus _status;
-        private readonly BackgroundWindow _bgWindow;
-        private readonly QianniuTagUI _tag;
 
+        #region Windows
+        private readonly BackgroundWindow _bgWindow;
+        #endregion
+
+        #region Tabs
+        private UserControl _homepage;
+        private UserControl _broadcast;
+        private UserControl _tag;
+        private UserControl _notImplPage;
+        private UserControl _debugPanel;
+        #endregion
+
+        #region MVVM Data Bindings
+        public bool IsDebugMode => (bool)Properties.Settings.Default["debug"];
+        #endregion
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -51,48 +63,64 @@ namespace Qianliyun_Launcher
             // prepare controls
             Logger.Debug("Preparing controls");
             _homepage = new Homepage.Homepage();
-            _broadcast = new BroadcastCaptureUI(_status);
+            _broadcast = new BroadcastCaptureUI();
             _tag = new QianniuTagUI();
 
             // Done, goto homepage
             Logger.Debug("Loading Homepage");
-            Page.Content = _homepage;
+            _switchToTab<Homepage.Homepage>(ref _homepage);
+        }
 
+        private ref UserControl _switchToTab<T>(ref UserControl stor) where T : UserControl, new()
+        {
+            if (!(stor is T))
+            {
+                Logger.Debug("Creating new tab {0}", typeof(T).FullName);
+                stor = new T();
+            }
+            Logger.Debug("Switching to tab {0}", typeof(T).FullName);
+            Page.Content = stor;
+            return ref stor;
         }
 
         private void ButtonStart_OnClick(object sender, RoutedEventArgs e)
         {
-            Page.Content = _homepage;
+            _switchToTab<Homepage.Homepage>(ref _homepage);
         }
 
         private void ButtonCapture_OnClick(object sender, RoutedEventArgs e)
         {
-            Page.Content = _broadcast;
+            _switchToTab<BroadcastCaptureUI>(ref _broadcast);
         }
 
         private void ButtonTagging_OnClick(object sender, RoutedEventArgs e)
         {
-            Page.Content = _tag;
+            _switchToTab<QianniuTagUI>(ref _tag);
         }
 
         private void ButtonUpgrade_OnClick(object sender, RoutedEventArgs e)
         {
-            Page.Content = _broadcast;
+            _switchToTab<NotImplementdPage.NotImplementedPage>(ref _notImplPage);
         }
 
         private void ButtonSMS_OnClick(object sender, RoutedEventArgs e)
         {
-            Page.Content = _broadcast;
+            _switchToTab<NotImplementdPage.NotImplementedPage>(ref _notImplPage);
         }
 
         private void ButtonContact_OnClick(object sender, RoutedEventArgs e)
         {
-            Page.Content = _broadcast;
+            _switchToTab<NotImplementdPage.NotImplementedPage>(ref _notImplPage);
         }
 
         private void ButtonData_OnClick(object sender, RoutedEventArgs e)
         {
-            Page.Content = _broadcast;
+            _switchToTab<NotImplementdPage.NotImplementedPage>(ref _notImplPage);
+        }
+
+        private void ButtonDebug_OnClick(object sender, RoutedEventArgs e)
+        {
+            _switchToTab<DebugPanel.DebugPanel>(ref _debugPanel);
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)

@@ -132,9 +132,8 @@ namespace Qianliyun_Launcher.BroadcastCapture.View
             }
         }
 
-        public BroadcastCaptureUI(GlobalStatus status)
+        public BroadcastCaptureUI()
         {
-            this.status = status;
             VM = new BroadcastCaptureViewModel();
             InitializeComponent();
             CaptureBrowser.RenderProcessMessageHandler = new RenderProcessMessageHandler();

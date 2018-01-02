@@ -180,12 +180,18 @@
     <Compile Include="BroadcastCapture\View\BroadcastCaptureUI.xaml.cs">
       <DependentUpon>BroadcastCaptureUI.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DebugPanel\DebugPanel.xaml.cs">
+      <DependentUpon>DebugPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Homepage\Homepage.xaml.cs">
       <DependentUpon>Homepage.xaml</DependentUpon>
     </Compile>
     <Compile Include="InteropUtil.cs" />
     <Compile Include="LoadingPage\Loading.xaml.cs">
       <DependentUpon>Loading.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NotImplementdPage\NotImplementedPage.xaml.cs">
+      <DependentUpon>NotImplementedPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="PInvoke.cs" />
     <Compile Include="QianniuTag\QianniuTagCore.cs" />
@@ -205,6 +211,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="BroadcastCapture\View\BroadcastCaptureUI.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DebugPanel\DebugPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -228,6 +238,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NotImplementdPage\NotImplementedPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="QianniuTag\QianniuTagUI.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
