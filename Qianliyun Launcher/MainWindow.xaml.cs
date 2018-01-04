@@ -40,7 +40,6 @@ namespace Qianliyun_Launcher
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        private Settings ApplicationConfig => Properties.Settings.Default;
         private StateManager State => StateManager.Instance;
 
         #region Tabs

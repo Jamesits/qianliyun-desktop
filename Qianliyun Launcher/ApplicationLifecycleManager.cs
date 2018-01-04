@@ -7,6 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using NLog;
+using Pathoschild.Http.Client;
+using Qianliyun_Launcher.Dialogs.LoginDialog;
 using Qianliyun_Launcher.Properties;
 
 namespace Qianliyun_Launcher
@@ -17,17 +19,21 @@ namespace Qianliyun_Launcher
 
         private static StateManager State => StateManager.Instance;
 
+        
+
         #region Windows
         
         #endregion
 
-        private void ApplicationStart(object sender, StartupEventArgs e)
+        [STAThread]
+        private async void ApplicationStart(object sender, StartupEventArgs e)
         {
             //Disable shutdown when the dialog closes
             Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-            
+
             // basic information
             Logger.Debug("Assembly: {0}", Assembly.GetEntryAssembly().GetName().Name);
+            Logger.Info("Machine GUID is {0}", State.MachineKey);
 
             // launch log window
             Logger.Debug("Launching logging window");
@@ -35,12 +41,25 @@ namespace Qianliyun_Launcher
             if (State.IsDebugMode) State._logWindow.Show();
 
             // check login status
-            // State.api.Login("test", "password", false);
-            //do
-            //{
-            //    Thread.Sleep(1000);
-            //} while (!State.IsLoggedIn);
-
+            State._loginDialog = new LoginDialog();
+            while (!State.IsLoggedIn || !State.api.verifyCachedLoginCredential())
+            {
+                Logger.Info("Try login");
+                bool ret = false;
+                try
+                {
+                    ret = await State._loginDialog.DoLogin();
+                }
+                catch (ApiException ex)
+                {
+                    Logger.Fatal("Login failed: {0}", ex);
+                    MessageBox.Show(ex.Message, "网络故障");
+                }
+                finally
+                {
+                    if (!ret) Current.Shutdown(1);
+                }
+            }
 
             // pull and populate global config
 

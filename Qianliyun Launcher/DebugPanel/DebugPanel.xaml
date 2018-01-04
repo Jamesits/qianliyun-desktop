@@ -10,16 +10,19 @@
     <Grid>
         <DockPanel LastChildFill="True">
             <Label DockPanel.Dock="Top" Content="DebugPanel"/>
-            <StackPanel Width="120">
-                <Button x:Name="BtnLogWindowToggle" Content="Toggle Log Window" Click="ButtonLogWindow_OnClick"></Button>
-                <Button x:Name="BtnLogin" Content="Login" Click="BtnLogin_OnClick"></Button>
-                <Button x:Name="BtnClearLoginStatus" Content="Clear Login Status" Click="BtnClearLoginStatus_OnClick"></Button>
+            <StackPanel Width="80">
+                <Button x:Name="BtnToggleDebugMode" Content="调试模式开关" Click="BtnToggleDebugMode_OnClick"></Button>
+                <Button x:Name="BtnLogWindowToggle" Content="日志窗口开关" Click="ButtonLogWindow_OnClick"></Button>
+                <Separator />
+                <Button x:Name="BtnLogin" Content="登录" Click="BtnLogin_OnClick"></Button>
+                <Button x:Name="BtnClearLoginStatus" Content="清除登录状态" Click="BtnClearLoginStatus_OnClick"></Button>
+                <Separator />
             </StackPanel>
             <DockPanel LastChildFill="True">
                 <DockPanel DockPanel.Dock="Top">
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
                         <Button x:Name="BtnBrowserGoto" Content="打开页面" Click="BtnBrowserGoto_OnClick"/>
-                        <Button x:Name="BtnBrowserDevTool" Content="DevTool" Click="BtnBrowserDevTool_OnClick" />
+                        <Button x:Name="BtnBrowserDevTool" Content="开发者工具" Click="BtnBrowserDevTool_OnClick" />
                     </StackPanel>
                     <TextBox x:Name="AddressBar"/>
                 </DockPanel>

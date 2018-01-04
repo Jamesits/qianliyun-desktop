@@ -5,9 +5,6 @@
     <Setting Name="username" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="cookies" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="debug" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
@@ -17,7 +14,7 @@
     <Setting Name="MachineGUID" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="IsLogined" Type="System.Boolean" Scope="User">
+    <Setting Name="SaveLoginStatus" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="LoginCredential" Type="System.String" Scope="User">

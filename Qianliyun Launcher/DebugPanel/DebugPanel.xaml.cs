@@ -25,7 +25,6 @@ namespace Qianliyun_Launcher.DebugPanel
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        private Settings ApplicationConfig => Properties.Settings.Default;
         private StateManager State => StateManager.Instance;
 
         public DebugPanel()
@@ -45,10 +44,10 @@ namespace Qianliyun_Launcher.DebugPanel
             };
         }
 
-        private void BtnLogin_OnClick(object sender, RoutedEventArgs e)
+        private async void BtnLogin_OnClick(object sender, RoutedEventArgs e)
         {
             Logger.Debug("Emulating login");
-            State.api.Login("username", "password", false);
+            await State._loginDialog.DoLogin();
         }
 
         private void BtnClearLoginStatus_OnClick(object sender, RoutedEventArgs e)
@@ -84,6 +83,11 @@ namespace Qianliyun_Launcher.DebugPanel
         {
             Logger.Debug("Enable DevTools");
             Browser.ShowDevTools();
+        }
+
+        private void BtnToggleDebugMode_OnClick(object sender, RoutedEventArgs e)
+        {
+            State.IsDebugMode = !State.IsDebugMode;
         }
     }
 }

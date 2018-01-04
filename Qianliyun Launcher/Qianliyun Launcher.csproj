@@ -186,6 +186,7 @@
     </ApplicationDefinition>
     <Compile Include="API.cs" />
     <Compile Include="ApplicationLifecycleManager.cs" />
+    <Compile Include="AsyncHelpers.cs" />
     <Compile Include="BackgroundWindow.xaml.cs">
       <DependentUpon>BackgroundWindow.xaml</DependentUpon>
     </Compile>
@@ -232,6 +233,7 @@
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="StateManager.cs" />
+    <Compile Include="Util.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="BackgroundWindow.xaml">

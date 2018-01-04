@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NLog;
 using Pathoschild.Http.Client;
+using Qianliyun_Launcher.Dialogs.LoginDialog;
 using Qianliyun_Launcher.Properties;
 
 namespace Qianliyun_Launcher
@@ -24,7 +25,7 @@ namespace Qianliyun_Launcher
         // ReSharper disable once ConvertToAutoProperty
         public static StateManager Instance => _instance;
         private static readonly StateManager _instance = new StateManager();
-        
+
         private readonly GlobalStatus _status;
 
         private Settings ApplicationConfig => Properties.Settings.Default;
@@ -36,22 +37,68 @@ namespace Qianliyun_Launcher
 
         #region states
 
-        private bool _isDebugMode;
+        public string APIBaseURL => (string) ApplicationConfig["APIBaseURL"];
+
+        private bool? _isDebugMode;
         public bool IsDebugMode
         {
-            get => _isDebugMode;
+            get => _isDebugMode?? (bool)ApplicationConfig["debug"];
             set {
                 _isDebugMode = value;
                 NotifyPropertyChanged();
             }
         }
+
         public bool IsLoggedIn { get; set; }
+
+        public bool SaveLoginStatus
+        {
+            get => (bool)ApplicationConfig["SaveLoginStatus"];
+            set
+            {
+                ApplicationConfig["SaveLoginStatus"] = value;
+                ApplicationConfig.Save();
+                NotifyPropertyChanged();
+            }
+        }
+
+        private string _cookie;
+
+        public string Cookie
+        {
+            get => _cookie ?? (string)ApplicationConfig["cookie"];
+            set
+            {
+                _cookie = value;
+                if (SaveLoginStatus)
+                {
+                    ApplicationConfig["LoginCredential"] = value;
+                    ApplicationConfig.Save();
+                }
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string MachineKey
+        {
+            get {
+                // check if machine GUID has been generated
+                if (((string)ApplicationConfig["MachineGUID"]).Length < 1)
+                {
+                    ApplicationConfig["MachineGUID"] = Guid.NewGuid().ToString();
+                    ApplicationConfig.Save();
+                    Logger.Debug("Generated new MachineGUID {0}", (string)ApplicationConfig["MachineGUID"]);
+                }
+                return (string)ApplicationConfig["MachineGUID"];
+            }
+        }
         #endregion
 
         #region windows
         public BackgroundWindow _bgWindow;
         public MainWindow _mainWindow;
         public LogWindow.LogWindow _logWindow;
+        public LoginDialog _loginDialog;
         #endregion
 
         /// <summary>
@@ -62,9 +109,9 @@ namespace Qianliyun_Launcher
             Logger.Debug("Creating StateManager");
 
             // set initial states
-            IsDebugMode = (bool)ApplicationConfig["debug"];
+            
             // init global objects
-            HTTPClient = new FluentClient((string)ApplicationConfig["APIBaseURL"]);
+            HTTPClient = new FluentClient(APIBaseURL);
             api = new API();
 
         }

@@ -37,18 +37,6 @@ namespace Qianliyun_Launcher.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string cookies {
-            get {
-                return ((string)(this["cookies"]));
-            }
-            set {
-                this["cookies"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool debug {
             get {
@@ -83,12 +71,12 @@ namespace Qianliyun_Launcher.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool IsLogined {
+        public bool SaveLoginStatus {
             get {
-                return ((bool)(this["IsLogined"]));
+                return ((bool)(this["SaveLoginStatus"]));
             }
             set {
-                this["IsLogined"] = value;
+                this["SaveLoginStatus"] = value;
             }
         }
         

@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Newtonsoft.Json;
 using NLog;
 using Pathoschild.Http.Client;
 using Qianliyun_Launcher.Properties;
@@ -17,24 +21,47 @@ namespace Qianliyun_Launcher
         private static Settings ApplicationConfig => Properties.Settings.Default;
         private static StateManager State => StateManager.Instance;
 
-        public void Login(string username, string password, bool stayLoggedIn = true)
+        public API()
         {
-            if ((bool) ApplicationConfig["IsLogined"])
+            Logger.Debug("Init API");
+        }
+
+        #region login
+
+        public async Task Login(string username, SecureString password, bool stayLoggedIn = true)
+        {
+            if (State.IsLoggedIn)
             {
-                Logger.Debug("Configuration reports it has been logged in. Connecting using existing credential...");
-                
+                Logger.Warn("State reports it has been logged in.");
+                return;
             }
 
-                // show login window
-                var loginResult = State.HTTPClient.PostAsync("login.php").WithArguments(new
-                {
-                    username = username,
-                    password = password,
-                    machine_key = (string)ApplicationConfig["MachineGUID"],
-                }).AsResponse();
             try
             {
-                Logger.Debug("HTTP {0} {1}", loginResult.Status, loginResult.Result);
+                // show login window
+                var loginRequest = await State.HTTPClient.PostAsync("login.php", new
+                    {
+                        username,
+                        password,
+                        machine_key = (string)ApplicationConfig["MachineGUID"],
+                    }).AsResponse();
+                var body = AsyncHelpers.RunSync(() => loginRequest.Message.Content.ReadAsStringAsync());
+                Logger.Debug("HTTP {0} \nResponse header: {1}\nResponse body: {2}", loginRequest.Status, loginRequest.Message, body);
+
+                // we need to save JSESSIONID cookie
+                var loginCredential = loginRequest.Message.Headers.Where(x => x.Key == "Set-Cookie").ToList()[0].Value.Where(x => x.StartsWith("JS")).ToList()[0].Split(';')[0];
+                Logger.Debug("Login credential: {0}", loginCredential);
+
+                // flush key information in memory
+                loginRequest = null;
+                password.Clear();
+                System.GC.Collect();
+
+                if (!stayLoggedIn) return;
+                Logger.Debug("Saving login status");
+                State.IsLoggedIn = true;
+                ApplicationConfig["cookie"] = loginCredential;
+                ApplicationConfig.Save();
             }
             catch (AggregateException e)
             {
@@ -44,20 +71,24 @@ namespace Qianliyun_Launcher
                     MessageBox.Show(e.InnerException?.Message ?? e.Message, "错误");
                 }
             }
-                
-            
 
-            if (!stayLoggedIn) return;
-            Logger.Debug("Saving login status");
-            ApplicationConfig["IsLogined"] = true;
-            ApplicationConfig.Save();
         }
 
         public void ClearLoginStatus()
         {
             Logger.Debug("Clearing login status");
-            ApplicationConfig["IsLogined"] = false;
+            State.IsLoggedIn = false;
+            State.Cookie = null;
+            ApplicationConfig["LoginCredential"] = null;
             ApplicationConfig.Save();
         }
+
+        public bool verifyCachedLoginCredential()
+        {
+            return false;
+        }
+
+        #endregion
+
     }
 }
