@@ -140,10 +140,11 @@ namespace Qianliyun_Launcher.BroadcastCapture.View
             CaptureBrowser.RegisterAsyncJsObject("CaptureBridge", VM, BindingOptions.DefaultBinder);
             CaptureBrowser.FrameLoadStart += (sender, e) =>
             {
+                Logger.Debug("Loading new frame {0}", e.Url);
                 Dispatcher.Invoke(() =>
                 {
-                    Logger.Debug("URL changed to {0}", e.Url);
-                    AddressBar.Text = e.Url;
+                    Logger.Debug("URL changed to {0}", CaptureBrowser.Address);
+                    AddressBar.Text = CaptureBrowser.Address;
                 });
             };
             //Wait for the page to finish loading (all resources will have been loaded, rendering is likely still happening)
