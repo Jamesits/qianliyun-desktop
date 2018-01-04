@@ -157,12 +157,6 @@
                 </local:ImageButton.Source>
                 <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">Debug</TextBlock>
             </local:ImageButton>
-            <local:ImageButton Style="{DynamicResource TabBarImageButtonStyleEx}" Visibility="{Binding Path=IsDebugMode, Mode=OneWay, Converter={StaticResource BoolToVis}}" Click="ButtonLogWindow_OnClick">
-                <local:ImageButton.Source>
-                    <BitmapImage UriSource="" />
-                </local:ImageButton.Source>
-                <TextBlock Style="{DynamicResource TabBarTextBlockStyle}">LogWindow</TextBlock>
-            </local:ImageButton>
         </StackPanel>
         <Grid DockPanel.Dock="Bottom" Height="20" VerticalAlignment="Bottom" Background="{DynamicResource AppBackgroundColorBrush}" Margin="2">
             <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="0,1,0,0">

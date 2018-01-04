@@ -30,7 +30,8 @@ namespace Qianliyun_Launcher
         private Settings ApplicationConfig => Properties.Settings.Default;
 
         #region global objects
-        private IClient HTTPClient;
+        public IClient HTTPClient;
+        public API api;
         #endregion
 
         #region states
@@ -64,27 +65,8 @@ namespace Qianliyun_Launcher
             IsDebugMode = (bool)ApplicationConfig["debug"];
             // init global objects
             HTTPClient = new FluentClient((string)ApplicationConfig["APIBaseURL"]);
+            api = new API();
 
-        }
-
-        public void Login(string username, string password, bool stayLoggedIn=true)
-        {
-            if ((bool)ApplicationConfig["IsLogined"])
-            {
-                Logger.Debug("Configuration reports it has been logged in. Connecting using existing credential...");
-                var loginResult = HTTPClient.PostAsync("login.php").WithArguments(new 
-                {
-                    username = username,
-                    password = password,
-                    machine_key = (string)ApplicationConfig["MachineGUID"],
-                }).AsResponse();
-                Logger.Debug("HTTP {0} {1}", loginResult.Status, loginResult.Result);
-            }
-
-            if (!stayLoggedIn) return;
-            Logger.Debug("Saving login status");
-            ApplicationConfig["IsLogined"] = true;
-            ApplicationConfig.Save();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

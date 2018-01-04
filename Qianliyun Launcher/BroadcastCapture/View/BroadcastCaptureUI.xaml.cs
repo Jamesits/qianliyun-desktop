@@ -141,6 +141,9 @@ namespace Qianliyun_Launcher.BroadcastCapture.View
             CaptureBrowser.FrameLoadStart += (sender, e) =>
             {
                 Logger.Debug("Loading new frame {0}", e.Url);
+            };
+            CaptureBrowser.FrameLoadEnd += (sender, e) =>
+            {
                 Dispatcher.Invoke(() =>
                 {
                     Logger.Debug("URL changed to {0}", CaptureBrowser.Address);

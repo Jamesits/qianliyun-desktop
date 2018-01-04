@@ -35,6 +35,7 @@ namespace Qianliyun_Launcher
             if (State.IsDebugMode) State._logWindow.Show();
 
             // check login status
+            // State.api.Login("test", "password", false);
             //do
             //{
             //    Thread.Sleep(1000);

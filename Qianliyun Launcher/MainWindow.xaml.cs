@@ -151,14 +151,6 @@ namespace Qianliyun_Launcher
             _switchToTab<DebugPanel.DebugPanel>(ref _debugPanel);
         }
 
-        private void ButtonLogWindow_OnClick(object sender, RoutedEventArgs e)
-        {
-            Logger.Debug("Toggling LogWindow visibility");
-            if (State._logWindow.IsVisible)
-                State._logWindow.Hide();
-            else
-                State._logWindow.Show();
-        }
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {

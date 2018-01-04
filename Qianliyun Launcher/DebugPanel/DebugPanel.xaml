@@ -8,9 +8,23 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
+        <DockPanel LastChildFill="True">
+            <Label DockPanel.Dock="Top" Content="DebugPanel"/>
+            <StackPanel Width="120">
+                <Button x:Name="BtnLogWindowToggle" Content="Toggle Log Window" Click="ButtonLogWindow_OnClick"></Button>
+                <Button x:Name="BtnLogin" Content="Login" Click="BtnLogin_OnClick"></Button>
+                <Button x:Name="BtnClearLoginStatus" Content="Clear Login Status" Click="BtnClearLoginStatus_OnClick"></Button>
+            </StackPanel>
             <DockPanel LastChildFill="True">
-                <Label DockPanel.Dock="Top" Content="DebugPanel"/>
-                <wpf:ChromiumWebBrowser x:Name="CaptureBrowser" Address="chrome://about"/>
+                <DockPanel DockPanel.Dock="Top">
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                        <Button x:Name="BtnBrowserGoto" Content="打开页面" Click="BtnBrowserGoto_OnClick"/>
+                        <Button x:Name="BtnBrowserDevTool" Content="DevTool" Click="BtnBrowserDevTool_OnClick" />
+                    </StackPanel>
+                    <TextBox x:Name="AddressBar"/>
+                </DockPanel>
+                <wpf:ChromiumWebBrowser x:Name="Browser" Address="chrome://about"/>
+            </DockPanel>
         </DockPanel>
     </Grid>
 </UserControl>
