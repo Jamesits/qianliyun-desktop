@@ -16,6 +16,7 @@
                 <Separator />
                 <Button x:Name="BtnLogin" Content="登录" Click="BtnLogin_OnClick"></Button>
                 <Button x:Name="BtnClearLoginStatus" Content="清除登录状态" Click="BtnClearLoginStatus_OnClick"></Button>
+                <Button x:Name="BtnPopulateAccountInformation" Content="获取用户信息" Click="BtnPopulateAccountInformation_OnClick"></Button>
                 <Separator />
             </StackPanel>
             <DockPanel LastChildFill="True">

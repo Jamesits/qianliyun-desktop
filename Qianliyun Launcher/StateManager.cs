@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +33,16 @@ namespace Qianliyun_Launcher
 
         #region global objects
         public IClient HTTPClient;
-        public API api;
+        public API.API api;
+        #endregion
+
+        #region System Info
+
+        public string AssemblyName => Assembly.GetEntryAssembly().GetName().Name;
+        public string AppName => Assembly.GetEntryAssembly().FullName;
+        public Version AppVersion =>  Assembly.GetEntryAssembly().GetName().Version;
+        public string AppVersionString => String.Format("{0}.{1}.{2} build {3}", AppVersion.Major, AppVersion.Minor, AppVersion.Revision, AppVersion.Build);
+
         #endregion
 
         #region states
@@ -62,14 +72,14 @@ namespace Qianliyun_Launcher
             }
         }
 
-        private string _cookie;
+        private string _loginCredential;
 
-        public string Cookie
+        public string LoginCredential
         {
-            get => _cookie ?? (string)ApplicationConfig["cookie"];
+            get => _loginCredential ?? (string)ApplicationConfig["LoginCredential"];
             set
             {
-                _cookie = value;
+                _loginCredential = value;
                 if (SaveLoginStatus || value == null)
                 {
                     ApplicationConfig["LoginCredential"] = value;
@@ -112,7 +122,7 @@ namespace Qianliyun_Launcher
             
             // init global objects
             HTTPClient = new FluentClient(APIBaseURL);
-            api = new API();
+            api = new API.API();
 
         }
 

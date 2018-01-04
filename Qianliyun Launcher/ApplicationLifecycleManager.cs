@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using NLog;
 using Pathoschild.Http.Client;
+using Qianliyun_Launcher.DeepDarkWin32Fantasy;
 using Qianliyun_Launcher.Dialogs.LoginDialog;
 using Qianliyun_Launcher.Properties;
 
@@ -19,8 +20,6 @@ namespace Qianliyun_Launcher
 
         private static StateManager State => StateManager.Instance;
 
-        
-
         #region Windows
         
         #endregion
@@ -28,21 +27,38 @@ namespace Qianliyun_Launcher
         [STAThread]
         private async void ApplicationStart(object sender, StartupEventArgs e)
         {
+            Logger.Debug("App Init");
             //Disable shutdown when the dialog closes
             Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-
-            // basic information
-            Logger.Debug("Assembly: {0}", Assembly.GetEntryAssembly().GetName().Name);
-            Logger.Info("Machine GUID is {0}", State.MachineKey);
 
             // launch log window
             Logger.Debug("Launching logging window");
             State._logWindow = new LogWindow.LogWindow();
             if (State.IsDebugMode) State._logWindow.Show();
 
+            // basic information
+            StringBuilder sb = new StringBuilder(String.Empty);
+            sb.AppendLine("Operation System Information");
+            sb.AppendLine("----------------------------");
+            sb.AppendLine(String.Format("Name = {0}", OSVersionInfo.Name));
+            sb.AppendLine(String.Format("Edition = {0}", OSVersionInfo.Edition));
+            if (OSVersionInfo.ServicePack != string.Empty)
+                sb.AppendLine(String.Format("Service Pack = {0}", OSVersionInfo.ServicePack));
+            else
+                sb.AppendLine("Service Pack = None");
+            sb.AppendLine(String.Format("Version = {0}", OSVersionInfo.VersionString));
+            sb.AppendLine(String.Format("ProcessorBits = {0}", OSVersionInfo.ProcessorBits));
+            sb.AppendLine(String.Format("OSBits = {0}", OSVersionInfo.OSBits));
+            sb.AppendLine(String.Format("ProgramBits = {0}", OSVersionInfo.ProgramBits));
+            Logger.Debug(sb);
+            Logger.Debug("Assembly: {0}", State.AssemblyName);
+            Logger.Debug("AppName: {0}", State.AppName);
+            Logger.Debug("Application Version: {0}", State.AppVersionString);
+            Logger.Info("Machine GUID is {0}", State.MachineKey);
+
             // check login status
             State._loginDialog = new LoginDialog();
-            if (!State.SaveLoginStatus || !State.api.verifyCachedLoginCredential())
+            if (!State.SaveLoginStatus || !State.api.VerifyCachedLoginCredential())
             {
                 while (!State.IsLoggedIn)
                 {
@@ -55,7 +71,7 @@ namespace Qianliyun_Launcher
                     catch (ApiException ex)
                     {
                         Logger.Fatal("Login failed: {0}", ex);
-                        MessageBox.Show(ex.Message, "网络故障");
+                        MessageBox.Show("登录失败：" + ex.Message, "登录失败");
                     }
                     finally
                     {

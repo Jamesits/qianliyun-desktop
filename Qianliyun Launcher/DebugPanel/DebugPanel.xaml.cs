@@ -89,5 +89,10 @@ namespace Qianliyun_Launcher.DebugPanel
         {
             State.IsDebugMode = !State.IsDebugMode;
         }
+
+        private async void BtnPopulateAccountInformation_OnClick(object sender, RoutedEventArgs e)
+        {
+            await State.api.PopulateAccountInformation();
+        }
     }
 }

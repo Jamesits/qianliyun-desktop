@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using Newtonsoft.Json;
 using NLog;
 using Pathoschild.Http.Client;
-using Qianliyun_Launcher.Properties;
 
-namespace Qianliyun_Launcher
+namespace Qianliyun_Launcher.API
 {
     public class API
     {
@@ -58,13 +52,14 @@ namespace Qianliyun_Launcher
 
                 // flush key information in memory
                 Logger.Debug("Flushing memory (1st stage)");
+                // ReSharper disable once RedundantAssignment
                 loginRequest = null;
                 System.GC.Collect();
 
                 Logger.Debug("Saving login status");
                 State.IsLoggedIn = true;
                 State.SaveLoginStatus = stayLoggedIn;
-                State.Cookie = loginCredential;
+                State.LoginCredential = loginCredential;
             }
             catch (AggregateException e)
             {
@@ -78,10 +73,13 @@ namespace Qianliyun_Launcher
             finally
             {
                 Logger.Debug("Flushing memory (2nd stage)");
+                // ReSharper disable once RedundantAssignment
                 c = null;
                 password.Clear();
+                // ReSharper disable once RedundantAssignment
                 password = null;
-                System.GC.Collect();
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
             }
 
         }
@@ -90,12 +88,26 @@ namespace Qianliyun_Launcher
         {
             Logger.Debug("Clearing login status");
             State.IsLoggedIn = false;
-            State.Cookie = null;
+            State.LoginCredential = null;
         }
 
-        public bool verifyCachedLoginCredential()
+        public bool VerifyCachedLoginCredential()
         {
             return true;
+        }
+
+        #endregion
+
+        // related to subscription, customization and limitation
+        #region Account
+
+        public async Task PopulateAccountInformation()
+        {
+            Logger.Debug("PopulateAccountInformation");
+            var UserInfo = await State.HTTPClient.PostAsync("query_user_info.php")
+                .WithHeader("Cookie", State.LoginCredential)
+                .As<UserInfo>();
+            Logger.Debug(UserInfo);
         }
 
         #endregion

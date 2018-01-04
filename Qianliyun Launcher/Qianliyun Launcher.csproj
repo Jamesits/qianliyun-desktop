@@ -184,7 +184,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="API.cs" />
+    <Compile Include="API\API.cs" />
+    <Compile Include="API\DatabaseModel.cs" />
     <Compile Include="ApplicationLifecycleManager.cs" />
     <Compile Include="AsyncHelpers.cs" />
     <Compile Include="BackgroundWindow.xaml.cs">
@@ -198,6 +199,7 @@
     <Compile Include="DebugPanel\DebugPanel.xaml.cs">
       <DependentUpon>DebugPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DeepDarkWin32Fantasy\WindowsVersion.cs" />
     <Compile Include="Dialogs\AboutDialog\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
