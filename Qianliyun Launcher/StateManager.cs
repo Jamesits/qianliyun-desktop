@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using NLog;
+using NLog.Fluent;
 using Pathoschild.Http.Client;
 using Qianliyun_Launcher.Dialogs.LoginDialog;
 using Qianliyun_Launcher.Properties;
@@ -29,7 +28,7 @@ namespace Qianliyun_Launcher
 
         private readonly GlobalStatus _status;
 
-        private Settings ApplicationConfig => Properties.Settings.Default;
+        private Settings ApplicationConfig => Settings.Default;
 
         #region global objects
         public IClient HTTPClient;
@@ -41,7 +40,8 @@ namespace Qianliyun_Launcher
         public string AssemblyName => Assembly.GetEntryAssembly().GetName().Name;
         public string AppName => Assembly.GetEntryAssembly().FullName;
         public Version AppVersion =>  Assembly.GetEntryAssembly().GetName().Version;
-        public string AppVersionString => String.Format("{0}.{1}.{2} build {3}", AppVersion.Major, AppVersion.Minor, AppVersion.Revision, AppVersion.Build);
+        public string AppVersionString =>
+            $"{AppVersion.Major}.{AppVersion.Minor}.{AppVersion.Revision} build {AppVersion.Build}";
 
         #endregion
 
@@ -122,8 +122,25 @@ namespace Qianliyun_Launcher
             
             // init global objects
             HTTPClient = new FluentClient(APIBaseURL);
+            HTTPClient.SetUserAgent($"{AssemblyName}/{AppVersionString}");
+            HTTPClient.Filters.Add((IRequest request) =>
+            {
+                
+            });
+
             api = new API.API();
 
+        }
+
+        /// <summary>Method invoked just before the HTTP request is submitted. This method can modify the outgoing HTTP request.</summary>
+        /// <param name="request">The HTTP request.</param>
+        public void OnRequest(IRequest request)
+        {
+            if (IsLoggedIn && LoginCredential.Length > 0)
+            {
+                request.Message.Headers.GetCookies("JSESSIONID") = LoginCredential;
+            }
+            request.Message.Headers.Authorization = new AuthenticationHeaderValue("token", "…");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -131,7 +148,7 @@ namespace Qianliyun_Launcher
         // This method is called by the Set accessor of each property.
         // The CallerMemberName attribute that is applied to the optional propertyName
         // parameter causes the property name of the caller to be substituted as an argument.
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             Logger.Debug("Property changed: {0}", propertyName);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

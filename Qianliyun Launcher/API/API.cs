@@ -104,7 +104,7 @@ namespace Qianliyun_Launcher.API
         public async Task PopulateAccountInformation()
         {
             Logger.Debug("PopulateAccountInformation");
-            var UserInfo = await State.HTTPClient.PostAsync("query_user_info.php")
+            var UserInfo = await State.HTTPClient.PostAsync("query_user_info.php", new {})
                 .WithHeader("Cookie", State.LoginCredential)
                 .As<UserInfo>();
             Logger.Debug(UserInfo);
