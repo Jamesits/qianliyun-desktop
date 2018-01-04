@@ -70,7 +70,7 @@ namespace Qianliyun_Launcher
             set
             {
                 _cookie = value;
-                if (SaveLoginStatus)
+                if (SaveLoginStatus || value == null)
                 {
                     ApplicationConfig["LoginCredential"] = value;
                     ApplicationConfig.Save();

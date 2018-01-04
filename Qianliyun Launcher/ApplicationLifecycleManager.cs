@@ -42,24 +42,34 @@ namespace Qianliyun_Launcher
 
             // check login status
             State._loginDialog = new LoginDialog();
-            while (!State.IsLoggedIn || !State.api.verifyCachedLoginCredential())
+            if (!State.SaveLoginStatus || !State.api.verifyCachedLoginCredential())
             {
-                Logger.Info("Try login");
-                bool ret = false;
-                try
+                while (!State.IsLoggedIn)
                 {
-                    ret = await State._loginDialog.DoLogin();
-                }
-                catch (ApiException ex)
-                {
-                    Logger.Fatal("Login failed: {0}", ex);
-                    MessageBox.Show(ex.Message, "网络故障");
-                }
-                finally
-                {
-                    if (!ret) Current.Shutdown(1);
+                    Logger.Info("Try login");
+                    bool ret = false;
+                    try
+                    {
+                        ret = await State._loginDialog.DoLogin();
+                    }
+                    catch (ApiException ex)
+                    {
+                        Logger.Fatal("Login failed: {0}", ex);
+                        MessageBox.Show(ex.Message, "网络故障");
+                    }
+                    finally
+                    {
+                        if (!ret) Current.Shutdown(1);
+                    }
                 }
             }
+            else
+            {
+                State.IsLoggedIn = true;
+                Logger.Debug("Logged in using saved credential");
+            }
+
+            Logger.Debug("Logged in");
 
             // pull and populate global config
 

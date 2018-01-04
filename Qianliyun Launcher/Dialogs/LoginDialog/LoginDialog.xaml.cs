@@ -61,6 +61,7 @@ namespace Qianliyun_Launcher.Dialogs.LoginDialog
                 // wipe memory
                 Password.Clear();
                 System.GC.Collect();
+                Hide();
             }
             return flag;
         }
