@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,39 +15,47 @@ namespace Qianliyun_Launcher
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        private StateManager State => StateManager.Instance;
+        private static StateManager State => StateManager.Instance;
 
         #region Windows
-        private BackgroundWindow _bgWindow;
-        private MainWindow _mainWindow;
+        
         #endregion
 
         private void ApplicationStart(object sender, StartupEventArgs e)
         {
             //Disable shutdown when the dialog closes
             Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            
+            // basic information
+            Logger.Debug("Assembly: {0}", Assembly.GetEntryAssembly().GetName().Name);
+
+            // launch log window
+            Logger.Debug("Launching logging window");
+            State._logWindow = new LogWindow.LogWindow();
+            if (State.IsDebugMode) State._logWindow.Show();
 
             // check login status
-            do
-            {
-                Thread.Sleep(1000);
-            } while (!State.IsLoggedIn);
+            //do
+            //{
+            //    Thread.Sleep(1000);
+            //} while (!State.IsLoggedIn);
 
 
             // pull and populate global config
 
             // launch background window
             Logger.Debug("Loading background window");
-            _bgWindow = new BackgroundWindow();
+            State._bgWindow = new BackgroundWindow();
             //this.bgWindow.EnableDebugMode();
 
             // launch main window
             Logger.Debug("Loading Main Window");
-            _mainWindow = new MainWindow();
+            State._mainWindow = new MainWindow();
+            State._mainWindow.Show();
 
             //Re-enable normal shutdown mode.
             Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
-            Current.MainWindow = _mainWindow;
+            Current.MainWindow = State._mainWindow;
         }
     }
 }

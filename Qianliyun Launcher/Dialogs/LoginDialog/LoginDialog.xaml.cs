@@ -42,7 +42,7 @@ namespace Qianliyun_Launcher.Dialogs.LoginDialog
 
         private bool checkCachedLoginCredential()
         {
-            
+            return false;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

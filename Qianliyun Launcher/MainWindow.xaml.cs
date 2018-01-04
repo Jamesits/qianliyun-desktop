@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using NLog;
 using Qianliyun_Launcher.BroadcastCapture.View;
@@ -51,12 +53,40 @@ namespace Qianliyun_Launcher
         #endregion
 
         #region MVVM Data Bindings
-        public bool IsDebugMode => (bool)Properties.Settings.Default["debug"];
+
+        public bool IsDebugMode
+        {
+            get => State.IsDebugMode;
+            set {
+                State.IsDebugMode = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         #endregion
-        
+
+        public static RoutedCommand HotkeyRoutedCommand = new RoutedCommand();
+        private int _debugModeToggleHitCount;
+        private Timer _debugModeToggleHitCountResetTimer;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        // This method is called by the Set accessor of each property.
+        // The CallerMemberName attribute that is applied to the optional propertyName
+        // parameter causes the property name of the caller to be substituted as an argument.
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            Logger.Debug("Property changed: {0}", propertyName);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public MainWindow()
         {
             InitializeComponent();
+
+            // register hotkey
+            HotkeyRoutedCommand.InputGestures.Add(new KeyGesture(Key.D, ModifierKeys.Control));
+            _debugModeToggleHitCountResetTimer = new Timer(x => { _debugModeToggleHitCount = 0; }, null, 0, 1000);
 
             // display loading progressbar
             _switchToTab<Loading>(ref _loadingPage);
@@ -64,7 +94,6 @@ namespace Qianliyun_Launcher
             // prepare controls
             Logger.Debug("Preparing controls");
 
-            
             // Done, goto homepage
             Logger.Debug("Loading Homepage");
             _switchToTab<Homepage.Homepage>(ref _homepage);
@@ -122,9 +151,26 @@ namespace Qianliyun_Launcher
             _switchToTab<DebugPanel.DebugPanel>(ref _debugPanel);
         }
 
+        private void ButtonLogWindow_OnClick(object sender, RoutedEventArgs e)
+        {
+            Logger.Debug("Toggling LogWindow visibility");
+            if (State._logWindow.IsVisible)
+                State._logWindow.Hide();
+            else
+                State._logWindow.Show();
+        }
+
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             // _bgWindow.Close();
+        }
+
+        private void ToggleDebugMode(object sender, ExecutedRoutedEventArgs e)
+        {
+            _debugModeToggleHitCount++;
+            if (_debugModeToggleHitCount != 5) return;
+            Logger.Info("Toggling debug mode");
+            IsDebugMode = !IsDebugMode;
         }
     }
 
