@@ -119,28 +119,16 @@ namespace Qianliyun_Launcher
             Logger.Debug("Creating StateManager");
 
             // set initial states
-            
+
             // init global objects
-            HTTPClient = new FluentClient(APIBaseURL);
+            // https://github.com/Pathoschild/FluentHttpClient/issues/72#issuecomment-355486050
+            HTTPClient = new FluentClient(APIBaseURL, new HttpClient(new HttpClientHandler { UseCookies = false }));
             HTTPClient.SetUserAgent($"{AssemblyName}/{AppVersionString}");
-            HTTPClient.Filters.Add((IRequest request) =>
-            {
-                
-            });
+            // auto add auth cookie if exist
+            HTTPClient.Filters.Add(new FluentHttpClientCustomFilter());
 
             api = new API.API();
 
-        }
-
-        /// <summary>Method invoked just before the HTTP request is submitted. This method can modify the outgoing HTTP request.</summary>
-        /// <param name="request">The HTTP request.</param>
-        public void OnRequest(IRequest request)
-        {
-            if (IsLoggedIn && LoginCredential.Length > 0)
-            {
-                request.Message.Headers.GetCookies("JSESSIONID") = LoginCredential;
-            }
-            request.Message.Headers.Authorization = new AuthenticationHeaderValue("token", "…");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
