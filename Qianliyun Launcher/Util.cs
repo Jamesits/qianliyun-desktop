@@ -54,11 +54,13 @@ namespace Qianliyun_Launcher
         /// <param name="httpErrorAsException">Whether HTTP error responses (e.g. HTTP 404) should be raised as exceptions.</param>
         public void OnResponse(IResponse response, bool httpErrorAsException)
         {
+#if DEBUG
             Logger.Debug("HTTP {0} {1} \nRequest Header: {2}\nResponse header: {3}", 
                 response.Message.Version,
                 response.Message.StatusCode,
                 response.Message.RequestMessage,
                 response.Message.Headers);
+#endif
             return;
         }
     }
@@ -76,7 +78,9 @@ namespace Qianliyun_Launcher
             out object result)
         {
             result = null;
+#if DEBUG
             Logger.Debug("Trying to access member {0} type {1}", binder.Name, binder.GetType());
+#endif
             if (binder.GetType() != _obj.GetType()) return false;
             result = _obj;
             return true;
@@ -88,7 +92,9 @@ namespace Qianliyun_Launcher
             object[] args,
             out object result)
         {
+#if DEBUG
             Logger.Debug("Trying to invoke member {0} type {1}", binder.Name, binder.GetType());
+#endif
             result = null;
             return false;
         }
@@ -146,8 +152,9 @@ namespace Qianliyun_Launcher
                 {
                     if (!propType.IsByRef && !(propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(Nullable<>))) // originally used `!propType.IsByRef && propType.Name != "Nullable`1"`
                     {
-                            
+#if DEBUG
                         Logger.Warn("Setting an not nullable type property `{0}` to null, ignored", kv.Key);
+#endif
                         // Throw if type is a value type 
                         // but not Nullable<>
                         // throw new ArgumentException($"`{kv.Key}` is not nullable");
@@ -155,7 +162,9 @@ namespace Qianliyun_Launcher
                 }
                 else if (kv.Value.GetType() != propType)
                 {
+#if DEBUG
                     Logger.Warn("Assigning property `{0}` with type `{1}` to a different type `{2}`", kv.Key, kv.Value.GetType(), propType);
+#endif
                     // You could make this a bit less strict 
                     // but I don't recommend it.
                     // throw new ArgumentException("type mismatch");

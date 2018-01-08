@@ -116,11 +116,17 @@ namespace Qianliyun_Launcher.QianniuTag
                 {
                     try
                     {
+#if DEBUG
                         Logger.Debug("Finding Qianniu Application");
+#endif
                         var qianniuTopWindows = qianniuApplication.GetAllTopLevelWindows(automation);
+#if DEBUG
                         Logger.Debug("Finding Qianniu Chat Window");
+#endif
                         var chatWindow = qianniuTopWindows.Where(x => x.Name.EndsWith("接待中心")).ToList()[0];
+#if DEBUG
                         Logger.Debug("Finding Search bar");
+#endif
                         var searchBar = chatWindow.FindFirstByXPath("/Pane[last()]/Pane[5]");
 
                         // if there is content in searchBar, Click clear;
@@ -129,13 +135,17 @@ namespace Qianliyun_Launcher.QianniuTag
                             var searchBarChilds = searchBar.FindAllChildren().ToList();
                             if (searchBarChilds.Count > 2)
                             {
+#if DEBUG
                                 Logger.Debug("Clearing search bar content");
+#endif
                                 var clearBtn = searchBarChilds[2].AsButton();
                                 Click(clearBtn.Properties.NativeWindowHandle, 5, 5);
                             }
                             else
                             {
+#if DEBUG
                                 Logger.Debug("Nothing in search bar, OK to progress");
+#endif
                             }
                         }
                         catch (Exception e)
@@ -148,9 +158,13 @@ namespace Qianliyun_Launcher.QianniuTag
 
                         try
                         {
+#if DEBUG
                             Logger.Debug("Finding search textbox");
+#endif
                             var searchBox = searchBar.FindFirstByXPath("/Edit").AsTextBox();
+#if DEBUG
                             Logger.Debug("Inserting username {0}", name);
+#endif
                             Write(searchBox.Properties.NativeWindowHandle, name);
                         }
                         catch (Exception e)
@@ -165,14 +179,18 @@ namespace Qianliyun_Launcher.QianniuTag
                         // check if we can get a search result pane
                         try
                         {
+#if DEBUG
                             Logger.Debug("See if we can get a search resule pane...");
+#endif
                             var searchResultPopup = chatWindow.FindAllChildren()
                                 .Where(x => x.FindAllChildren().Length == 2 && x.FindAllChildren()[1].Name == "SEARCH_WND")
                                 .ToList()[0];
                             var searchResultInnerPane = searchResultPopup.FindFirstByXPath("/Pane[2]");
                             // search in network
                             // TODO: it seems that pressing enter works too. needs verification.
+#if DEBUG
                             Logger.Debug("we need to search in network rather than friend list");
+#endif
                             Click(searchResultInnerPane.Properties.NativeWindowHandle,
                                 searchResultInnerPane.ActualWidth.ToInt() - 15, 21);
                         }
@@ -188,7 +206,9 @@ namespace Qianliyun_Launcher.QianniuTag
                         // wait for search result
                         try
                         {
+#if DEBUG
                             Logger.Debug("find search result pop dialog");
+#endif
                             var searchResultPopup = chatWindow.FindAllChildren()
                                 .Where(x => x.FindAllChildren().Length == 2 && x.FindAllChildren()[1].Name == "SEARCH_WND")
                                 .ToList()[0];
@@ -197,7 +217,9 @@ namespace Qianliyun_Launcher.QianniuTag
                             // check if there is result
 
                             // Click first entry
+#if DEBUG
                             Logger.Debug("Click on the first entry");
+#endif
                             //clickWithMouse(
                             //    (int)(searchResultInnerPane.BoundingRectangle.X + searchResultInnerPane.BoundingRectangle.Width / 2),
                             //    (int)searchResultInnerPane.BoundingRectangle.Y + 19);
@@ -226,7 +248,9 @@ namespace Qianliyun_Launcher.QianniuTag
                         catch (ArgumentOutOfRangeException)
                         {
                             // OK, let's continue...
+#if DEBUG
                             Logger.Debug("Friend request passed");
+#endif
                         }
 
                         Thread.Sleep(1000);
@@ -234,12 +258,16 @@ namespace Qianliyun_Launcher.QianniuTag
                         try
                         {
                             // now we should have chat dialog opened...
+#if DEBUG
                             Logger.Debug("Trying to find add friend toolbar");
+#endif
                             // find chat toolbar
                             var friendToolbar = chatWindow.FindFirstByXPath("/Pane[last()]/Pane[3]").FindAllChildren()
                                 .Where((x => x.ClassName == "ToolBarPlus")).ToList()[0];
                             // Click on add friend button
+#if DEBUG
                             Logger.Debug("Click on add friend button");
+#endif
                             // TODO: this guy may already be friend. Try to detect?
                             Click(friendToolbar.Properties.NativeWindowHandle, 90, 18);
                             // clickWithMouse((int) friendToolbar.BoundingRectangle.Left + 90, (int) friendToolbar.BoundingRectangle.Top + 15);
@@ -272,7 +300,9 @@ namespace Qianliyun_Launcher.QianniuTag
                         // Otherwise we should have a "添加好友成功!" dialog here
                         try
                         {
+#if DEBUG
                             Logger.Debug("trying to get a friended dialog");
+#endif
                             var desktop = automation.GetDesktop();
                             var addFriendVerificationWindow = desktop.FindAllChildren().Where(x => x.Name == "添加好友成功!")
                                 .ToList()[0];
@@ -295,7 +325,9 @@ namespace Qianliyun_Launcher.QianniuTag
                         // Click "客户" on the right panel on chat dialog
                         try
                         {
+#if DEBUG
                             Logger.Debug("Clicking on customer information tab");
+#endif
                             var userInformationTabBar = chatWindow.FindFirstByXPath("/Pane[2]/Pane[3]/Pane[5]/Pane[1]");
                             Click(userInformationTabBar.Properties.NativeWindowHandle, 210, 22);
                         }
@@ -311,7 +343,9 @@ namespace Qianliyun_Launcher.QianniuTag
                         // now find the right panel - a embedded Chrome
                         try
                         {
+#if DEBUG
                             Logger.Debug("Find the right panel");
+#endif
                             var rightPanel = chatWindow.FindFirstByXPath("/Pane[2]/Pane[3]/Pane[5]/Pane[3]");
                             var customerInformationPanel = rightPanel.FindFirstByXPath("/Pane/Pane/Pane");
                             // TODO: there is two identical documents under customerInformationPanel; check why
@@ -319,11 +353,15 @@ namespace Qianliyun_Launcher.QianniuTag
                             // check if Chrome MSAA API has been enabled
                             if (customerInformationDocument.FindAllChildren().Length == 0)
                             {
+#if DEBUG
                                 Logger.Fatal("Chrome MSAA not enabled!");
+#endif
                                 throw new UIAutomationUnsupportedException(
-                                    "Legacy Chrome Window don't have MSAA support enabled");
+                                    "Chrome BOOM");
                             }
+#if DEBUG
                             Logger.Debug("Chrome MSAA check passed, continue to next stage");
+#endif
 
                             // find Edit after "备注"; following List （tag 总数量）
                             var commentEditControl = customerInformationDocument.FindAllChildren().Last(x =>
@@ -337,7 +375,9 @@ namespace Qianliyun_Launcher.QianniuTag
                                     return false;
                                 }
                             });
+#if DEBUG
                             Logger.Debug("Got comment edit control");
+#endif
                             var htmlTopNodes = customerInformationDocument.FindAllChildren();
                             // 备注
                             // 备注输入框
@@ -348,13 +388,16 @@ namespace Qianliyun_Launcher.QianniuTag
                             var tagListIndex = htmlTopNodes.ToList().IndexOf(commentEditControl) + 2;
                             var alreadyHadTagCount = Convert.ToInt32(htmlTopNodes[tagListIndex - 1].FindFirstChild()
                                 .FindChildAt(2).Name);
+#if DEBUG
                             Logger.Debug("This user have {0} tags", alreadyHadTagCount);
+#endif
                             var alreadyHadTagList = htmlTopNodes.ToList().Skip(tagListIndex)
                                 .Take(alreadyHadTagCount);
                             var alreadyHadTags = alreadyHadTagList.Select(x => x.FindFirstChild().Name).ToList();
+#if DEBUG
                             Logger.Info("User tags: ");
                             foreach (var tag in alreadyHadTags) Logger.Info("\t{0}", tag);
-
+#endif
                             // if this user already have this tag -> ignore
                             if (alreadyHadTags.Contains(newTag)) throw new TagAlreadyPresentException();
 
@@ -379,8 +422,10 @@ namespace Qianliyun_Launcher.QianniuTag
                             // after user tags, before last one
                             var alreadyPresentTags = htmlTopNodes.ToList().Skip(tagListIndex + alreadyHadTagCount).Reverse()
                                 .Skip(1).Reverse().Select(x => x.FindFirstChild().Name).ToList();
+#if DEBUG
                             Logger.Info("Global tags: ");
                             foreach (var tag in alreadyPresentTags) Logger.Info("\t{0}", tag);
+#endif
                             if (!alreadyPresentTags.Contains(newTag)) throw new TagNotExistException();
 
                             // get the tag to be added
@@ -428,6 +473,7 @@ namespace Qianliyun_Launcher.QianniuTag
             {
                 // cannot find AliWorkbench.exe
                 Logger.Error(e.Message);
+                throw new UIAutomationNotTestedRouteException("Cannot find running Qianniu", e);
             }
         }
     }
