@@ -129,9 +129,17 @@ namespace Qianliyun_Launcher.API
             State.LoginCredential = null;
         }
 
-        public bool VerifyCachedLoginCredential()
+        public async Task<bool> VerifyCachedLoginCredential()
         {
-            return true;
+            try
+            {
+                await PopulateAccountInformation();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         #endregion

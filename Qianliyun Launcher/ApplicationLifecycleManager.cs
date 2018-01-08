@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using NLog;
 using Pathoschild.Http.Client;
 using Qianliyun_Launcher.DeepDarkWin32Fantasy;
 using Qianliyun_Launcher.Dialogs.LoginDialog;
-using Qianliyun_Launcher.Properties;
 
 namespace Qianliyun_Launcher
 {
@@ -31,25 +25,28 @@ namespace Qianliyun_Launcher
             //Disable shutdown when the dialog closes
             Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
+            // parse arguments
+            State.Args = e.Args;
+            if (Util.StringInArray("/noshutup", State.Args, false)) State.IsDebugMode = true;
+
             // launch log window
             Logger.Debug("Launching logging window");
             State._logWindow = new LogWindow.LogWindow();
             if (State.IsDebugMode) State._logWindow.Show();
 
             // basic information
-            StringBuilder sb = new StringBuilder(String.Empty);
+            var sb = new StringBuilder(string.Empty);
             sb.AppendLine("Operation System Information");
             sb.AppendLine("----------------------------");
-            sb.AppendLine(String.Format("Name = {0}", OSVersionInfo.Name));
-            sb.AppendLine(String.Format("Edition = {0}", OSVersionInfo.Edition));
-            if (OSVersionInfo.ServicePack != string.Empty)
-                sb.AppendLine(String.Format("Service Pack = {0}", OSVersionInfo.ServicePack));
-            else
-                sb.AppendLine("Service Pack = None");
-            sb.AppendLine(String.Format("Version = {0}", OSVersionInfo.VersionString));
-            sb.AppendLine(String.Format("ProcessorBits = {0}", OSVersionInfo.ProcessorBits));
-            sb.AppendLine(String.Format("OSBits = {0}", OSVersionInfo.OSBits));
-            sb.AppendLine(String.Format("ProgramBits = {0}", OSVersionInfo.ProgramBits));
+            sb.AppendLine($"Name = {OSVersionInfo.Name}");
+            sb.AppendLine($"Edition = {OSVersionInfo.Edition}");
+            sb.AppendLine(OSVersionInfo.ServicePack != string.Empty
+                ? $"Service Pack = {OSVersionInfo.ServicePack}"
+                : "Service Pack = None");
+            sb.AppendLine($"Version = {OSVersionInfo.VersionString}");
+            sb.AppendLine($"ProcessorBits = {OSVersionInfo.ProcessorBits}");
+            sb.AppendLine($"OSBits = {OSVersionInfo.OSBits}");
+            sb.AppendLine($"ProgramBits = {OSVersionInfo.ProgramBits}");
             Logger.Debug(sb);
             Logger.Debug("Assembly: {0}", State.AssemblyName);
             Logger.Debug("AppName: {0}", State.AppName);
@@ -60,7 +57,7 @@ namespace Qianliyun_Launcher
             if (!State.IsFirstInstance)
             {
                 Logger.Fatal("Multiple instance detected, quitting");
-                MessageBox.Show("本程序不支持重复运行");
+                MessageBox.Show("本程序不支持同时运行");
                 Current.Shutdown(1);
             }
 
@@ -71,7 +68,7 @@ namespace Qianliyun_Launcher
                 while (!State.IsLoggedIn)
                 {
                     Logger.Info("Try login");
-                    bool ret = false;
+                    var ret = false;
                     try
                     {
                         ret = await State._loginDialog.DoLogin();

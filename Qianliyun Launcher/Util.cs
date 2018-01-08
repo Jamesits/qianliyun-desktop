@@ -23,6 +23,16 @@ namespace Qianliyun_Launcher
             }
             return lowerCase ? builder.ToString().ToLower() : builder.ToString();
         }
+
+        public static bool StringInArray(string value, string[] from, bool ignoreCase = false)
+        {
+            if (ignoreCase)
+            {
+                from = from.Select(x => x.ToLower()).ToArray();
+                value = value.ToLower();
+            }
+            return Array.IndexOf(from, value) > -1;
+        }
     }
 
     class FluentHttpClientCustomFilter : Pathoschild.Http.Client.Extensibility.IHttpFilter

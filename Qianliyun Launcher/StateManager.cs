@@ -55,6 +55,8 @@ namespace Qianliyun_Launcher
 
         #region states
 
+        public string[] Args;
+
         public string APIBaseURL => (string) ApplicationConfig["APIBaseURL"];
 
         private bool? _isDebugMode;
