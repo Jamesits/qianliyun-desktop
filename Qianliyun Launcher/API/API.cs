@@ -24,10 +24,18 @@ namespace Qianliyun_Launcher.API
         }
 
         #region wrapper
-
         private static async Task<T> GetApiObject<T>(string api, string extractedObjName) where T: class, new()
         {
             var retstr = await State.HTTPClient.PostAsync(api).AsString();
+            dynamic retobj = JsonConvert.DeserializeObject<ExpandoObject>(retstr, new ExpandoObjectConverter());
+            var ret = new T();
+            Mapper<T>.Map((ExpandoObject)((IDictionary<string, object>)retobj)[extractedObjName], ret);
+            return ret;
+        }
+
+        private static async Task<T> GetApiObject<T>(string api, object postBody, string extractedObjName) where T : class, new()
+        {
+            var retstr = await State.HTTPClient.PostAsync(api, postBody).AsString();
             dynamic retobj = JsonConvert.DeserializeObject<ExpandoObject>(retstr, new ExpandoObjectConverter());
             var ret = new T();
             Mapper<T>.Map((ExpandoObject)((IDictionary<string, object>)retobj)[extractedObjName], ret);
