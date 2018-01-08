@@ -63,7 +63,7 @@ namespace Qianliyun_Launcher
 
             // check login status
             State._loginDialog = new LoginDialog();
-            if (!State.SaveLoginStatus || !State.api.VerifyCachedLoginCredential())
+            if (!State.SaveLoginStatus || !await State.api.VerifyCachedLoginCredential())
             {
                 while (!State.IsLoggedIn)
                 {
