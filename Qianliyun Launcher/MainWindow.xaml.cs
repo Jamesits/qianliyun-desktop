@@ -162,6 +162,7 @@ namespace Qianliyun_Launcher
             if (_debugModeToggleHitCount != 5) return;
             Logger.Info("Toggling debug mode");
             IsDebugMode = !IsDebugMode;
+            State._logWindow.Show();
         }
     }
 
