@@ -88,6 +88,7 @@ namespace Qianliyun_Launcher
             Logger.Debug("Logged in");
 
             // pull and populate global config
+            await State.api.PopulateAccountInformation();
 
             // launch background window
             Logger.Debug("Loading background window");

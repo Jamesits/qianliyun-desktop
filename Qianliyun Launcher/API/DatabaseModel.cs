@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.RightsManagement;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Animation;
+﻿using System.Collections.Generic;
 
 // ReSharper disable All 
 
@@ -24,32 +18,32 @@ namespace Qianliyun_Launcher.API
 
     public class LiveSession
     {
-        public Int64 id;
-        public Int64 UserID;
-        public string url;
-        public string title;
-        public string host;
-        public string comment;
-        public float begin;
-        public float end;
-        public List<string> tags;
+        public long? Id { get; set; }
+        public long? UserID { get; set; }
+        public string Url { get; set; }
+        public string Title { get; set; }
+        public string Host { get; set; }
+        public string Comment { get; set; }
+        public float Begin { get; set; }
+        public float End { get; set; }
+        public List<string> Tags { get; set; }
     }
 
     public class CustomerInfo
     {
-        public Int64 id;
-        public Int64 user_id;
-        public string customer_name;
-        public string mobile;
-        public string status;
-        public List<string> tags;
+        public long? Id { get; set; }
+        public long? User_id { get; set; }
+        public string Customer_name { get; set; }
+        public string Mobile { get; set; }
+        public string Status { get; set; }
+        public List<string> Tags { get; set; }
     }
 
     public class LiveViewer
     {
-        public Int64 id;
-        public Int64 user_id;
-        public Int64 live_id;
-        public Int64 customer_id;
+        public long? Id { get; set; }
+        public long? User_id { get; set; }
+        public long? Live_id { get; set; }
+        public long? Customer_id { get; set; }
     }
 }
