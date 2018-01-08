@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using NLog;
@@ -15,7 +16,13 @@ namespace Qianliyun_Launcher
         private static StateManager State => StateManager.Instance;
 
         #region Windows
-        
+
+        #endregion
+
+        #region debug initialization
+        [Conditional("DEBUG")]
+        private static void InitDebugEnv()
+        { }
         #endregion
 
         [STAThread]
@@ -28,6 +35,8 @@ namespace Qianliyun_Launcher
             // parse arguments
             State.Args = e.Args;
             if (Util.StringInArray("/noshutup", State.Args, false)) State.IsDebugMode = true;
+
+            InitDebugEnv();
 
             // launch log window
             Logger.Debug("Launching logging window");
