@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using NLog;
 using NLog.Fluent;
 using Pathoschild.Http.Client;
+using Qianliyun_Launcher.API;
 using Qianliyun_Launcher.Dialogs.LoginDialog;
 using Qianliyun_Launcher.Properties;
 
@@ -102,6 +103,9 @@ namespace Qianliyun_Launcher
                 return (string)ApplicationConfig["MachineGUID"];
             }
         }
+
+        public UserInfo UserInfo { get; set; }
+
         #endregion
 
         #region windows

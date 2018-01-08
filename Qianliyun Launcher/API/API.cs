@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Net;
 using System.Security;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using NLog;
 using Pathoschild.Http.Client;
 
@@ -18,6 +22,18 @@ namespace Qianliyun_Launcher.API
         {
             Logger.Debug("Init API");
         }
+
+        #region wrapper
+
+        private static async Task<T> GetApiObject<T>(string api, string extractedObjName) where T: class, new()
+        {
+            var retstr = await State.HTTPClient.PostAsync(api).AsString();
+            dynamic retobj = JsonConvert.DeserializeObject<ExpandoObject>(retstr, new ExpandoObjectConverter());
+            var ret = new T();
+            Mapper<T>.Map((ExpandoObject)((IDictionary<string, object>)retobj)[extractedObjName], ret);
+            return ret;
+        }
+        #endregion
 
         #region login
 
@@ -104,9 +120,7 @@ namespace Qianliyun_Launcher.API
         public async Task PopulateAccountInformation()
         {
             Logger.Debug("PopulateAccountInformation");
-            var UserInfo = await State.HTTPClient.PostAsync("query_user_info.php", new {})
-                .As<SBStructure<UserInfo>>();
-            Logger.Debug(UserInfo);
+            State.UserInfo = await GetApiObject<UserInfo>("query_user_info.php", "user_info");
         }
 
         #endregion

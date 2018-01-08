@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.RightsManagement;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Animation;
 
 // ReSharper disable All 
 
@@ -11,14 +12,14 @@ namespace Qianliyun_Launcher.API
 {
     public class UserInfo
     {
-        public Int64 id;
-        public string username;
-        public string alias;
-        public string reseller_alias;
-        public int auth_max;
-        public int auth_left;
-        public int deauth_left;
-        public Int64 reseller;
+        public long? Id { get; set; }
+        public string Username { get; set; }
+        public string Alias { get; set; }
+        public string Reseller_alias { get; set; }
+        public long? Auth_max { get; set; }
+        public long? Auth_left { get; set; }
+        public long? Deauth_left { get; set; }
+        public long? Reseller { get; set; }
     }
 
     public class LiveSession
