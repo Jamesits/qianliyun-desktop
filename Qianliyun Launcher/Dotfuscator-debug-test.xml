@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE dotfuscator SYSTEM "http://www.preemptive.com/dotfuscator/dtd/dotfuscator_v2.4.dtd">
+<dotfuscator version="2.3">
+  <input>
+    <loadpaths />
+    <asmlist>
+      <package refid="4f58cbac-09d6-4f29-ac85-19dbb68a50f2">
+        <file dir="C:\Users\james\code\qianliyun\desktop\Launcher\Qianliyun Launcher\bin\x86" name="Debug" />
+        <asmlist>
+          <inputassembly refid="975f78ae-f8f1-4388-bec2-6ecc8c7fd83f">
+            <option>honoroas</option>
+            <option>stripoa</option>
+            <option>library</option>
+            <option>artifact</option>
+            <option>transformxaml</option>
+            <file dir="" name="CefSharp.BrowserSubprocess.Core.dll" />
+          </inputassembly>
+          <inputassembly refid="6e046508-8b52-4449-9fc4-89a4c4a6601b">
+            <option>honoroas</option>
+            <option>stripoa</option>
+            <option>library</option>
+            <option>artifact</option>
+            <option>transformxaml</option>
+            <file dir="" name="CefSharp.BrowserSubprocess.exe" />
+          </inputassembly>
+          <inputassembly refid="79842003-6444-4405-ae20-a5f3a5766560">
+            <option>honoroas</option>
+            <option>stripoa</option>
+            <option>library</option>
+            <option>artifact</option>
+            <option>transformxaml</option>
+            <file dir="" name="CefSharp.Core.dll" />
+          </inputassembly>
+          <inputassembly refid="b3ad62d9-a16a-4463-8554-58111e9da7f2">
+            <option>honoroas</option>
+            <option>stripoa</option>
+            <option>library</option>
+            <option>artifact</option>
+            <option>transformxaml</option>
+            <file dir="" name="CefSharp.dll" />
+          </inputassembly>
+          <inputassembly refid="4b37378c-2aa0-419f-8700-6d7c8fd8c870">
+            <option>honoroas</option>
+            <option>stripoa</option>
+            <option>library</option>
+            <option>artifact</option>
+            <option>transformxaml</option>
+            <file dir="" name="CefSharp.Wpf.dll" />
+          </inputassembly>
+          <inputassembly refid="c088f3f7-5ce3-411f-a7eb-7499ccd0a423">
+            <option>honoroas</option>
+            <option>stripoa</option>
+            <option>library</option>
+            <option>artifact</option>
+            <option>transformxaml</option>
+            <file dir="" name="FlaUI.Core.dll" />
+          </inputassembly>
+          <inputassembly refid="3440e514-7166-487a-ba7c-5bac2397624a">
+            <option>honoroas</option>
+            <option>stripoa</option>
+            <option>library</option>
+            <option>artifact</option>
+            <option>transformxaml</option>
+            <file dir="" name="FlaUI.UIA3.dll" />
+          </inputassembly>
+          <inputassembly refid="91109eb0-beb2-41dc-a432-b2a571d32c93">
+            <option>honoroas</option>
+            <option>stripoa</option>
+            <option>library</option>
+            <option>artifact</option>
+            <option>transformxaml</option>
+            <file dir="" name="GalaSoft.MvvmLight.dll" />
+          </inputassembly>
+          <inputassembly refid="bf101a4c-72ab-4387-8a23-d7910e0cb801">
+            <option>honoroas</option>
+            <option>stripoa</option>
+            <option>library</option>
+            <option>artifact</option>
+            <option>transformxaml</option>
+            <file dir="" name="GalaSoft.MvvmLight.Extras.dll" />
+          </inputassembly>
+          <inputassembly refid="dae9b8c4-2697-47fa-ba40-0bf3648255d7">
+            <option>honoroas</option>
+            <option>stripoa</option>
+            <option>library</option>
+            <option>artifact</option>
+            <option>transformxaml</option>
+            <file dir="" name="GalaSoft.MvvmLight.Platform.dll" />
+          </inputassembly>
+          <inputassembly refid="8c7c54b2-c055-4493-805a-ac21656820e7">
+            <option>honoroas</option>
+            <option>stripoa</option>
+            <option>library</option>
+            <option>artifact</option>
+            <option>transformxaml</option>
+            <file dir="" name="Interop.UIAutomationClient.dll" />
+          </inputassembly>
+          <inputassembly refid="9966cbcc-0732-41f2-8a5f-430857866721">
+            <option>honoroas</option>
+            <option>stripoa</option>
+            <option>library</option>
+            <option>artifact</option>
+            <option>transformxaml</option>
+            <file dir="" name="KeraLua.dll" />
+          </inputassembly>
+          <inputassembly refid="b879bef8-0ea2-4de7-a4ac-4c06faf562e3">
+            <option>honoroas</option>
+            <option>stripoa</option>
+            <option>library</option>
+            <option>artifact</option>
+            <option>transformxaml</option>
+            <file dir="" name="Newtonsoft.Json.dll" />
+          </inputassembly>
+          <inputassembly refid="eab9fa7d-070d-427f-a3ff-eb4285985333">
+            <option>honoroas</option>
+            <option>stripoa</option>
+            <option>library</option>
+            <option>artifact</option>
+            <option>transformxaml</option>
+            <file dir="" name="NLog.dll" />
+          </inputassembly>
+          <inputassembly refid="0d5453fc-93b8-4e48-9de3-6a363137053a">
+            <option>honoroas</option>
+            <option>stripoa</option>
+            <option>library</option>
+            <option>artifact</option>
+            <option>transformxaml</option>
+            <file dir="" name="NLog.Windows.Forms.dll" />
+          </inputassembly>
+          <inputassembly refid="44a5dd54-c6c6-4cb2-b548-658351706cf3">
+            <option>honoroas</option>
+            <option>stripoa</option>
+            <option>library</option>
+            <option>artifact</option>
+            <option>transformxaml</option>
+            <file dir="" name="NLua.dll" />
+          </inputassembly>
+          <inputassembly refid="b0d23d3c-cfaf-493c-933d-06eaf442b4c3">
+            <option>honoroas</option>
+            <option>stripoa</option>
+            <option>library</option>
+            <option>artifact</option>
+            <option>transformxaml</option>
+            <file dir="" name="Pathoschild.Http.Client.dll" />
+          </inputassembly>
+          <inputassembly refid="49bfb8a8-1126-456e-8570-456269c0befe">
+            <option>honoroas</option>
+            <option>stripoa</option>
+            <option>library</option>
+            <option>transformxaml</option>
+            <file dir="" name="Qianliyun Launcher.exe" />
+          </inputassembly>
+        </asmlist>
+      </package>
+    </asmlist>
+  </input>
+  <output>
+    <file dir="${configdir}\Dotfuscated" />
+  </output>
+  <renaming>
+    <option>xmlserialization</option>
+    <mapping>
+      <mapoutput overwrite="false">
+        <file dir="${configdir}\Dotfuscated" name="Map.xml" />
+      </mapoutput>
+    </mapping>
+    <referencerulelist>
+      <referencerule rulekey="{6655B10A-FD58-462d-8D4F-5B1316DFF0FF}" />
+      <referencerule rulekey="{7D9C8B02-2383-420f-8740-A9760394C2C1}" />
+      <referencerule rulekey="{229FD6F8-5BCC-427b-8F72-A7A413ECDF1A}" />
+      <referencerule rulekey="{2B7E7C8C-A39A-4db8-9DFC-6AFD38509061}" />
+      <referencerule rulekey="{494EA3BA-B947-44B5-BEE8-A11CC85AAF9B}" />
+      <referencerule rulekey="{89769974-93E9-4e71-8D92-BE70E855ACFC}" />
+      <referencerule rulekey="{4D81E604-A545-4631-8B6D-C3735F793F80}" />
+    </referencerulelist>
+  </renaming>
+  <sos mergeruntime="true">
+    <option>version:v4</option>
+    <option>sendanalytics</option>
+    <option>dontsendtamper</option>
+  </sos>
+  <smartobfuscation>
+    <smartobfuscationreport verbosity="all" overwrite="false" />
+  </smartobfuscation>
+</dotfuscator>
