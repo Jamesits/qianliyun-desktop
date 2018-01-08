@@ -56,6 +56,14 @@ namespace Qianliyun_Launcher
             Logger.Debug("Application Version: {0}", State.AppVersionString);
             Logger.Info("Machine GUID is {0}", State.MachineKey);
 
+            // prevent multiple instances
+            if (!State.IsFirstInstance)
+            {
+                Logger.Fatal("Multiple instance detected, quitting");
+                MessageBox.Show("本程序不支持重复运行");
+                Current.Shutdown(1);
+            }
+
             // check login status
             State._loginDialog = new LoginDialog();
             if (!State.SaveLoginStatus || !State.api.VerifyCachedLoginCredential())

@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using NLog;
 using NLog.Fluent;
 using Pathoschild.Http.Client;
@@ -34,6 +35,7 @@ namespace Qianliyun_Launcher
         #region global objects
         public IClient HTTPClient;
         public API.API api;
+        private readonly Mutex GlobalAppLaunchLockMutex;
         #endregion
 
         #region System Info
@@ -44,6 +46,11 @@ namespace Qianliyun_Launcher
         public string AppVersionString =>
             $"{AppVersion.Major}.{AppVersion.Minor}.{AppVersion.Revision} build {AppVersion.Build}";
 
+        public readonly bool IsFirstInstance;
+        #endregion
+
+        #region config
+        public readonly string AppGuid = "9274ca94-bed4-4056-b188-faaa19f9cd10";
         #endregion
 
         #region states
@@ -132,7 +139,8 @@ namespace Qianliyun_Launcher
             HTTPClient.Filters.Add(new FluentHttpClientCustomFilter());
 
             api = new API.API();
-
+            GlobalAppLaunchLockMutex = new Mutex(false, "Global\\" + AppGuid);
+            IsFirstInstance = GlobalAppLaunchLockMutex.WaitOne(0, false);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
