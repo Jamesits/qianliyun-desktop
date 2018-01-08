@@ -130,29 +130,27 @@ namespace Qianliyun_Launcher
             foreach (var kv in source)
             {
                 PropertyInfo p;
-                if (_propertyMap.TryGetValue(kv.Key.ToLower(), out p))
+                if (!_propertyMap.TryGetValue(kv.Key.ToLower(), out p)) continue;
+                var propType = p.PropertyType;
+                if (kv.Value == null)
                 {
-                    var propType = p.PropertyType;
-                    if (kv.Value == null)
+                    if (!propType.IsByRef && !(propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(Nullable<>))) // originally used `!propType.IsByRef && propType.Name != "Nullable`1"`
                     {
-                        if (!propType.IsByRef && !(propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(Nullable<>))) // originally used `propType.Name != "Nullable`1"`
-                        {
                             
-                            Logger.Warn("Setting an not nullable type property `{0}` to null, ignored", kv.Key);
-                            // Throw if type is a value type 
-                            // but not Nullable<>
-                        //    throw new ArgumentException($"`{kv.Key}` is not nullable");
-                        }
+                        Logger.Warn("Setting an not nullable type property `{0}` to null, ignored", kv.Key);
+                        // Throw if type is a value type 
+                        // but not Nullable<>
+                        // throw new ArgumentException($"`{kv.Key}` is not nullable");
                     }
-                    else if (kv.Value.GetType() != propType)
-                    {
-                        Logger.Warn("Assigning property `{0}` with type `{1}` to a different type `{2}`", kv.Key, kv.Value.GetType(), propType);
-                        // You could make this a bit less strict 
-                        // but I don't recommend it.
-                        // throw new ArgumentException("type mismatch");
-                    }
-                    p.SetValue(destination, kv.Value, null);
                 }
+                else if (kv.Value.GetType() != propType)
+                {
+                    Logger.Warn("Assigning property `{0}` with type `{1}` to a different type `{2}`", kv.Key, kv.Value.GetType(), propType);
+                    // You could make this a bit less strict 
+                    // but I don't recommend it.
+                    // throw new ArgumentException("type mismatch");
+                }
+                p.SetValue(destination, kv.Value, null);
             }
         }
     }

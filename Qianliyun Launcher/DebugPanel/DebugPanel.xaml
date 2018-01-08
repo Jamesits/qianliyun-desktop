@@ -18,6 +18,7 @@
                 <Button x:Name="BtnClearLoginStatus" Content="清除登录状态" Click="BtnClearLoginStatus_OnClick"></Button>
                 <Button x:Name="BtnPopulateAccountInformation" Content="获取用户信息" Click="BtnPopulateAccountInformation_OnClick"></Button>
                 <Separator />
+                <Button x:Name="BtnQueryLiveSessions" Content="获取直播记录" Click="BtnQueryLiveSessions_OnClick" />
             </StackPanel>
             <DockPanel LastChildFill="True">
                 <DockPanel DockPanel.Dock="Top">

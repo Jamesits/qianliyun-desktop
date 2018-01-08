@@ -43,6 +43,20 @@ namespace Qianliyun_Launcher.API
         }
         #endregion
 
+        private static async Task TestApiEndpoint(string api, object postBody)
+        {
+            try
+            {
+                var retstr = await State.HTTPClient.PostAsync(api, postBody).AsString();
+                Logger.Debug(retstr);
+            }
+            catch (ApiException e)
+            {
+                Logger.Warn(e.Message);
+            }
+            
+        }
+
         #region login
 
         public async Task Login(string username, SecureString password, bool stayLoggedIn = false)
@@ -133,5 +147,15 @@ namespace Qianliyun_Launcher.API
 
         #endregion
 
+        #region TaobaoUser
+        #endregion
+
+        #region BroadcastCaptureSession
+
+        public async Task QueryLiveSessions()
+        {
+            await TestApiEndpoint("query_live_session.php", new LiveSession());
+        }
+        #endregion
     }
 }

@@ -94,5 +94,10 @@ namespace Qianliyun_Launcher.DebugPanel
         {
             await State.api.PopulateAccountInformation();
         }
+
+        private async void BtnQueryLiveSessions_OnClick(object sender, RoutedEventArgs e)
+        {
+            await State.api.QueryLiveSessions();
+        }
     }
 }

@@ -4,46 +4,49 @@
 
 namespace Qianliyun_Launcher.API
 {
+#pragma warning disable IDE1006 // Naming Styles
     public class UserInfo
     {
-        public long? Id { get; set; }
-        public string Username { get; set; }
-        public string Alias { get; set; }
-        public string Reseller_alias { get; set; }
-        public long? Auth_max { get; set; }
-        public long? Auth_left { get; set; }
-        public long? Deauth_left { get; set; }
-        public long? Reseller { get; set; }
+
+        public long? id { get; set; }
+        public string username { get; set; }
+        public string alias { get; set; }
+        public string reseller_alias { get; set; }
+        public long? auth_max { get; set; }
+        public long? auth_left { get; set; }
+        public long? deauth_left { get; set; }
+        public long? reseller { get; set; }
     }
 
     public class LiveSession
     {
-        public long? Id { get; set; }
-        public long? UserID { get; set; }
-        public string Url { get; set; }
-        public string Title { get; set; }
-        public string Host { get; set; }
-        public string Comment { get; set; }
-        public float Begin { get; set; }
-        public float End { get; set; }
-        public List<string> Tags { get; set; }
+        public long? id { get; set; }
+        public long? user_id { get; set; }
+        public string url { get; set; }
+        public string title { get; set; }
+        public string host { get; set; }
+        public string comment { get; set; }
+        public float begin { get; set; }
+        public float end { get; set; }
+        public List<string> tags { get; set; }
     }
 
     public class CustomerInfo
     {
-        public long? Id { get; set; }
-        public long? User_id { get; set; }
-        public string Customer_name { get; set; }
-        public string Mobile { get; set; }
-        public string Status { get; set; }
-        public List<string> Tags { get; set; }
+        public long? id { get; set; }
+        public long? user_id { get; set; }
+        public string customer_name { get; set; }
+        public string mobile { get; set; }
+        public string status { get; set; }
+        public List<string> tags { get; set; }
     }
 
     public class LiveViewer
     {
-        public long? Id { get; set; }
-        public long? User_id { get; set; }
-        public long? Live_id { get; set; }
-        public long? Customer_id { get; set; }
+        public long? id { get; set; }
+        public long? user_id { get; set; }
+        public long? live_id { get; set; }
+        public long? customer_id { get; set; }
     }
+#pragma warning restore IDE1006 // Naming Styles
 }
