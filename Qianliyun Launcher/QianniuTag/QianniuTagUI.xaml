@@ -7,13 +7,23 @@
              mc:Ignorable="d" 
              DataContext="{Binding RelativeSource={RelativeSource Self}}"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="LiveSessionsSource" Source="{Binding LiveSessions}" />
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </UserControl.Resources>
     <Grid>
-        <DataGrid x:Name="CaptureResultDataGrid" DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource LiveSessions}}" DisplayMemberPath="Name" Width="260" AutoGenerateColumns="False" CanUserAddRows="False" CanUserSortColumns="False" IsReadOnly="True">
-            <DataGrid.Columns>
-                <DataGridTextColumn x:Name="UserName" Width="Auto" Header="用户名" Binding="{Binding Username}"/>
-                <DataGridTextColumn x:Name="UserAction" Width="Auto" Header="动作" Binding="{Binding UserAction}"/>
-            </DataGrid.Columns>
-        </DataGrid>
+        <DockPanel LastChildFill="True">
+            <StackPanel DockPanel.Dock="Right">
+                <Button x:Name="BtnTag" Click="BtnTag_OnClick" Content="打标"></Button>
+            </StackPanel>
+            <DataGrid x:Name="CaptureResultDataGrid" DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource LiveSessionsSource}}" DisplayMemberPath="Name" AutoGenerateColumns="False" CanUserAddRows="False" CanUserSortColumns="False" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="UserName" Width="Auto" Header="直播名" Binding="{Binding Title}"/>
+                    <DataGridTextColumn x:Name="UserAction" Width="Auto" Header="房主" Binding="{Binding Host}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+        
 
     </Grid>
 </UserControl>

@@ -111,7 +111,7 @@ namespace Qianliyun_Launcher
         }
 
         public UserInfo UserInfo { get; set; }
-        public List<LiveSession> LiveSessions { get; set; }
+        public BindingList<LiveSession> LiveSessions { get; set; }
 
         #endregion
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Security;
@@ -167,7 +168,7 @@ namespace Qianliyun_Launcher.API
         public async Task QueryLiveSessions()
         {
             Logger.Debug("QueryLiveSessions");
-            State.LiveSessions = await GetApiObjectList<LiveSession>("query_live_session.php", "live_session", new LiveSession());
+            State.LiveSessions = new BindingList<LiveSession>(await GetApiObjectList<LiveSession>("query_live_session.php", "live_session", new LiveSession()));
         }
 
         public async Task UpdateLiveSession(LiveSession s)
