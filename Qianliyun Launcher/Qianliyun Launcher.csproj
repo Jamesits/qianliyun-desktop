@@ -227,6 +227,8 @@
       <DependentUpon>NotImplementedPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="DeepDarkWin32Fantasy\PInvoke.cs" />
+    <Compile Include="ObservableDictionary\ObservableDictionary.cs" />
+    <Compile Include="ObservableDictionary\ObservableSortedDictionary.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="QianniuTag\QianniuTagCore.cs" />
     <Compile Include="QianniuTag\QianniuTagUI.xaml.cs">
