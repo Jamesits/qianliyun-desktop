@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
@@ -12,7 +13,7 @@ namespace Qianliyun_Launcher.BroadcastCapture.ViewModel
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public Capture CaptureProperties;
-        public ObservableCollection<CaptureResultEntry> ResultEntries;
+        public BindingList<CaptureResultEntry> ResultEntries;
 
         public bool HasInjectedJs { get; set; }
 
@@ -32,7 +33,7 @@ namespace Qianliyun_Launcher.BroadcastCapture.ViewModel
         public BroadcastCaptureViewModel()
         {
             CaptureProperties = new Capture();
-            ResultEntries = new ObservableCollection<CaptureResultEntry>();
+            ResultEntries = new BindingList<CaptureResultEntry>();
             Logger.Debug("Initialized capture result storage");
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -17,7 +18,7 @@ namespace Qianliyun_Launcher.BroadcastCapture.View
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public BroadcastCaptureViewModel VM { get; set; }
-        public ObservableCollection<CaptureResultEntry> CaptureResults => VM.ResultEntries;
+        public BindingList<CaptureResultEntry> CaptureResults => VM.ResultEntries;
         public bool IsDebugMode => (bool)Properties.Settings.Default["debug"];
 
         public bool IsCapturing
@@ -183,7 +184,7 @@ namespace Qianliyun_Launcher.BroadcastCapture.View
             };
 
             // auto scroll
-            CaptureResults.CollectionChanged += (sender, e) =>
+            CaptureResults.ListChanged += (sender, e) =>
             {
                 if (CaptureResultDataGrid.Items.Count > 0)
                 {
