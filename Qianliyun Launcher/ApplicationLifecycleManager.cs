@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Text;
 using System.Windows;
+using System.Windows.Threading;
 using NLog;
 using Pathoschild.Http.Client;
 using Qianliyun_Launcher.DeepDarkWin32Fantasy;
@@ -25,16 +26,36 @@ namespace Qianliyun_Launcher
         { }
         #endregion
 
+        #region exception handler
+        void AppDomainUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+        {
+            Exception ex = (Exception)e.ExceptionObject;
+            Logger.Fatal(ex.Message);
+        }
+
+        private void DispatcherUnhandledExceptionHandler(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            Logger.Fatal(e.Exception.Message);
+            // Prevent default unhandled exception processing
+            // e.Handled = true;
+        }
+        #endregion
+
         [STAThread]
         private async void ApplicationStart(object sender, StartupEventArgs e)
         {
             Logger.Debug("App Init");
+
             //Disable shutdown when the dialog closes
             Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
+            // register global exception process methods
+            AppDomain.CurrentDomain.UnhandledException += AppDomainUnhandledExceptionHandler;
+            DispatcherUnhandledException += DispatcherUnhandledExceptionHandler;
+
             // parse arguments
             State.Args = e.Args;
-            if (Util.StringInArray("/noshutup", State.Args, false)) State.IsDebugMode = true;
+            if (Util.StringInArray("/noshutup", State.Args, true)) State.IsDebugMode = true;
 
             InitDebugEnv();
 
