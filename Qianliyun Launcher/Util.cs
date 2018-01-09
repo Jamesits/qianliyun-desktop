@@ -1,15 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
+using System.Xaml;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NLog;
 using Pathoschild.Http.Client;
 
 namespace Qianliyun_Launcher
 {
+    static class ExtensionMethod
+    {
+        public static Type GetEnumeratedType<T>(this IEnumerable<T> _)
+        {
+            return typeof(T);
+        }
+    }
+
     class Util
     {
         public static string RandomString(int size, bool lowerCase)
@@ -32,6 +45,13 @@ namespace Qianliyun_Launcher
                 value = value.ToLower();
             }
             return Array.IndexOf(from, value) > -1;
+        }
+
+
+        // get only the property you need in a JSON string
+        public static string RipJsonObject(string json, string propertyName)
+        {
+            return JObject.Parse(json).GetValue(propertyName).ToString();
         }
     }
 
@@ -113,7 +133,7 @@ namespace Qianliyun_Launcher
     // lock statement with every call to Map.
     public static class Mapper<T>
         // We can only use reference types
-        where T : class
+        where T : class, new()
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static readonly Dictionary<string, PropertyInfo> _propertyMap;
@@ -130,6 +150,27 @@ namespace Qianliyun_Launcher
                         p => p.Name.ToLower(),
                         p => p
                     );
+        }
+
+        private static Type GetEnumeratedType<U>(IEnumerable<U> _)
+        {
+            return typeof(U);
+        }
+
+        public static void MapList(ExpandoObject source, List<T> destination)
+        {
+            var src_enum = source as IEnumerable<T>;
+            if (src_enum == null)
+            {
+                Logger.Fatal("source is not a list");
+                throw new ArgumentException("source is not a list");
+            }
+            foreach (var item in src_enum)
+            {
+                var ret0 = new T();
+                //Map(item, ret0);
+                destination.Add(ret0);
+            }
         }
 
         public static void Map(ExpandoObject source, T destination)

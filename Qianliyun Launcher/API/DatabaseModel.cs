@@ -26,8 +26,8 @@ namespace Qianliyun_Launcher.API
         public string title { get; set; }
         public string host { get; set; }
         public string comment { get; set; }
-        public float begin { get; set; }
-        public float end { get; set; }
+        public float? begin { get; set; }
+        public float? end { get; set; }
         public List<string> tags { get; set; }
     }
 

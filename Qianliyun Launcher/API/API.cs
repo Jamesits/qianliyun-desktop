@@ -7,6 +7,7 @@ using System.Security;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using NLog;
 using Pathoschild.Http.Client;
 
@@ -24,37 +25,36 @@ namespace Qianliyun_Launcher.API
         }
 
         #region wrapper
-        private static async Task<T> GetApiObject<T>(string api, string extractedObjName) where T: class, new()
+        private static async Task<T> GetApiObject<T>(string api, string extractedObjName, object postBody = null) where T : class, new()
         {
-            var retstr = await State.HTTPClient.PostAsync(api).AsString();
-            dynamic retobj = JsonConvert.DeserializeObject<ExpandoObject>(retstr, new ExpandoObjectConverter());
-            var ret = new T();
-            Mapper<T>.Map((ExpandoObject)((IDictionary<string, object>)retobj)[extractedObjName], ret);
-            return ret;
+            string retstr;
+            if (postBody != null) retstr = await State.HTTPClient.PostAsync(api, postBody).AsString();
+            else retstr = await State.HTTPClient.PostAsync(api).AsString();
+            return JObject.Parse(retstr).GetValue(extractedObjName).ToObject<T>();
         }
 
-        private static async Task<T> GetApiObject<T>(string api, object postBody, string extractedObjName) where T : class, new()
+        private static async Task<List<T>> GetApiObjectList<T>(string api, string extractedObjName, object postBody = null) where T : class, new()
         {
-            var retstr = await State.HTTPClient.PostAsync(api, postBody).AsString();
-            dynamic retobj = JsonConvert.DeserializeObject<ExpandoObject>(retstr, new ExpandoObjectConverter());
-            var ret = new T();
-            Mapper<T>.Map((ExpandoObject)((IDictionary<string, object>)retobj)[extractedObjName], ret);
-            return ret;
+            string retstr;
+            if (postBody != null) retstr = await State.HTTPClient.PostAsync(api, postBody).AsString();
+            else retstr = await State.HTTPClient.PostAsync(api).AsString();
+            return JObject.Parse(retstr).GetValue(extractedObjName).Where(x => x != null).Select(x => x.ToObject<T>()).ToList();
         }
         #endregion
 
-        private static async Task TestApiEndpoint(string api, object postBody)
+        private static async Task<string> TestApiEndpoint(string api, object postBody)
         {
             try
             {
                 var retstr = await State.HTTPClient.PostAsync(api, postBody).AsString();
                 Logger.Debug(retstr);
+                return retstr;
             }
             catch (ApiException e)
             {
                 Logger.Warn(e.Message);
             }
-            
+            return null;
         }
 
         #region login
@@ -162,7 +162,8 @@ namespace Qianliyun_Launcher.API
 
         public async Task QueryLiveSessions()
         {
-            await TestApiEndpoint("query_live_session.php", new LiveSession());
+            Logger.Debug("QueryLiveSessions");
+            State.LiveSessions = await GetApiObjectList<LiveSession>("query_live_session.php", "live_session", new LiveSession());
         }
         #endregion
     }
