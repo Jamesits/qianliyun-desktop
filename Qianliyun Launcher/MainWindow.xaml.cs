@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Configuration;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
@@ -11,7 +9,6 @@ using System.Windows.Media;
 using NLog;
 using Qianliyun_Launcher.BroadcastCapture.View;
 using Qianliyun_Launcher.LoadingPage;
-using Qianliyun_Launcher.Properties;
 using Qianliyun_Launcher.QianniuTag;
 
 namespace Qianliyun_Launcher

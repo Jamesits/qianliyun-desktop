@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using NLog;
-using NLog.Fluent;
 using Pathoschild.Http.Client;
 using Qianliyun_Launcher.API;
 using Qianliyun_Launcher.Dialogs.LoginDialog;
@@ -28,8 +26,6 @@ namespace Qianliyun_Launcher
         // ReSharper disable once ConvertToAutoProperty
         public static StateManager Instance => _instance;
         private static readonly StateManager _instance = new StateManager();
-
-        private readonly GlobalStatus _status;
 
         private Settings ApplicationConfig => Settings.Default;
 

@@ -43,7 +43,7 @@ namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
         /// <summary>
         /// Determines if the current application is 32 or 64-bit.
         /// </summary>
-        static public SoftwareArchitecture ProgramBits
+        public static SoftwareArchitecture ProgramBits
         {
             get
             {
@@ -70,7 +70,7 @@ namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
             }
         }
 
-        static public SoftwareArchitecture OSBits
+        public static SoftwareArchitecture OSBits
         {
             get
             {
@@ -83,10 +83,7 @@ namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
                         break;
 
                     case 32:
-                        if (Is32BitProcessOn64BitProcessor())
-                            osbits = SoftwareArchitecture.Bit64;
-                        else
-                            osbits = SoftwareArchitecture.Bit32;
+                        osbits = Is32BitProcessOn64BitProcessor() ? SoftwareArchitecture.Bit64 : SoftwareArchitecture.Bit32;
                         break;
 
                     default:
@@ -101,7 +98,7 @@ namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
         /// <summary>
         /// Determines if the current processor is 32 or 64-bit.
         /// </summary>
-        static public ProcessorArchitecture ProcessorBits
+        public static ProcessorArchitecture ProcessorBits
         {
             get
             {
@@ -139,11 +136,11 @@ namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
         #endregion BITS
 
         #region EDITION
-        static private string s_Edition;
+        private static string s_Edition;
         /// <summary>
         /// Gets the edition of the operating system running on this computer.
         /// </summary>
-        static public string Edition
+        public static string Edition
         {
             get
             {
@@ -153,8 +150,8 @@ namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
                 string edition = String.Empty;
 
                 OperatingSystem osVersion = Environment.OSVersion;
-                OSVERSIONINFOEX osVersionInfo = new OSVERSIONINFOEX();
-                osVersionInfo.dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSVERSIONINFOEX));
+                OSVERSIONINFOEX osVersionInfo =
+                    new OSVERSIONINFOEX {dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSVERSIONINFOEX))};
 
                 if (GetVersionEx(ref osVersionInfo))
                 {
@@ -173,16 +170,7 @@ namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
                         }
                         else if (productType == VER_NT_SERVER)
                         {
-                            if ((suiteMask & VER_SUITE_ENTERPRISE) != 0)
-                            {
-                                // Windows NT 4.0 Server Enterprise
-                                edition = "Enterprise Server";
-                            }
-                            else
-                            {
-                                // Windows NT 4.0 Server
-                                edition = "Standard Server";
-                            }
+                            edition = (suiteMask & VER_SUITE_ENTERPRISE) != 0 ? "Enterprise Server" : "Standard Server";
                         }
                     }
                     #endregion VERSION 4
@@ -198,10 +186,7 @@ namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
                             }
                             else
                             {
-                                if (GetSystemMetrics(86) == 0) // 86 == SM_TABLETPC
-                                    edition = "Professional";
-                                else
-                                    edition = "Tablet Edition";
+                                edition = GetSystemMetrics(86) == 0 ? "Professional" : "Tablet Edition";
                             }
                         }
                         else if (productType == VER_NT_SERVER)
@@ -484,11 +469,11 @@ namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
         #endregion EDITION
 
         #region NAME
-        static private string s_Name;
+        private static string s_Name;
         /// <summary>
         /// Gets the name of the operating system running on this computer.
         /// </summary>
-        static public string Name
+        public static string Name
         {
             get
             {
@@ -498,8 +483,8 @@ namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
                 string name = "unknown";
 
                 OperatingSystem osVersion = Environment.OSVersion;
-                OSVERSIONINFOEX osVersionInfo = new OSVERSIONINFOEX();
-                osVersionInfo.dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSVERSIONINFOEX));
+                OSVERSIONINFOEX osVersionInfo =
+                    new OSVERSIONINFOEX {dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSVERSIONINFOEX))};
 
                 if (GetVersionEx(ref osVersionInfo))
                 {
@@ -550,10 +535,7 @@ namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
                                                 name = "Windows 95";
                                             break;
                                         case 10:
-                                            if (csdVersion == "A")
-                                                name = "Windows 98 Second Edition";
-                                            else
-                                                name = "Windows 98";
+                                            name = csdVersion == "A" ? "Windows 98 Second Edition" : "Windows 98";
                                             break;
                                         case 90:
                                             name = "Windows Me";
@@ -758,10 +740,10 @@ namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
 
         #region 64 BIT OS DETECTION
         [DllImport("kernel32", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
-        public extern static IntPtr LoadLibrary(string libraryName);
+        public static extern IntPtr LoadLibrary(string libraryName);
 
         [DllImport("kernel32", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
-        public extern static IntPtr GetProcAddress(IntPtr hwnd, string procedureName);
+        public static extern IntPtr GetProcAddress(IntPtr hwnd, string procedureName);
         #endregion 64 BIT OS DETECTION
 
         #region PRODUCT
@@ -859,14 +841,14 @@ namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
         /// <summary>
         /// Gets the service pack information of the operating system running on this computer.
         /// </summary>
-        static public string ServicePack
+        public static string ServicePack
         {
             get
             {
                 string servicePack = String.Empty;
-                OSVERSIONINFOEX osVersionInfo = new OSVERSIONINFOEX();
+                OSVERSIONINFOEX osVersionInfo =
+                    new OSVERSIONINFOEX {dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSVERSIONINFOEX))};
 
-                osVersionInfo.dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSVERSIONINFOEX));
 
                 if (GetVersionEx(ref osVersionInfo))
                 {
@@ -883,13 +865,8 @@ namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
         /// <summary>
         /// Gets the build version number of the operating system running on this computer.
         /// </summary>
-        static public int BuildVersion
-        {
-            get
-            {
-                return int.Parse(RegistryRead(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion", "CurrentBuildNumber", "0"));
-            }
-        }
+        public static int BuildVersion => int.Parse(RegistryRead(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion", "CurrentBuildNumber", "0"));
+
         #endregion BUILD
 
         #region FULL
@@ -897,26 +874,16 @@ namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
         /// <summary>
         /// Gets the full version string of the operating system running on this computer.
         /// </summary>
-        static public string VersionString
-        {
-            get
-            {
-                return Version.ToString();
-            }
-        }
+        public static string VersionString => Version.ToString();
+
         #endregion STRING
 
         #region VERSION
         /// <summary>
         /// Gets the full version of the operating system running on this computer.
         /// </summary>
-        static public Version Version
-        {
-            get
-            {
-                return new Version(MajorVersion, MinorVersion, BuildVersion, RevisionVersion);
-            }
-        }
+        public static Version Version => new Version(MajorVersion, MinorVersion, BuildVersion, RevisionVersion);
+
         #endregion VERSION
         #endregion FULL
 
@@ -924,7 +891,7 @@ namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
         /// <summary>
         /// Gets the major version number of the operating system running on this computer.
         /// </summary>
-        static public int MajorVersion
+        public static int MajorVersion
         {
             get
             {
@@ -947,7 +914,7 @@ namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
         /// <summary>
         /// Gets the minor version number of the operating system running on this computer.
         /// </summary>
-        static public int MinorVersion
+        public static int MinorVersion
         {
             get
             {
@@ -970,7 +937,7 @@ namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
         /// <summary>
         /// Gets the revision version number of the operating system running on this computer.
         /// </summary>
-        static public int RevisionVersion
+        public static int RevisionVersion
         {
             get
             {
@@ -995,7 +962,7 @@ namespace Qianliyun_Launcher.DeepDarkWin32Fantasy
 
                 if (fnPtr != IntPtr.Zero)
                 {
-                    return (IsWow64ProcessDelegate)Marshal.GetDelegateForFunctionPointer((IntPtr)fnPtr, typeof(IsWow64ProcessDelegate));
+                    return (IsWow64ProcessDelegate)Marshal.GetDelegateForFunctionPointer(fnPtr, typeof(IsWow64ProcessDelegate));
                 }
             }
 

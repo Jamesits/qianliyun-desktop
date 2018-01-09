@@ -1,5 +1,4 @@
-﻿using System.Windows.Controls;
-using NLog;
+﻿using NLog;
 
 namespace Qianliyun_Launcher.Homepage
 {

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Net;
 using System.Security;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using NLog;
 using Pathoschild.Http.Client;
@@ -16,7 +13,6 @@ namespace Qianliyun_Launcher.API
     public class API
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
         private static StateManager State => StateManager.Instance;
 
         public API()
@@ -25,6 +21,14 @@ namespace Qianliyun_Launcher.API
         }
 
         #region wrapper
+
+        private static async Task PostApi(string api, object postBody = null)
+        {
+            if (postBody != null) await State.HTTPClient.PostAsync(api, postBody).AsString();
+            else await State.HTTPClient.PostAsync(api).AsString();
+        }
+
+
         private static async Task<T> GetApiObject<T>(string api, string extractedObjName, object postBody = null) where T : class, new()
         {
             string retstr;
@@ -92,7 +96,7 @@ namespace Qianliyun_Launcher.API
                 Logger.Debug("Flushing memory (1st stage)");
                 // ReSharper disable once RedundantAssignment
                 loginRequest = null;
-                System.GC.Collect();
+                GC.Collect();
 
                 Logger.Debug("Saving login status");
                 State.IsLoggedIn = true;
@@ -164,6 +168,12 @@ namespace Qianliyun_Launcher.API
         {
             Logger.Debug("QueryLiveSessions");
             State.LiveSessions = await GetApiObjectList<LiveSession>("query_live_session.php", "live_session", new LiveSession());
+        }
+
+        public async Task UpdateLiveSession(LiveSession s)
+        {
+            Logger.Debug("UpdateLiveSession");
+            await PostApi("update_live_session.php", s);
         }
         #endregion
     }

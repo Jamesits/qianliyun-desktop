@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -76,7 +74,7 @@ namespace Qianliyun_Launcher
         private class ExclusiveSynchronizationContext : SynchronizationContext
         {
             private bool done;
-            public Exception InnerException { get; set; }
+            public Exception InnerException { private get; set; }
             readonly AutoResetEvent workItemsWaiting = new AutoResetEvent(false);
             readonly Queue<Tuple<SendOrPostCallback, object>> items =
                 new Queue<Tuple<SendOrPostCallback, object>>();

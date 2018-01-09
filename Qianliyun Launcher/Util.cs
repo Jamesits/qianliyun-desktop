@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms.VisualStyles;
-using System.Xaml;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NLog;
 using Pathoschild.Http.Client;
 
 namespace Qianliyun_Launcher
 {
-    static class ExtensionMethod
+    internal static class ExtensionMethod
     {
         public static Type GetEnumeratedType<T>(this IEnumerable<T> _)
         {
@@ -23,7 +18,7 @@ namespace Qianliyun_Launcher
         }
     }
 
-    class Util
+    internal class Util
     {
         public static string RandomString(int size, bool lowerCase)
         {
@@ -55,7 +50,7 @@ namespace Qianliyun_Launcher
         }
     }
 
-    class FluentHttpClientCustomFilter : Pathoschild.Http.Client.Extensibility.IHttpFilter
+    internal class FluentHttpClientCustomFilter : Pathoschild.Http.Client.Extensibility.IHttpFilter
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static StateManager State => StateManager.Instance;
@@ -81,47 +76,6 @@ namespace Qianliyun_Launcher
                 response.Message.RequestMessage,
                 response.Message.Headers);
 #endif
-            return;
-        }
-    }
-
-    // ReSharper disable once InconsistentNaming
-    public class SBStructure<T> : DynamicObject where T : new()
-    {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        // ReSharper disable once InconsistentNaming
-        public string error;
-        private readonly T _obj;
-
-        // Implement the TryGetMember method of the DynamicObject class for dynamic member calls.
-        public override bool TryGetMember(GetMemberBinder binder,
-            out object result)
-        {
-            result = null;
-#if DEBUG
-            Logger.Debug("Trying to access member {0} type {1}", binder.Name, binder.GetType());
-#endif
-            if (binder.GetType() != _obj.GetType()) return false;
-            result = _obj;
-            return true;
-        }
-
-        // Implement the TryInvokeMember method of the DynamicObject class for 
-        // dynamic member calls that have arguments.
-        public override bool TryInvokeMember(InvokeMemberBinder binder,
-            object[] args,
-            out object result)
-        {
-#if DEBUG
-            Logger.Debug("Trying to invoke member {0} type {1}", binder.Name, binder.GetType());
-#endif
-            result = null;
-            return false;
-        }
-
-        public SBStructure()
-        {
-            _obj = new T();
         }
     }
 
@@ -152,25 +106,15 @@ namespace Qianliyun_Launcher
                     );
         }
 
-        private static Type GetEnumeratedType<U>(IEnumerable<U> _)
-        {
-            return typeof(U);
-        }
-
         public static void MapList(ExpandoObject source, List<T> destination)
         {
-            var src_enum = source as IEnumerable<T>;
-            if (src_enum == null)
+            var srcEnum = source as IEnumerable<T>;
+            if (srcEnum == null)
             {
                 Logger.Fatal("source is not a list");
                 throw new ArgumentException("source is not a list");
             }
-            foreach (var item in src_enum)
-            {
-                var ret0 = new T();
-                //Map(item, ret0);
-                destination.Add(ret0);
-            }
+            destination.AddRange(srcEnum.Select(item => new T()));
         }
 
         public static void Map(ExpandoObject source, T destination)

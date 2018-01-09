@@ -16,7 +16,6 @@ namespace Qianliyun_Launcher.BroadcastCapture.View
     public partial class BroadcastCaptureUI : UserControl
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private GlobalStatus status;
         public BroadcastCaptureViewModel VM { get; set; }
         public ObservableCollection<CaptureResultEntry> CaptureResults => VM.ResultEntries;
         public bool IsDebugMode => (bool)Properties.Settings.Default["debug"];
@@ -189,11 +188,8 @@ namespace Qianliyun_Launcher.BroadcastCapture.View
                 if (CaptureResultDataGrid.Items.Count > 0)
                 {
                     var border = VisualTreeHelper.GetChild(CaptureResultDataGrid, 0) as Decorator;
-                    if (border != null)
-                    {
-                        var scroll = border.Child as ScrollViewer;
-                        if (scroll != null) scroll.ScrollToEnd();
-                    }
+                    var scroll = border?.Child as ScrollViewer;
+                    scroll?.ScrollToEnd();
                 }
             };
         }
@@ -214,18 +210,7 @@ namespace Qianliyun_Launcher.BroadcastCapture.View
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
-            if (IsCapturing)
-            {
-                Logger.Debug("Start capturing");
-                //CaptureBrowser.ExecuteScriptAsync(captureJs);
-            }
-            else
-            {
-                Logger.Debug("Stop capturing");
-                //CaptureBrowser.ExecuteScriptAsync(stopCaptureJs);
-                
-            }
-            
+            Logger.Debug(IsCapturing ? "Start capturing" : "Stop capturing");
         }
 
         //private void BtnStop_Click(object sender, RoutedEventArgs e)

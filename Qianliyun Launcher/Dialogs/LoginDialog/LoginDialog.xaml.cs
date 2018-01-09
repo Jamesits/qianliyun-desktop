@@ -1,20 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using NLog;
-using Qianliyun_Launcher.Properties;
 
 namespace Qianliyun_Launcher.Dialogs.LoginDialog
 {
@@ -60,7 +49,7 @@ namespace Qianliyun_Launcher.Dialogs.LoginDialog
             {
                 // wipe memory
                 Password.Clear();
-                System.GC.Collect();
+                GC.Collect();
                 Hide();
             }
             return flag;

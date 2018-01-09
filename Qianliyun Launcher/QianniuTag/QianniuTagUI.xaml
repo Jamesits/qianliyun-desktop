@@ -5,9 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Qianliyun_Launcher.QianniuTag"
              mc:Ignorable="d" 
+             DataContext="{Binding RelativeSource={RelativeSource Self}}"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="93,60,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <DataGrid x:Name="CaptureResultDataGrid" DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource LiveSessions}}" DisplayMemberPath="Name" Width="260" AutoGenerateColumns="False" CanUserAddRows="False" CanUserSortColumns="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="UserName" Width="Auto" Header="用户名" Binding="{Binding Username}"/>
+                <DataGridTextColumn x:Name="UserAction" Width="Auto" Header="动作" Binding="{Binding UserAction}"/>
+            </DataGrid.Columns>
+        </DataGrid>
 
     </Grid>
 </UserControl>
