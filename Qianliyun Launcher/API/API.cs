@@ -136,9 +136,10 @@ namespace Qianliyun_Launcher.API
 
         public async Task<bool> VerifyCachedLoginCredential()
         {
+            if (State.LoginCredential == null || State.LoginCredential.Length <= 0) return false;
             try
             {
-                await PopulateAccountInformation();
+                await State.HTTPClient.PostAsync("query_user_info.php").WithHeader("Cookie", State.LoginCredential).AsString();
                 return true;
             }
             catch

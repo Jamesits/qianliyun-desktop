@@ -65,22 +65,20 @@ namespace Qianliyun_Launcher
             if (State.IsDebugMode) State._logWindow.Show();
 
             // basic information
-            var sb = new StringBuilder(string.Empty);
-            sb.AppendLine("Operation System Information");
-            sb.AppendLine("----------------------------");
-            sb.AppendLine($"Name = {OSVersionInfo.Name}");
-            sb.AppendLine($"Edition = {OSVersionInfo.Edition}");
-            sb.AppendLine(OSVersionInfo.ServicePack != string.Empty
-                ? $"Service Pack = {OSVersionInfo.ServicePack}"
-                : "Service Pack = None");
-            sb.AppendLine($"Version = {OSVersionInfo.VersionString}");
-            sb.AppendLine($"ProcessorBits = {OSVersionInfo.ProcessorBits}");
-            sb.AppendLine($"OSBits = {OSVersionInfo.OSBits}");
-            sb.AppendLine($"ProgramBits = {OSVersionInfo.ProgramBits}");
+            var sb = $@"Operation System Information
+----------------------------
+Name = {OSVersionInfo.Name}
+Edition = {OSVersionInfo.Edition}
+Service Pack = {OSVersionInfo.ServicePack}
+Version = {OSVersionInfo.VersionString}
+ProcessorBits = {OSVersionInfo.ProcessorBits}
+OSBits = {OSVersionInfo.OSBits}
+ProgramBits = {OSVersionInfo.ProgramBits}";
             Logger.Debug(sb);
             Logger.Debug("Assembly: {0}", State.AssemblyName);
             Logger.Debug("AppName: {0}", State.AppName);
             Logger.Debug("Application Version: {0}", State.AppVersionString);
+            Logger.Debug("Application GUID is {0}", State.AppGuid);
             Logger.Info("Machine GUID is {0}", State.MachineKey);
 
             // prevent multiple instances
