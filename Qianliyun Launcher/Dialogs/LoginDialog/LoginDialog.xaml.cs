@@ -57,7 +57,15 @@ namespace Qianliyun_Launcher.Dialogs.LoginDialog
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            _loginStartedSemaphore.Release();
+            try
+            {
+                _loginStartedSemaphore.Release();
+            }
+            catch (SemaphoreFullException)
+            {
+                Logger.Warn("Clicked too much times of login button");
+            }
+            
         }
 
         private void UserCancelling(object sender, RoutedEventArgs e)

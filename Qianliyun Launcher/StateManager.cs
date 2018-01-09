@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Net.Http;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading;
 using NLog;
 using Pathoschild.Http.Client;
@@ -47,7 +48,7 @@ namespace Qianliyun_Launcher
         #endregion
 
         #region config
-        public readonly string AppGuid = "9274ca94-bed4-4056-b188-faaa19f9cd10";
+        public readonly string AppGuid = ((GuidAttribute)(Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(GuidAttribute), true)[0])).Value;
         #endregion
 
         #region states

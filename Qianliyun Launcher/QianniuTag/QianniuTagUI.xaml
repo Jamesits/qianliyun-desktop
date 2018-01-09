@@ -14,6 +14,7 @@
     <Grid>
         <DockPanel LastChildFill="True">
             <StackPanel DockPanel.Dock="Right">
+                <Button x:Name="BtnRefresh" Content="刷新" Click="BtnRefresh_OnClick"></Button>
                 <Button x:Name="BtnTag" Click="BtnTag_OnClick" Content="打标"></Button>
             </StackPanel>
             <DataGrid x:Name="CaptureResultDataGrid" DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource LiveSessionsSource}}" DisplayMemberPath="Name" AutoGenerateColumns="False" CanUserAddRows="False" CanUserSortColumns="False" IsReadOnly="True">

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using NLog;
@@ -30,16 +28,18 @@ namespace Qianliyun_Launcher.QianniuTag
             {
                 Logger.Debug("Received PropertyChanged {0}", e.PropertyName);
             };
-            
+#pragma warning disable 4014
+            State.api.QueryLiveSessions();
+#pragma warning restore 4014
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            doTag("朱导来了", "测试");
+            DoTag("朱导来了", "测试");
             
         }
 
-        private void doTag(String username, String tag)
+        private static void DoTag(string username, string tag)
         {
             QianniuTagCore.DoTag(username, tag);
         }
@@ -56,6 +56,11 @@ namespace Qianliyun_Launcher.QianniuTag
         {
             Logger.Debug("PropertyChanged {0}", propertyName);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private async void BtnRefresh_OnClick(object sender, RoutedEventArgs e)
+        {
+            await State.api.QueryLiveSessions();
         }
     }
 }
