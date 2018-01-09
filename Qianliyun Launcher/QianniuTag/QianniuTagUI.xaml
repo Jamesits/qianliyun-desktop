@@ -18,8 +18,8 @@
             </StackPanel>
             <DataGrid x:Name="CaptureResultDataGrid" DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource LiveSessionsSource}}" DisplayMemberPath="Name" AutoGenerateColumns="False" CanUserAddRows="False" CanUserSortColumns="False" IsReadOnly="True">
                 <DataGrid.Columns>
-                    <DataGridTextColumn x:Name="UserName" Width="Auto" Header="直播名" Binding="{Binding Title}"/>
-                    <DataGridTextColumn x:Name="UserAction" Width="Auto" Header="房主" Binding="{Binding Host}"/>
+                    <DataGridTextColumn x:Name="Title" Width="Auto" Header="直播名" Binding="{Binding Title}"/>
+                    <DataGridTextColumn x:Name="Host" Width="Auto" Header="房主" Binding="{Binding Host}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>

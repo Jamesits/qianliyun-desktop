@@ -111,7 +111,18 @@ namespace Qianliyun_Launcher
         }
 
         public UserInfo UserInfo { get; set; }
-        public BindingList<LiveSession> LiveSessions { get; set; }
+
+        private BindingList<LiveSession> _liveSessions = new BindingList<LiveSession>();
+
+        public BindingList<LiveSession> LiveSessions
+        {
+            get => _liveSessions;
+            set
+            {
+                _liveSessions = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         #endregion
 

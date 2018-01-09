@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
@@ -47,6 +48,16 @@ namespace Qianliyun_Launcher
         public static string RipJsonObject(string json, string propertyName)
         {
             return JObject.Parse(json).GetValue(propertyName).ToString();
+        }
+
+        // replace the content of a bindinglist without changing itself (so to prevent binding lost)
+        public static void ReplaceBindingList<T>(BindingList<T>dest, IEnumerable<T>src)
+        {
+            dest.Clear();
+            foreach (var item in src)
+            {
+                dest.Add(item);
+            }
         }
     }
 
