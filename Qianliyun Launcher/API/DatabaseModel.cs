@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using Newtonsoft.Json;
 
 // ReSharper disable All 
 
 namespace Qianliyun_Launcher.API
 {
-    public class UserInfo
+    public class UserInfo : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [JsonProperty("id")]
         public long? Id { get; set; }
 
@@ -32,8 +35,11 @@ namespace Qianliyun_Launcher.API
         public long? Reseller { get; set; }
     }
 
-    public class LiveSession
+    public class LiveSession : INotifyPropertyChanged
     {
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [JsonProperty("id")]
         public long? Id { get; set; }
 
@@ -62,8 +68,10 @@ namespace Qianliyun_Launcher.API
         public List<string> Tags { get; set; }
     }
 
-    public class CustomerInfo
+    public class CustomerInfo : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [JsonProperty("id")]
         public long? Id { get; set; }
 
@@ -83,8 +91,10 @@ namespace Qianliyun_Launcher.API
         public List<string> Tags { get; set; }
     }
 
-    public class LiveViewer
+    public class LiveViewer : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [JsonProperty("id")]
         public long? Id { get; set; }
 

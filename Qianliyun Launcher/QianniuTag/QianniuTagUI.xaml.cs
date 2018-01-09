@@ -11,10 +11,11 @@ namespace Qianliyun_Launcher.QianniuTag
     /// Interaction logic for QianniuTagUI.xaml
     /// </summary>
     // ReSharper disable once InconsistentNaming
-    public partial class QianniuTagUI
+    public partial class QianniuTagUI : INotifyPropertyChanged
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static StateManager State => StateManager.Instance;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         #region databindings
         public BindingList<LiveSession> LiveSessions => State.LiveSessions;
