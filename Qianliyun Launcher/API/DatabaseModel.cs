@@ -1,52 +1,100 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 // ReSharper disable All 
 
 namespace Qianliyun_Launcher.API
 {
-#pragma warning disable IDE1006 // Naming Styles
     public class UserInfo
     {
+        [JsonProperty("id")]
+        public long? Id { get; set; }
 
-        public long? id { get; set; }
-        public string username { get; set; }
-        public string alias { get; set; }
-        public string reseller_alias { get; set; }
-        public long? auth_max { get; set; }
-        public long? auth_left { get; set; }
-        public long? deauth_left { get; set; }
-        public long? reseller { get; set; }
+        [JsonProperty("username")]
+        public string UserName { get; set; }
+
+        [JsonProperty("alias")]
+        public string Alias { get; set; }
+
+        [JsonProperty("reseller_alias")]
+        public string ResellerAlias { get; set; }
+
+        [JsonProperty("auth_max")]
+        public long? AuthMax { get; set; }
+
+        [JsonProperty("auth_left")]
+        public long? AuthLeft { get; set; }
+
+        [JsonProperty("deauth_left")]
+        public long? DeauthLeft { get; set; }
+
+        [JsonProperty("reseller")]
+        public long? Reseller { get; set; }
     }
 
     public class LiveSession
     {
-        public long? id { get; set; }
-        public long? user_id { get; set; }
-        public string url { get; set; }
-        public string title { get; set; }
-        public string host { get; set; }
-        public string comment { get; set; }
-        public float? begin { get; set; }
-        public float? end { get; set; }
-        public List<string> tags { get; set; }
+        [JsonProperty("id")]
+        public long? Id { get; set; }
+
+        [JsonProperty("user_id")]
+        public long? UserId { get; set; }
+
+        [JsonProperty("url")]
+        public string Url { get; set; }
+
+        [JsonProperty("title")]
+        public string Title { get; set; }
+
+        [JsonProperty("host")]
+        public string Host { get; set; }
+
+        [JsonProperty("comment")]
+        public string Comment { get; set; }
+
+        [JsonProperty("begin")]
+        public float? Begin { get; set; }
+
+        [JsonProperty("end")]
+        public float? End { get; set; }
+
+        [JsonProperty("tags")]
+        public List<string> Tags { get; set; }
     }
 
     public class CustomerInfo
     {
-        public long? id { get; set; }
-        public long? user_id { get; set; }
-        public string customer_name { get; set; }
-        public string mobile { get; set; }
-        public string status { get; set; }
-        public List<string> tags { get; set; }
+        [JsonProperty("id")]
+        public long? Id { get; set; }
+
+        [JsonProperty("user_id")]
+        public long? UserId { get; set; }
+
+        [JsonProperty("customer_name")]
+        public string CustomerName { get; set; }
+
+        [JsonProperty("mobile")]
+        public string Mobile { get; set; }
+
+        [JsonProperty("status")]
+        public string Status { get; set; }
+
+        [JsonProperty("tags")]
+        public List<string> Tags { get; set; }
     }
 
     public class LiveViewer
     {
-        public long? id { get; set; }
-        public long? user_id { get; set; }
-        public long? live_id { get; set; }
-        public long? customer_id { get; set; }
+        [JsonProperty("id")]
+        public long? Id { get; set; }
+
+        [JsonProperty("user_id")]
+        public long? UserId { get; set; }
+
+        [JsonProperty("live_id")]
+        public long? LiveId { get; set; }
+
+        [JsonProperty("customer_id")]
+        public long? CustomerId { get; set; }
     }
-#pragma warning restore IDE1006 // Naming Styles
 }
