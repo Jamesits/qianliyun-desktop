@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Security;
 using System.Threading.Tasks;
+using System.Windows;
 using Newtonsoft.Json.Linq;
 using NLog;
 using Pathoschild.Http.Client;
@@ -23,27 +24,71 @@ namespace Qianliyun_Launcher.API
 
         #region wrapper
 
+        // return: recoverable?
+        private static async Task<bool> ExceeptionHandler(Exception e)
+        {
+            State.IsLoggedIn = false;
+            while (!State.IsLoggedIn)
+            {
+                Logger.Info("Try login");
+                try
+                {
+                    if (!await State._loginDialog.DoLogin()) break;
+                }
+                catch (ApiException ex)
+                {
+                    Logger.Fatal("Login failed: {0}", ex);
+                    MessageBox.Show("登录失败：" + ex.Message, "登录失败");
+                }
+            }
+            return false;
+        }
+
         private static async Task PostApi(string api, object postBody = null)
         {
-            if (postBody != null) await State.HTTPClient.PostAsync(api, postBody).AsString();
-            else await State.HTTPClient.PostAsync(api).AsString();
+            try
+            {
+                if (postBody != null) await State.HTTPClient.PostAsync(api, postBody).AsString();
+                else await State.HTTPClient.PostAsync(api).AsString();
+            }
+            catch (Exception e)
+            {
+                if (!await ExceeptionHandler(e)) throw;
+            }
+            
         }
 
 
         private static async Task<T> GetApiObject<T>(string api, string extractedObjName, object postBody = null) where T : class, new()
         {
-            string retstr;
-            if (postBody != null) retstr = await State.HTTPClient.PostAsync(api, postBody).AsString();
-            else retstr = await State.HTTPClient.PostAsync(api).AsString();
-            return JObject.Parse(retstr).GetValue(extractedObjName).ToObject<T>();
+            try
+            {
+                string retstr;
+                if (postBody != null) retstr = await State.HTTPClient.PostAsync(api, postBody).AsString();
+                else retstr = await State.HTTPClient.PostAsync(api).AsString();
+                return JObject.Parse(retstr).GetValue(extractedObjName).ToObject<T>();
+            }
+            catch (Exception e)
+            {
+                if (!await ExceeptionHandler(e)) throw;
+                return await(GetApiObject<T>(api, extractedObjName, postBody));
+            }
         }
 
         private static async Task<List<T>> GetApiObjectList<T>(string api, string extractedObjName, object postBody = null) where T : class, new()
         {
-            string retstr;
-            if (postBody != null) retstr = await State.HTTPClient.PostAsync(api, postBody).AsString();
-            else retstr = await State.HTTPClient.PostAsync(api).AsString();
-            return JObject.Parse(retstr).GetValue(extractedObjName).Where(x => x != null).Select(x => x.ToObject<T>()).ToList();
+            try
+            {
+                string retstr;
+                if (postBody != null) retstr = await State.HTTPClient.PostAsync(api, postBody).AsString();
+                else retstr = await State.HTTPClient.PostAsync(api).AsString();
+                return JObject.Parse(retstr).GetValue(extractedObjName).Where(x => x != null).Select(x => x.ToObject<T>()).ToList();
+            }
+            catch (Exception e)
+            {
+                if (!await ExceeptionHandler(e)) throw;
+                return await GetApiObjectList<T>(api, extractedObjName, postBody);
+            }
         }
         #endregion
 
