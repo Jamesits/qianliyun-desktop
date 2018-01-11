@@ -211,6 +211,7 @@ namespace Qianliyun_Launcher.API
 
         #region BroadcastCaptureSession
 
+        // captured live session list
         public async Task QueryLiveSessions()
         {
             Logger.Debug("QueryLiveSessions");
@@ -219,6 +220,12 @@ namespace Qianliyun_Launcher.API
                 State.LiveSessions, 
                 await GetApiObjectList<LiveSession>("query_live_session.php", "live_session", new LiveSession())
                 );
+        }
+
+        // get a live session
+        public async Task QueryLiveSession(LiveSession s)
+        {
+            await GetApiObjectList<LiveSession>("query_live_session.php", "live_session", s);
         }
 
         public async Task UpdateLiveSession(LiveSession s)

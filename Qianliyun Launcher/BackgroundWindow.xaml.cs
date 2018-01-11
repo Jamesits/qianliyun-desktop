@@ -39,7 +39,9 @@ namespace Qianliyun_Launcher
             //}
 
             // register accessibility hook
+#if DEBUG
             Logger.Info("Registering Chrome Accessibility hook");
+#endif
             _hhook = SetWinEventHook(EVENT_SYSTEM_ALERT, EVENT_SYSTEM_ALERT, IntPtr.Zero,
                 ProcDelegate, 0, 0, WINEVENT_OUTOFCONTEXT);
 
@@ -47,19 +49,21 @@ namespace Qianliyun_Launcher
 
         ~BackgroundWindow()
         {
+#if DEBUG
             Logger.Info("Unregistering Chrome Accessibility hook");
+#endif
             UnhookWinEvent(_hhook);
         }
 
         static void WinEventProc(IntPtr hWinEventHook, uint eventType,
             IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
         {
-            if (idObject == 1)
-            {
-                // notify Chrome that Accessibility should be enabled
-                Logger.Info("Received accessibility probe message, replying");
-                SendMessage(hwnd, WM_GETOBJECT, 0, 1);
-            }
+            if (idObject != 1) return;
+            // notify Chrome that Accessibility should be enabled
+#if DEBUG
+            Logger.Info("Received accessibility probe message, replying");
+#endif
+            SendMessage(hwnd, WM_GETOBJECT, 0, 1);
         }
 
         public void EnableDebugMode()
