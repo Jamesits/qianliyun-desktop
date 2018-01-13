@@ -91,7 +91,7 @@ namespace Qianliyun_Launcher.API
         public List<string> Tags { get; set; }
     }
 
-    public class LiveViewer : INotifyPropertyChanged
+    public class LiveActivity : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -104,7 +104,13 @@ namespace Qianliyun_Launcher.API
         [JsonProperty("live_id")]
         public long? LiveId { get; set; }
 
+        [JsonProperty("time")]
+        public float? Time { get; set; }
+
         [JsonProperty("customer_id")]
         public long? CustomerId { get; set; }
+
+        [JsonProperty("activity")]
+        public string Activity { get; set; }
     }
 }
