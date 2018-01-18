@@ -6,6 +6,20 @@ using Newtonsoft.Json;
 
 namespace Qianliyun_Launcher.API
 {
+    public class UpdateInfo : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [JsonProperty("latest_version")]
+        public long[] LatestVersion { get; set; }
+
+        [JsonProperty("update_url")]
+        public string UpdateUrl { get; set; }
+
+        [JsonProperty("changelog")]
+        public string Changelog { get; set; }
+    }
+
     public class UserInfo : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
