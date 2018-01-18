@@ -31,8 +31,31 @@ namespace Qianliyun_Launcher.API
         [JsonProperty("deauth_left")]
         public long? DeauthLeft { get; set; }
 
-        [JsonProperty("reseller")]
-        public long? Reseller { get; set; }
+        [JsonProperty("reseller_id")]
+        public long? ResellerID { get; set; }
+
+        [JsonProperty("reseller_info")]
+        public ResellerInfo ResellerInfo { get; set; }
+    }
+
+    public class ResellerInfo : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [JsonProperty("id")]
+        public long? Id { get; set; }
+
+        [JsonProperty("alias")]
+        public string Alias { get; set; }
+
+        [JsonProperty("app_title")]
+        public string AppTitle { get; set; }
+
+        [JsonProperty("app_status")]
+        public string AppStatus { get; set; }
+
+        [JsonProperty("app_copyright")]
+        public string AppCopyright { get; set; }
     }
 
     public class LiveSession : INotifyPropertyChanged
@@ -109,6 +132,9 @@ namespace Qianliyun_Launcher.API
 
         [JsonProperty("customer_id")]
         public long? CustomerId { get; set; }
+
+        [JsonProperty("customer_info")]
+        public CustomerInfo CustomerInfo { get; set; }
 
         [JsonProperty("activity")]
         public string Activity { get; set; }
